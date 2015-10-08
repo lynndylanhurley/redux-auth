@@ -1,14 +1,14 @@
 import React from "react";
 import Container from "./partials/Container";
 
-class Main extends React.Component {
+class Account extends React.Component {
   render () {
     return (
       <Container>
-        <h1>Main Page</h1>
+        <h1>Account page</h1>
       </Container>
     );
   }
 }
 
-export default Main;
+export default Account;
