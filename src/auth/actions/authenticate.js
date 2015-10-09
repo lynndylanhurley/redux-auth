@@ -17,13 +17,20 @@ export function authenticate(config) {
   return dispatch => {
     dispatch(authenticateStart());
 
-    var jqPromise = Auth.configure(config);
+    // only allow authenticaton from client-evaluated code.
+    if (window) {
+      let jqPromise = Auth.configure(config);
 
-    jqPromise.then(
-      (user) => dispatch(authenticateComplete(user)),
-      ({reason}) => dispatch(authenticateError([reason]))
-    );
+      jqPromise.then(
+        (user) => dispatch(authenticateComplete(user)),
+        ({reason}) => dispatch(authenticateError([reason]))
+      );
 
-    return Promise.resolve(jqPromise);
+      return Promise.resolve(jqPromise);
+    } else {
+      let reason = "Must authenticate from browser.";
+      dispatch(authenticateError([reason]));
+      return Promise.reject(reason);
+    }
   };
 }

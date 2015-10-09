@@ -13,5 +13,12 @@ export default createReducer(initialState, {
   [AuthActions.AUTHENTICATE_COMPLETE]: (state, { user }) => state.merge({
     attributes: user,
     isSignedIn: true
+  }),
+
+  [AuthActions.AUTHENTICATE_FAILURE]: (state) => state.merge({
+    attributes: null,
+    isSignedIn: false,
+    firstTimeLogin: false,
+    mustResetPassword: false
   })
 });

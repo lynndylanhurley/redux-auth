@@ -1,5 +1,6 @@
 var webpack = require("webpack");
 var path = require("path");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
   target:  "web",
@@ -18,12 +19,14 @@ module.exports = {
     new webpack.DefinePlugin({"process.env": {NODE_ENV: "\"production\""}}),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.UglifyJsPlugin(),
+    new ExtractTextPlugin("[name].css")
   ],
   module:  {
     loaders: [
       {include: /\.json$/, loaders: ["json-loader"]},
-      {include: /\.js$/, loaders: ["babel-loader?stage=0&optional=runtime&plugins=typecheck"], exclude: /node_modules/}
+      {include: /\.js$/, loaders: ["babel-loader?stage=0&optional=runtime&plugins=typecheck"], exclude: /node_modules/},
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader") }
     ]
   },
   resolve: {
