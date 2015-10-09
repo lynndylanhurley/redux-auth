@@ -2,7 +2,7 @@ import chai, { expect } from "chai";
 import sinon, { spy } from "sinon";
 import sinonChai from "sinon-chai";
 import Auth from "j-toker";
-import {configure} from "../../src/auth/actions/configure";
+import {configure} from "../../src/auth/index";
 import {getStore} from "./helper";
 
 chai.use(sinonChai);
@@ -11,7 +11,6 @@ var store, server;
 
 describe("configuration", () => {
   beforeEach(() => {
-    Auth.reset();
     store = getStore();
     server = sinon.fakeServer.create();
     spy(Auth, "validateToken");
@@ -22,11 +21,12 @@ describe("configuration", () => {
     server.restore();
     Auth.validateToken.restore();
     Auth.configure.restore();
+    Auth.reset();
   });
 
   describe("success", () => {
     it("should call configure and then update the store", (done) => {
-      var currentToken = {"access-token": "xxx"},
+      let currentToken = {"access-token": "xxx"},
           newToken     = "yyy",
           validEmail   = "test@test.com",
           validUid     = validEmail,

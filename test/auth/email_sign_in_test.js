@@ -2,41 +2,39 @@ import chai, { expect } from "chai";
 import sinon, { spy } from "sinon";
 import sinonChai from "sinon-chai";
 import Auth from "j-toker";
-import {authenticate} from "../../src/auth/index";
+import {emailSignIn} from "../../src/auth/index";
 import {getStore} from "./helper";
 
 chai.use(sinonChai);
 
 var store, server;
 
-describe("authenticate", () => {
+describe("email sign in", () => {
   beforeEach(() => {
+    Auth.configure({}, true);
     store = getStore();
     server = sinon.fakeServer.create();
-    spy(Auth, "validateToken");
-    spy(Auth, "configure");
+    spy(Auth, "emailSignIn");
   });
 
   afterEach(() => {
     server.restore();
-    Auth.validateToken.restore();
-    Auth.configure.restore();
+    Auth.emailSignIn.restore();
     Auth.reset();
   });
 
   describe("success", () => {
-    it("should call authenticate and then update the store", (done) => {
-      let currentToken = {"access-token": "xxx"},
-          newToken     = "yyy",
+    it("should authenticate user upon successful sign in", (done) => {
+      let newToken     = "yyy",
           validEmail   = "test@test.com",
           validUid     = validEmail,
           userObj      = {
-            email:    validEmail,
-            uid:      validUid
+            email: validEmail,
+            uid:   validUid
           };
 
       // mock success response
-      server.respondWith("GET", "/api/auth/validate_token", [
+      server.respondWith("POST", "/api/auth/sign_in", [
         200, {
           "access-token": newToken,
           "Content-Type": "application/json"
@@ -44,19 +42,14 @@ describe("authenticate", () => {
           data: userObj
       })]);
 
-      // add cookie so config has token
-      Auth.configure({}, true);
-      Auth.persistData("authHeaders", currentToken);
-
-      // this is what we actually want to test
-      store.dispatch(authenticate()).then(() => {
-        expect(Auth.configure.calledOnce);
-        expect(Auth.validateToken.calledOnce);
-
+      store.dispatch(emailSignIn({
+        email: validEmail,
+        password: "secret123"
+      })).then(() => {
         // ensure state was updated
         let state = store.getState().toJS(),
             userState = state.user,
-            authState = state.authentication;
+            signInState = state.emailSignIn;
 
         expect(userState).to.deep.equal({
           attributes: {
@@ -68,29 +61,34 @@ describe("authenticate", () => {
           mustResetPassword: false
         });
 
-        expect(authState).to.deep.equal({
+        expect(signInState).to.deep.equal({
           loading: false,
-          valid: true,
           errors: null
         });
 
+        expect(Auth.emailSignIn.called);
         done();
       });
 
-      // tell sinon mock server to issue response
       server.respond();
     });
   });
 
-
   describe("failure", () => {
-    it("should not try to validate the token if cookie isn't present", (done) => {
-      Auth.configure({}, true);
-      store.dispatch(authenticate()).catch(() => {
+    it("should handle sign in failures", (done) => {
+      let errors = ["Invalid login credentials. Please try again."];
+
+      server.respondWith("POST", "/api/auth/sign_in", [
+        401, {}, JSON.stringify({
+          errors
+        })
+      ]);
+
+      store.dispatch(emailSignIn()).catch(() => {
         // ensure state was updated
         let state = store.getState().toJS(),
             userState = state.user,
-            authState = state.authentication;
+            signInState = state.emailSignIn;
 
         expect(userState).to.deep.equal({
           attributes: null,
@@ -99,17 +97,16 @@ describe("authenticate", () => {
           mustResetPassword: false
         });
 
-        expect(authState).to.deep.equal({
+        expect(signInState).to.deep.equal({
           loading: false,
-          valid: false,
-          errors: "Invalid token"
+          errors
         });
 
-        expect(Auth.configure.called);
-        expect(Auth.validateToken.notCalled);
-
+        expect(Auth.emailSignIn.called);
         done();
       });
+
+      server.respond();
     });
   });
 });

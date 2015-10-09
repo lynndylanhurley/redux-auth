@@ -13,13 +13,13 @@ export function authenticateComplete(user) {
 export function authenticateError(errors) {
   return { type: AUTHENTICATE_ERROR, errors };
 }
-export function authenticate(config) {
+export function authenticate(opts) {
   return dispatch => {
     dispatch(authenticateStart());
 
     // only allow authenticaton from client-evaluated code.
     if (window) {
-      let jqPromise = Auth.configure(config);
+      let jqPromise = Auth.validateToken(opts);
 
       jqPromise.then(
         (user) => dispatch(authenticateComplete(user)),
