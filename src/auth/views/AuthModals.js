@@ -4,6 +4,10 @@ import EmailSignUpSuccessModal from "./modals/EmailSignUpSuccessModal";
 import EmailSignUpErrorModal from "./modals/EmailSignUpErrorModal";
 import SignOutSuccessModal from "./modals/SignOutSuccessModal";
 import SignOutErrorModal from "./modals/SignOutErrorModal";
+import FirstTimeLoginSuccessModal from "./modals/FirstTimeLoginSuccessModal";
+import FirstTimeLoginErrorModal from "./modals/FirstTimeLoginErrorModal";
+import RequestPasswordResetErrorModal from "./modals/RequestPasswordResetErrorModal";
+import RequestPasswordResetSuccessModal from "./modals/RequestPasswordResetSuccessModal";
 import { connect } from "react-redux";
 
 @connect(({authUi}) => ({authUi}))
@@ -13,7 +17,11 @@ class AuthModals extends React.Component {
     signOutErrorEnabled: PropTypes.bool,
     emailSignInSuccessEnabled: PropTypes.bool,
     emailSignUpSuccessEnabled: PropTypes.bool,
-    emailSignUpErrorEnabled: PropTypes.bool
+    emailSignUpErrorEnabled: PropTypes.bool,
+    firstTimeLoginSuccessEnabled: PropTypes.bool,
+    firstTimeLoginErrorEnabled: PropTypes.bool,
+    requestPasswordResetErrorEnabled: PropTypes.bool,
+    requestPasswordResetSuccessEnabled: PropTypes.bool
   }
 
   static defaultProps = {
@@ -21,7 +29,11 @@ class AuthModals extends React.Component {
     signOutErrorEnabled: true,
     emailSignInSuccessEnabled: true,
     emailSignUpSuccessEnabled: true,
-    emailSignUpErrorEnabled: true
+    emailSignUpErrorEnabled: true,
+    firstTimeLoginSuccessEnabled: true,
+    firstTimeLoginErrorEnabled: true,
+    requestPasswordResetErrorEnabled: true,
+    requestPasswordResetSuccessEnabled: true
   }
 
   render () {
@@ -50,6 +62,26 @@ class AuthModals extends React.Component {
       this.props.authUi.get("signOutErrorModalVisible")
     );
 
+    let showFirstTimeLoginSuccess = (
+      this.props.firstTimeLoginSuccessEnabled &&
+      this.props.authUi.get("firstTimeLoginSuccessModalVisible")
+    );
+
+    let showFirstTimeLoginError = (
+      this.props.firstTimeLoginErrorEnabled &&
+      this.props.authUi.get("firstTimeLoginErrorModalVisible")
+    );
+
+    let showRequestPasswordResetError = (
+      this.props.requestPasswordResetErrorEnabled &&
+      this.props.authUi.get("requestPasswordResetErrorModalVisible")
+    );
+
+    let showRequestPasswordResetSuccess = (
+      this.props.requestPasswordResetSuccessEnabled &&
+      this.props.authUi.get("requestPasswordResetSuccessModalVisible")
+    );
+
     return (
       <div id="auth-modals">
         <EmailSignInSuccessModal show={showEmailSignInSuccess} />
@@ -57,6 +89,10 @@ class AuthModals extends React.Component {
         <EmailSignUpErrorModal show={showEmailSignUpError} />
         <SignOutSuccessModal show={showSignOutSuccess} />
         <SignOutErrorModal show={showSignOutError} />
+        <FirstTimeLoginSuccessModal show={showFirstTimeLoginSuccess} />
+        <FirstTimeLoginErrorModal show={showFirstTimeLoginError} />
+        <RequestPasswordResetErrorModal show={showRequestPasswordResetError} />
+        <RequestPasswordResetSuccessModal show={showRequestPasswordResetSuccess} />
       </div>
     );
   }

@@ -22,8 +22,8 @@ class ErrorList extends React.Component {
       return (
         <div className="has-error">
           <p>Please correct the following {errorWord}:</p>
-          {this.props.errors.map(err => {
-            return <p><Glyphicon glyph="exclamation-sign" /> {err}</p>;
+          {this.props.errors.map((err, i) => {
+            return <p key={i}><Glyphicon glyph="exclamation-sign" /> {err}</p>;
           })}
         </div>
       );

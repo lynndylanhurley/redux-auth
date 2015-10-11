@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import Input from "./Input";
 import { emailSignInFormUpdate, emailSignIn } from "../actions/email-sign-in";
 import { connect } from "react-redux";
@@ -26,7 +26,7 @@ class EmailSignInForm extends React.Component {
   render () {
     let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
     return (
-      <div>
+      <div className='redux-auth email-sign-in-form'>
         <h2>{this.props.title}</h2>
         <Input type="text"
                label="Email"

@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import {
   EmailSignInForm,
   EmailSignUpForm,
-  SignOutButton
+  SignOutButton,
+  RequestPasswordResetForm
 } from "../auth/index";
 
 @connect(({auth}) => ({auth}))
@@ -33,6 +34,10 @@ class Main extends React.Component {
 
           <IndexWell>
             <EmailSignUpForm />
+          </IndexWell>
+
+          <IndexWell>
+            <RequestPasswordResetForm />
           </IndexWell>
         </Row>
       </Container>

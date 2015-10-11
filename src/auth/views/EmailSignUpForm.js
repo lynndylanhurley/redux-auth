@@ -26,7 +26,7 @@ class EmailSignUpForm extends React.Component {
   render () {
     let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
     return (
-      <div>
+      <div className='redux-auth email-sign-up-form'>
         <h2>{this.props.title}</h2>
         <Input type="text"
                label="Email"

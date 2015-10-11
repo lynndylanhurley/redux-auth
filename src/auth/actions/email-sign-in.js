@@ -11,8 +11,8 @@ export function emailSignInFormUpdate(key, value) {
 export function emailSignInStart() {
   return { type: EMAIL_SIGN_IN_START };
 }
-export function emailSignInComplete(user) {
-  return { type: EMAIL_SIGN_IN_COMPLETE, user };
+export function emailSignInComplete(user, showModal) {
+  return { type: EMAIL_SIGN_IN_COMPLETE, user, showModal };
 }
 export function emailSignInError(errors) {
   return { type: EMAIL_SIGN_IN_ERROR, errors };

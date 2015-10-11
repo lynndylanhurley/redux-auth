@@ -4,14 +4,22 @@ import * as uiActions from "../actions/ui";
 import * as emailSignInActions from "../actions/email-sign-in";
 import * as emailSignUpActions from "../actions/email-sign-up";
 import * as signOutActions from "../actions/sign-out";
+import * as requestPasswordResetActions from "../actions/request-password-reset";
 
 const initialState = Immutable.fromJS({
-  emailSignInSuccessModalVisible: false,
-  emailSignInErrorModalVisible:   false,
-  signOutSuccessModalVisible:     false,
-  signOutErrorModalVisible:       false,
-  emailSignUpSuccessModalVisible: false,
-  emailSignUpAddress:             null
+  emailSignInSuccessModalVisible:          false,
+  emailSignInErrorModalVisible:            false,
+  signOutSuccessModalVisible:              false,
+  signOutErrorModalVisible:                false,
+  emailSignUpSuccessModalVisible:          false,
+  emailSignUpAddress:                      null,
+  firstTimeLoginModalSuccessVisible:       false,
+  passwordResetModalSuccessVisible:        false,
+  firstTimeLoginModalErrorVisible:         false,
+  passwordResetModalErrorVisible:          false,
+  requestPasswordResetSuccessModalVisible: false,
+  requestPasswordResetErrorModalVisible:   false,
+  requestPasswordResetSuccessMessage:      null
 });
 
 export default createReducer(initialState, {
@@ -52,12 +60,9 @@ export default createReducer(initialState, {
     emailSignUpAddress: user.email
   }),
 
-  [emailSignUpActions.EMAIL_SIGN_UP_ERROR]: state => {
-    console.log("caught email sign up error");
-    return state.set(
-      "emailSignUpErrorModalVisible", true
-    );
-  },
+  [emailSignUpActions.EMAIL_SIGN_UP_ERROR]: state => state.set(
+    "emailSignUpErrorModalVisible", true
+  ),
 
   [uiActions.HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL]: state => state.merge({
     emailSignUpSuccessModalVisible: false,
@@ -66,5 +71,57 @@ export default createReducer(initialState, {
 
   [uiActions.HIDE_EMAIL_SIGN_UP_ERROR_MODAL]: state => state.set(
     "emailSignUpErrorModalVisible", false
+  ),
+
+  [uiActions.SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL]: state => state.set(
+    "firstTimeLoginSuccessModalVisible", true
+  ),
+
+  [uiActions.HIDE_FIRST_TIME_LOGIN_SUCCESS_MODAL]: state => state.set(
+    "firstTimeLoginSuccessModalVisible", false
+  ),
+
+  [uiActions.HIDE_PASSWORD_RESET_SUCCESS_MODAL]: state => state.set(
+    "passwordResetSuccessModalVisible", false
+  ),
+
+  [uiActions.SHOW_PASSWORD_RESET_SUCCESS_MODAL]: state => state.set(
+    "passwordResetSuccessModalVisible", true
+  ),
+
+  [uiActions.SHOW_FIRST_TIME_LOGIN_ERROR_MODAL]: state => state.set(
+    "firstTimeLoginErrorModalVisible", true
+  ),
+
+  [uiActions.HIDE_FIRST_TIME_LOGIN_ERROR_MODAL]: state => state.set(
+    "firstTimeLoginErrorModalVisible", false
+  ),
+
+  [uiActions.HIDE_PASSWORD_RESET_ERROR_MODAL]: state => state.set(
+    "passwordResetErrorModalVisible", false
+  ),
+
+  [uiActions.SHOW_PASSWORD_RESET_ERROR_MODAL]: state => state.set(
+    "passwordResetErrorModalVisible", true
+  ),
+
+  [requestPasswordResetActions.REQUEST_PASSWORD_RESET_COMPLETE]: (state, {message}) => {
+    return state.merge({
+      requestPasswordResetSuccessModalVisible: true,
+      requestPasswordResetSuccessMessage: message
+    });
+  },
+
+  [requestPasswordResetActions.REQUEST_PASSWORD_RESET_ERROR]: state => state.set(
+    "requestPasswordResetErrorModalVisible", true
+  ),
+
+  [uiActions.HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL]: state => state.merge({
+    requestPasswordResetSuccessModalVisible: false,
+    requestPasswordResetSuccessMessage: null
+  }),
+
+  [uiActions.HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL]: state => state.set(
+    "requestPasswordResetErrorModalVisible", false
   )
 });

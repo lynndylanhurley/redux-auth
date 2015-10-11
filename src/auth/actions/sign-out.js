@@ -19,11 +19,10 @@ export function signOut(opts) {
 
     let jqPromise = Auth.signOut(opts);
 
-    jqPromise.then(
-      (user) => dispatch(signOutComplete(user)),
-      ({data}) => dispatch(signOutError(data.errors))
-    );
+    jqPromise.then(user => dispatch(signOutComplete(user)));
 
-    return Promise.resolve(jqPromise);
+    return Promise
+      .resolve(jqPromise)
+      .catch(({data}) => dispatch(signOutError(data.errors)));
   };
 }

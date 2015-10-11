@@ -1,9 +1,20 @@
-export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL = "HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL";
-export const HIDE_EMAIL_SIGN_IN_ERROR_MODAL   = "HIDE_EMAIL_SIGN_IN_ERROR_MODAL";
-export const HIDE_SIGN_OUT_ERROR_MODAL        = "HIDE_SIGN_OUT_ERROR_MODAL";
-export const HIDE_SIGN_OUT_SUCCESS_MODAL      = "HIDE_SIGN_OUT_SUCCESS_MODAL";
-export const HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL = "HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL";
-export const HIDE_EMAIL_SIGN_UP_ERROR_MODAL   = "HIDE_EMAIL_SIGN_UP_ERROR_MODAL";
+export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = "HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL";
+export const HIDE_EMAIL_SIGN_IN_ERROR_MODAL            = "HIDE_EMAIL_SIGN_IN_ERROR_MODAL";
+export const HIDE_SIGN_OUT_ERROR_MODAL                 = "HIDE_SIGN_OUT_ERROR_MODAL";
+export const HIDE_SIGN_OUT_SUCCESS_MODAL               = "HIDE_SIGN_OUT_SUCCESS_MODAL";
+export const HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL          = "HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL";
+export const HIDE_EMAIL_SIGN_UP_ERROR_MODAL            = "HIDE_EMAIL_SIGN_UP_ERROR_MODAL";
+export const SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL       = "SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL";
+export const HIDE_FIRST_TIME_LOGIN_SUCCESS_MODAL       = "HIDE_FIRST_TIME_LOGIN_SUCCESS_MODAL";
+export const HIDE_PASSWORD_RESET_SUCCESS_MODAL         = "HIDE_PASSWORD_RESET_SUCCESS_MODAL";
+export const SHOW_PASSWORD_RESET_SUCCESS_MODAL         = "SHOW_PASSWORD_RESET_SUCCESS_MODAL";
+export const SHOW_FIRST_TIME_LOGIN_ERROR_MODAL         = "SHOW_FIRST_TIME_LOGIN_ERROR_MODAL";
+export const HIDE_FIRST_TIME_LOGIN_ERROR_MODAL         = "HIDE_FIRST_TIME_LOGIN_ERROR_MODAL";
+export const HIDE_PASSWORD_RESET_ERROR_MODAL           = "HIDE_PASSWORD_RESET_ERROR_MODAL";
+export const SHOW_PASSWORD_RESET_ERROR_MODAL           = "SHOW_PASSWORD_RESET_ERROR_MODAL";
+export const HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL = "HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL";
+export const HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL   = "HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL";
+
 
 export function hideEmailSignInSuccessModal() {
   return { type: HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL };
@@ -22,4 +33,34 @@ export function hideEmailSignUpSuccessModal() {
 }
 export function hideEmailSignUpErrorModal() {
   return { type: HIDE_EMAIL_SIGN_UP_ERROR_MODAL };
+}
+export function showFirstTimeLoginSuccessModal() {
+  return { type: SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL };
+}
+export function showPasswordResetSuccessModal() {
+  return { type: SHOW_PASSWORD_RESET_SUCCESS_MODAL };
+}
+export function hideFirstTimeLoginSuccessModal() {
+  return { type: HIDE_FIRST_TIME_LOGIN_SUCCESS_MODAL };
+}
+export function hidePasswordResetSuccessModal() {
+  return { type: HIDE_PASSWORD_RESET_SUCCESS_MODAL };
+}
+export function showFirstTimeLoginErrorModal() {
+  return { type: SHOW_FIRST_TIME_LOGIN_ERROR_MODAL };
+}
+export function showPasswordResetErrorModal() {
+  return { type: SHOW_PASSWORD_RESET_ERROR_MODAL };
+}
+export function hideFirstTimeLoginErrorModal() {
+  return { type: HIDE_FIRST_TIME_LOGIN_ERROR_MODAL };
+}
+export function hidePasswordResetErrorModal() {
+  return { type: HIDE_PASSWORD_RESET_ERROR_MODAL };
+}
+export function hidePasswordResetRequestSuccessModal() {
+  return { type: HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL };
+}
+export function hidePasswordResetRequestErrorModal() {
+  return { type: HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL };
 }

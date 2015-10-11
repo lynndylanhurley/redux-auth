@@ -4,6 +4,12 @@ import {
   authenticateComplete,
   authenticateError
 } from "./authenticate";
+import {
+  showFirstTimeLoginSuccessModal,
+  showFirstTimeLoginErrorModal,
+  showPasswordResetSuccessModal,
+  showPasswordResetErrorModal
+} from "./ui";
 
 export function configure(config) {
   return dispatch => {
@@ -13,11 +19,34 @@ export function configure(config) {
     if (window) {
       let jqPromise = Auth.configure(config);
 
-      jqPromise.then((user) => dispatch(authenticateComplete(user)));
+      jqPromise.then(user => dispatch(authenticateComplete(user)));
 
       return Promise
         .resolve(jqPromise)
-        .catch(({reason}) => dispatch(authenticateError([reason])));
+        .then(() => {
+          if (Auth.firstTimeLogin) {
+            console.log("dispatching is first time login");
+            dispatch(showFirstTimeLoginSuccessModal());
+          }
+
+          if (Auth.mustResetPassword) {
+            console.log("dispatching must reset password");
+            dispatch(showPasswordResetSuccessModal());
+          }
+        })
+        .catch(({reason}) => {
+          if (Auth.firstTimeLogin) {
+            console.log("dispatching is first time login error");
+            dispatch(showFirstTimeLoginErrorModal());
+          }
+
+          if (Auth.mustResetPassword) {
+            console.log("dispatching must reset password error");
+            dispatch(showPasswordResetErrorModal());
+          }
+
+          dispatch(authenticateError([reason]));
+        });
 
     } else {
       let reason = "Must configure from browser.";
@@ -26,4 +55,3 @@ export function configure(config) {
     }
   };
 }
-
