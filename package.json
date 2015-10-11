@@ -33,6 +33,7 @@
     "bootstrap": "^3.3.5",
     "bootstrap-sass": "^3.3.5",
     "bootstrap-webpack": "0.0.5",
+    "classnames": "^2.1.5",
     "exports-loader": "^0.6.2",
     "h2o2": "4.0.1",
     "hapi": "9.3.1",

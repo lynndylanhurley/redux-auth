@@ -13,12 +13,12 @@ export function configure(config) {
     if (window) {
       let jqPromise = Auth.configure(config);
 
-      jqPromise.then(
-        (user) => dispatch(authenticateComplete(user)),
-        ({reason}) => dispatch(authenticateError([reason]))
-      );
+      jqPromise.then((user) => dispatch(authenticateComplete(user)));
 
-      return Promise.resolve(jqPromise);
+      return Promise
+        .resolve(jqPromise)
+        .catch(({reason}) => dispatch(authenticateError([reason])));
+
     } else {
       let reason = "Must configure from browser.";
       dispatch(authenticateError([reason]));

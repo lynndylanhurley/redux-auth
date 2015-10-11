@@ -1,6 +1,6 @@
 import React from "react";
 import {Route, IndexRoute} from "react-router";
-import {authStateReducer} from "../auth/index";
+import {authStateReducer, authUiStateReducer} from "../auth/index";
 import {routerStateReducer} from "redux-router";
 import {ReduxRouter} from "redux-router";
 import {combineReducers} from "redux";
@@ -20,6 +20,7 @@ export const routes = (
 );
 
 export const reducer = combineReducers({
-  auth: authStateReducer,
+  auth:   authStateReducer,
+  authUi: authUiStateReducer,
   router: routerStateReducer
 });

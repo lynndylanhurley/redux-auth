@@ -63,7 +63,8 @@ describe("email sign in", () => {
 
         expect(signInState).to.deep.equal({
           loading: false,
-          errors: null
+          errors: null,
+          form: {}
         });
 
         expect(Auth.emailSignIn.called);
@@ -99,7 +100,8 @@ describe("email sign in", () => {
 
         expect(signInState).to.deep.equal({
           loading: false,
-          errors
+          errors,
+          form: {}
         });
 
         expect(Auth.emailSignIn.called);

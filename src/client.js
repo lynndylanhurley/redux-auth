@@ -6,6 +6,7 @@ import {reduxReactRouter, ReduxRouter} from "redux-router";
 import { routes, reducer } from "./views/routes";
 import { Provider } from "react-redux";
 import thunk from "redux-thunk";
+import { configure } from "./auth/index";
 
 var store = compose(
   applyMiddleware(thunk),
@@ -21,6 +22,11 @@ var store = compose(
   })
 )(createStore)(reducer);
 
+
+// configure redux-auth
+store.dispatch(configure({
+  apiUrl: "//devise-token-auth.dev"
+}));
 
 /**
  * Fire-up React Router.
@@ -42,4 +48,3 @@ if (process.env.NODE_ENV !== "production") {
     console.error("Server-side React render was discarded. Make sure that your initial render does not contain any client-side code.");
   }
 }
-

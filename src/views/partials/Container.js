@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import { Grid, Navbar, NavItem, Nav, NavBrand } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { AuthModals } from "../../auth/index";
 
 if (!global.__SERVER__) {
   require("../../styles/main.scss");
@@ -31,6 +32,8 @@ class Container extends React.Component {
         <Grid className="content">
           {this.props.children}
         </Grid>
+
+        <AuthModals />
       </div>
     );
   }

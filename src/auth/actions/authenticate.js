@@ -21,12 +21,12 @@ export function authenticate(opts) {
     if (window) {
       let jqPromise = Auth.validateToken(opts);
 
-      jqPromise.then(
-        (user) => dispatch(authenticateComplete(user)),
-        ({reason}) => dispatch(authenticateError([reason]))
-      );
+      jqPromise.then((user) => dispatch(authenticateComplete(user)));
 
-      return Promise.resolve(jqPromise);
+      return Promise
+        .resolve(jqPromise)
+        .catch(({reason}) => dispatch(authenticateError([reason])));
+
     } else {
       let reason = "Must authenticate from browser.";
       dispatch(authenticateError([reason]));
