@@ -2,6 +2,7 @@ import React, { PropTypes } from "react";
 import EmailSignInSuccessModal from "./modals/EmailSignInSuccessModal";
 import EmailSignInErrorModal from "./modals/EmailSignInErrorModal";
 import OAuthSignInSuccessModal from "./modals/OAuthSignInSuccessModal";
+import OAuthSignInErrorModal from "./modals/OAuthSignInErrorModal";
 import EmailSignUpSuccessModal from "./modals/EmailSignUpSuccessModal";
 import EmailSignUpErrorModal from "./modals/EmailSignUpErrorModal";
 import SignOutSuccessModal from "./modals/SignOutSuccessModal";
@@ -100,11 +101,17 @@ class AuthModals extends React.Component {
       this.props.authUi.get("oAuthSignInSuccessModalVisible")
     );
 
+    let showOAuthSignInError = (
+      this.props.oAuthSignInErrorEnabled &&
+      this.props.authUi.get("oAuthSignInErrorModalVisible")
+    );
+
     return (
       <div id="auth-modals">
         <EmailSignInSuccessModal show={showEmailSignInSuccess} />
         <EmailSignInErrorModal show={showEmailSignInError} />
         <OAuthSignInSuccessModal show={showOAuthSignInSuccess} />
+        <OAuthSignInErrorModal show={showOAuthSignInError} />
         <EmailSignUpSuccessModal show={showEmailSignUpSuccess} />
         <EmailSignUpErrorModal show={showEmailSignUpError} />
         <SignOutSuccessModal show={showSignOutSuccess} />
