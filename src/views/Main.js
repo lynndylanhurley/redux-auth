@@ -1,13 +1,14 @@
 import React from "react";
 import Container from "./partials/Container";
 import IndexWell from "./partials/IndexWell";
-import { Row } from "react-bootstrap";
+import { Row, ButtonGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 import {
   EmailSignInForm,
   EmailSignUpForm,
   SignOutButton,
-  RequestPasswordResetForm
+  RequestPasswordResetForm,
+  OAuthSignInButton
 } from "../auth/index";
 
 @connect(({auth}) => ({auth}))
@@ -19,8 +20,13 @@ class Main extends React.Component {
 
         <Row>
           <IndexWell>
-            <label>Current User</label>
-            <p>{this.props.auth.getIn(["user", "attributes", "email"])}</p>
+            <h2>Current User</h2>
+
+            <label>provider</label>
+            <p>{this.props.auth.getIn(["user", "attributes", "provider"]) || "none"}</p>
+
+            <label>uid</label>
+            <p>{this.props.auth.getIn(["user", "attributes", "uid"]) || "none"}</p>
           </IndexWell>
 
           <IndexWell>
@@ -34,6 +40,15 @@ class Main extends React.Component {
 
           <IndexWell>
             <EmailSignUpForm />
+          </IndexWell>
+
+          <IndexWell>
+            <h2>OAuth Sign In</h2>
+            <ButtonGroup>
+              <OAuthSignInButton provider="github" label="Github" />
+              <OAuthSignInButton provider="facebook" bsStyle="primary" label="Facebook" />
+              <OAuthSignInButton provider="google" bsStyle="warning" label="Google" />
+            </ButtonGroup>
           </IndexWell>
 
           <IndexWell>

@@ -5,10 +5,13 @@ import * as emailSignInActions from "../actions/email-sign-in";
 import * as emailSignUpActions from "../actions/email-sign-up";
 import * as signOutActions from "../actions/sign-out";
 import * as requestPasswordResetActions from "../actions/request-password-reset";
+import * as oAuthSignInActions from "../actions/oauth-sign-in";
 
 const initialState = Immutable.fromJS({
   emailSignInSuccessModalVisible:          false,
   emailSignInErrorModalVisible:            false,
+  oAuthSignInSuccessModalVisible:          false,
+  oAuthSignInErrorModalVisible:            false,
   signOutSuccessModalVisible:              false,
   signOutErrorModalVisible:                false,
   emailSignUpSuccessModalVisible:          false,
@@ -29,6 +32,14 @@ export default createReducer(initialState, {
 
   [emailSignInActions.EMAIL_SIGN_IN_ERROR]: state => state.set(
     "emailSignInErrorModalVisible", true
+  ),
+
+  [oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE]: state => state.set(
+    "oAuthSignInSuccessModalVisible", true
+  ),
+
+  [oAuthSignInActions.OAUTH_SIGN_IN_ERROR]: state => state.set(
+    "oAuthSignInErrorModalVisible", true
   ),
 
   [uiActions.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL]: state => state.set(
@@ -123,5 +134,13 @@ export default createReducer(initialState, {
 
   [uiActions.HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL]: state => state.set(
     "requestPasswordResetErrorModalVisible", false
+  ),
+
+  [uiActions.HIDE_OAUTH_SIGN_IN_SUCCESS_MODAL]: state => state.set(
+    "oAuthSignInSuccessModalVisible", false
+  ),
+
+  [uiActions.HIDE_OAUTH_SIGN_IN_ERROR_MODAL]: state => state.set(
+    "oAuthSignInErrorModalVisible", false
   )
 });

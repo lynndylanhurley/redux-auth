@@ -3,6 +3,7 @@ import { createReducer } from "redux-immutablejs";
 import * as authActions from "../actions/authenticate";
 import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
 import { SIGN_OUT_COMPLETE } from "../actions/sign-out";
+import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
 
 const initialState = Immutable.fromJS({
   attributes: null,
@@ -19,6 +20,11 @@ export default createReducer(initialState, {
 
   [EMAIL_SIGN_IN_COMPLETE]: (state, { user }) => state.merge({
     attributes: user.data,
+    isSignedIn: true
+  }),
+
+  [OAUTH_SIGN_IN_COMPLETE]: (state, { user }) => state.merge({
+    attributes: user,
     isSignedIn: true
   }),
 

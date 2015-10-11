@@ -1,5 +1,7 @@
 export const HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL          = "HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL";
 export const HIDE_EMAIL_SIGN_IN_ERROR_MODAL            = "HIDE_EMAIL_SIGN_IN_ERROR_MODAL";
+export const HIDE_OAUTH_SIGN_IN_SUCCESS_MODAL          = "HIDE_OAUTH_SIGN_IN_SUCCESS_MODAL";
+export const HIDE_OAUTH_SIGN_IN_ERROR_MODAL            = "HIDE_OAUTH_SIGN_IN_ERROR_MODAL";
 export const HIDE_SIGN_OUT_ERROR_MODAL                 = "HIDE_SIGN_OUT_ERROR_MODAL";
 export const HIDE_SIGN_OUT_SUCCESS_MODAL               = "HIDE_SIGN_OUT_SUCCESS_MODAL";
 export const HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL          = "HIDE_EMAIL_SIGN_UP_SUCCESS_MODAL";
@@ -16,11 +18,18 @@ export const HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL = "HIDE_REQUEST_PASSWORD_
 export const HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL   = "HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL";
 
 
+
 export function hideEmailSignInSuccessModal() {
   return { type: HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL };
 }
 export function hideEmailSignInErrorModal() {
   return { type: HIDE_EMAIL_SIGN_IN_ERROR_MODAL };
+}
+export function hideOAuthSignInSuccessModal() {
+  return { type: HIDE_OAUTH_SIGN_IN_SUCCESS_MODAL };
+}
+export function hideOAuthSignInErrorModal() {
+  return { type: HIDE_OAUTH_SIGN_IN_ERROR_MODAL };
 }
 export function hideSignOutSuccessModal() {
   return { type: HIDE_SIGN_OUT_SUCCESS_MODAL };
