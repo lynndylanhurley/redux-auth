@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
-import { Button } from "react-bootstrap";
+import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "../actions/email-sign-up";
 import { connect } from "react-redux";
 
@@ -24,7 +24,11 @@ class EmailSignUpForm extends React.Component {
   }
 
   render () {
-    let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
+    let disabled = (
+      this.props.auth.getIn(["user", "isSignedIn"]) ||
+      this.props.auth.getIn(["emailSignUp", "loading"])
+    );
+
     return (
       <div className='redux-auth email-sign-up-form'>
         <h2>{this.props.title}</h2>
@@ -52,10 +56,13 @@ class EmailSignUpForm extends React.Component {
                errors={this.props.auth.getIn(["emailSignUp", "errors", "password_confirmation"])}
                onChange={this.handleInput.bind(this, "password_confirmation")} />
 
-        <Button onClick={this.handleSubmit.bind(this)}
-                disabled={disabled}>
-          Submit
-        </Button>
+
+        <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", "loading"])}
+                      glyph="send"
+                      disabled={disabled}
+                      onClick={this.handleSubmit.bind(this)}>
+          Sign Up
+        </ButtonLoader>
       </div>
     );
   }

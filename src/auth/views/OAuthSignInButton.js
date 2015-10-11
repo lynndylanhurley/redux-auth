@@ -1,21 +1,20 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
-import { Button } from "react-bootstrap";
+import ButtonLoader from "./ButtonLoader";
 import { oAuthSignIn } from "../actions/oauth-sign-in";
 
-@connect(({auth}) => ({auth}))
+@connect(({auth, authUi}) => ({auth, authUi}))
 class OAuthSignInButton extends React.Component {
   static propTypes = {
     provider: PropTypes.string.isRequired,
     label: PropTypes.string,
-    bsStyle: PropTypes.string,
-    signInParams: PropTypes.object
+    signInParams: PropTypes.object,
+    children: PropTypes.node
   }
 
   static defaultProps = {
-    bsStyle: "default",
-    label: "OAuth Sign In",
-    signInParams: {}
+    signInParams: {},
+    children: <span>OAuth Sign In</span>
   }
 
   handleClick () {
@@ -27,12 +26,17 @@ class OAuthSignInButton extends React.Component {
 
   render () {
     let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
+    let loading = (
+      (this.props.authUi.get("oAuthSignInLoadingProvider") === this.props.provider) &&
+      this.props.auth.getIn(["oAuthSignIn", "loading"])
+    );
+
     return (
-      <Button onClick={this.handleClick.bind(this)}
-              disabled={disabled}
-              bsStyle={this.props.bsStyle}>
-        {this.props.label}
-      </Button>
+      <ButtonLoader {...this.props}
+                    loading={loading}
+                    glyph="log-in"
+                    disabled={disabled}
+                    onClick={this.handleClick.bind(this)} />
     );
   }
 }

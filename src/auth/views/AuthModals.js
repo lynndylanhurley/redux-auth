@@ -11,6 +11,10 @@ import FirstTimeLoginSuccessModal from "./modals/FirstTimeLoginSuccessModal";
 import FirstTimeLoginErrorModal from "./modals/FirstTimeLoginErrorModal";
 import RequestPasswordResetErrorModal from "./modals/RequestPasswordResetErrorModal";
 import RequestPasswordResetSuccessModal from "./modals/RequestPasswordResetSuccessModal";
+import UpdatePasswordErrorModal from "./modals/UpdatePasswordErrorModal";
+import UpdatePasswordSuccessModal from "./modals/UpdatePasswordSuccessModal";
+import DestroyAccountErrorModal from "./modals/DestroyAccountErrorModal";
+import DestroyAccountSuccessModal from "./modals/DestroyAccountSuccessModal";
 import { connect } from "react-redux";
 
 @connect(({authUi}) => ({authUi}))
@@ -27,7 +31,11 @@ class AuthModals extends React.Component {
     firstTimeLoginSuccessEnabled: PropTypes.bool,
     firstTimeLoginErrorEnabled: PropTypes.bool,
     requestPasswordResetErrorEnabled: PropTypes.bool,
-    requestPasswordResetSuccessEnabled: PropTypes.bool
+    requestPasswordResetSuccessEnabled: PropTypes.bool,
+    updatePasswordErrorEnabled: PropTypes.bool,
+    updatePasswordSuccessEnabled: PropTypes.bool,
+    destroyAccountErrorEnabled: PropTypes.bool,
+    destroyAccountSuccessEnabled: PropTypes.bool
   }
 
   static defaultProps = {
@@ -42,7 +50,11 @@ class AuthModals extends React.Component {
     firstTimeLoginSuccessEnabled: true,
     firstTimeLoginErrorEnabled: true,
     requestPasswordResetErrorEnabled: true,
-    requestPasswordResetSuccessEnabled: true
+    requestPasswordResetSuccessEnabled: true,
+    updatePasswordErrorEnabled: true,
+    updatePasswordSuccessEnabled: true,
+    destroyAccountErrorEnabled: true,
+    destroyAccountSuccessEnabled: true
   }
 
   render () {
@@ -106,6 +118,26 @@ class AuthModals extends React.Component {
       this.props.authUi.get("oAuthSignInErrorModalVisible")
     );
 
+    let updatePasswordSuccess = (
+      this.props.updatePasswordSuccessEnabled &&
+      this.props.authUi.get("updatePasswordSuccessModalVisible")
+    );
+
+    let updatePasswordError = (
+      this.props.updatePasswordErrorEnabled &&
+      this.props.authUi.get("updatePasswordErrorModalVisible")
+    );
+
+    let destroyAccountSuccess = (
+      this.props.destroyAccountSuccessEnabled &&
+      this.props.authUi.get("destroyAccountSuccessModalVisible")
+    );
+
+    let destroyAccountError = (
+      this.props.destroyAccountErrorEnabled &&
+      this.props.authUi.get("destroyAccountErrorModalVisible")
+    );
+
     return (
       <div id="auth-modals">
         <EmailSignInSuccessModal show={showEmailSignInSuccess} />
@@ -120,6 +152,10 @@ class AuthModals extends React.Component {
         <FirstTimeLoginErrorModal show={showFirstTimeLoginError} />
         <RequestPasswordResetErrorModal show={showRequestPasswordResetError} />
         <RequestPasswordResetSuccessModal show={showRequestPasswordResetSuccess} />
+        <UpdatePasswordErrorModal show={updatePasswordError} />
+        <UpdatePasswordSuccessModal show={updatePasswordSuccess} />
+        <DestroyAccountErrorModal show={destroyAccountError} />
+        <DestroyAccountSuccessModal show={destroyAccountSuccess} />
       </div>
     );
   }

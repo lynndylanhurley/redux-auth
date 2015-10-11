@@ -8,7 +8,9 @@ import {
   EmailSignUpForm,
   SignOutButton,
   RequestPasswordResetForm,
-  OAuthSignInButton
+  OAuthSignInButton,
+  UpdatePasswordForm,
+  DestroyAccountButton
 } from "../auth/index";
 
 @connect(({auth}) => ({auth}))
@@ -45,14 +47,23 @@ class Main extends React.Component {
           <IndexWell>
             <h2>OAuth Sign In</h2>
             <ButtonGroup>
-              <OAuthSignInButton provider="github" label="Github" />
-              <OAuthSignInButton provider="facebook" bsStyle="primary" label="Facebook" />
-              <OAuthSignInButton provider="google" bsStyle="warning" label="Google" />
+              <OAuthSignInButton provider="github">Github</OAuthSignInButton>
+              <OAuthSignInButton provider="facebook" bsStyle="primary">Facebook</OAuthSignInButton>
+              <OAuthSignInButton provider="google" bsStyle="warning">Google</OAuthSignInButton>
             </ButtonGroup>
           </IndexWell>
 
           <IndexWell>
+            <h2>Destroy Account</h2>
+            <DestroyAccountButton />
+          </IndexWell>
+
+          <IndexWell>
             <RequestPasswordResetForm />
+          </IndexWell>
+
+          <IndexWell>
+            <UpdatePasswordForm />
           </IndexWell>
         </Row>
       </Container>

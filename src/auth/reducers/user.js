@@ -4,6 +4,7 @@ import * as authActions from "../actions/authenticate";
 import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
 import { SIGN_OUT_COMPLETE } from "../actions/sign-out";
 import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
+import { DESTROY_ACCOUNT_COMPLETE } from "../actions/destroy-account";
 
 const initialState = Immutable.fromJS({
   attributes: null,
@@ -28,6 +29,7 @@ export default createReducer(initialState, {
     isSignedIn: true
   }),
 
-  [authActions.AUTHENTICATE_FAILURE]: (state) => state.merge(initialState),
-  [SIGN_OUT_COMPLETE]: state => state.merge(initialState)
+  [authActions.AUTHENTICATE_FAILURE]: state => state.merge(initialState),
+  [SIGN_OUT_COMPLETE]:                state => state.merge(initialState),
+  [DESTROY_ACCOUNT_COMPLETE]:         state => state.merge(initialState)
 });

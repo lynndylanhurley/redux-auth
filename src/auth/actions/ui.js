@@ -16,7 +16,10 @@ export const HIDE_PASSWORD_RESET_ERROR_MODAL           = "HIDE_PASSWORD_RESET_ER
 export const SHOW_PASSWORD_RESET_ERROR_MODAL           = "SHOW_PASSWORD_RESET_ERROR_MODAL";
 export const HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL = "HIDE_REQUEST_PASSWORD_RESET_SUCCESS_MODAL";
 export const HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL   = "HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL";
-
+export const HIDE_UPDATE_PASSWORD_SUCCESS_MODAL        = "HIDE_UPDATE_PASSWORD_SUCCESS_MODAL";
+export const HIDE_UPDATE_PASSWORD_ERROR_MODAL          = "HIDE_UPDATE_PASSWORD_ERROR_MODAL";
+export const HIDE_DESTROY_ACCOUNT_SUCCESS_MODAL        = "HIDE_DESTROY_ACCOUNT_SUCCESS_MODAL";
+export const HIDE_DESTROY_ACCOUNT_ERROR_MODAL          = "HIDE_DESTROY_ACCOUNT_ERROR_MODAL";
 
 
 export function hideEmailSignInSuccessModal() {
@@ -72,4 +75,16 @@ export function hidePasswordResetRequestSuccessModal() {
 }
 export function hidePasswordResetRequestErrorModal() {
   return { type: HIDE_REQUEST_PASSWORD_RESET_ERROR_MODAL };
+}
+export function hideUpdatePasswordSuccessModal() {
+  return { type: HIDE_UPDATE_PASSWORD_SUCCESS_MODAL };
+}
+export function hideUpdatePasswordErrorModal() {
+  return { type: HIDE_UPDATE_PASSWORD_ERROR_MODAL };
+}
+export function hideDestroyAccountSuccessModal() {
+  return { type: HIDE_DESTROY_ACCOUNT_SUCCESS_MODAL };
+}
+export function hideDestroyAccountErrorModal() {
+  return { type: HIDE_DESTROY_ACCOUNT_ERROR_MODAL };
 }

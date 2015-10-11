@@ -1,10 +1,10 @@
 import React, { PropTypes } from "react";
+import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
-import { Modal, Button, Glyphicon } from "react-bootstrap";
-import { hideOAuthSignInErrorModal } from "../../actions/ui";
+import { hideDestroyAccountSuccessModal } from "../../actions/ui";
 
-@connect(({auth}) => ({auth}))
-class OAuthSignInErrorModal extends React.Component {
+@connect(({auth, authUi}) => ({auth, authUi}))
+class DestroyAccountSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
   }
@@ -14,7 +14,7 @@ class OAuthSignInErrorModal extends React.Component {
   }
 
   close () {
-    this.props.dispatch(hideOAuthSignInErrorModal());
+    this.props.dispatch(hideDestroyAccountSuccessModal());
   }
 
   render () {
@@ -22,14 +22,11 @@ class OAuthSignInErrorModal extends React.Component {
       <Modal show={this.props.show}
              onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
-          <Modal.Title>OAuth Sign In Error</Modal.Title>
+          <Modal.Title>Destroy Account Success</Modal.Title>
         </Modal.Header>
 
         <Modal.Body>
-          <p>
-            <Glyphicon glyph="exclamation-sign" /> There was an error
-            authenticating your account. Please try again.
-          </p>
+          <p>{this.props.authUi.get("destroyAccountMessage")}</p>
         </Modal.Body>
 
         <Modal.Footer>
@@ -42,4 +39,4 @@ class OAuthSignInErrorModal extends React.Component {
   }
 }
 
-export default OAuthSignInErrorModal;
+export default DestroyAccountSuccessModal;

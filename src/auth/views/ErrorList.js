@@ -23,15 +23,20 @@ class ErrorList extends React.Component {
         <div className="has-error">
           <p>Please correct the following {errorWord}:</p>
           {this.props.errors.map((err, i) => {
-            return <p key={i}><Glyphicon glyph="exclamation-sign" /> {err}</p>;
+            return (
+              <p key={i} className="control-label" style={{paddingLeft: "20px", position: "relative"}}>
+                <Glyphicon glyph="exclamation-sign"
+                           style={{position: "absolute", left: 0, top: 2}} /> {err}
+              </p>
+            );
           })}
         </div>
       );
     } else {
       return (
         <p>
-          There was an error processing this form. Please check each field and
-          try again.
+          <Glyphicon glyph="exclamation-sign" /> There was an error processing
+          this form. Please check each field and try again.
         </p>
       );
     }

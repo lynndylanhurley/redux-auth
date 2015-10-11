@@ -6,12 +6,15 @@ import * as emailSignUpActions from "../actions/email-sign-up";
 import * as signOutActions from "../actions/sign-out";
 import * as requestPasswordResetActions from "../actions/request-password-reset";
 import * as oAuthSignInActions from "../actions/oauth-sign-in";
+import * as updatePasswordActions from "../actions/update-password";
+import * as destroyAccountActions from "../actions/destroy-account";
 
 const initialState = Immutable.fromJS({
   emailSignInSuccessModalVisible:          false,
   emailSignInErrorModalVisible:            false,
   oAuthSignInSuccessModalVisible:          false,
   oAuthSignInErrorModalVisible:            false,
+  oAuthSignInLoadingProvider:              null,
   signOutSuccessModalVisible:              false,
   signOutErrorModalVisible:                false,
   emailSignUpSuccessModalVisible:          false,
@@ -22,7 +25,12 @@ const initialState = Immutable.fromJS({
   passwordResetModalErrorVisible:          false,
   requestPasswordResetSuccessModalVisible: false,
   requestPasswordResetErrorModalVisible:   false,
-  requestPasswordResetSuccessMessage:      null
+  requestPasswordResetSuccessMessage:      null,
+  updatePasswordSuccessModalVisible:       false,
+  updatePasswordErrorModalVisible:         false,
+  destroyAccountSuccessModalVisible:       false,
+  destroyAccountErrorModalVisible:         false,
+  destroyAccountMessage:                   null
 });
 
 export default createReducer(initialState, {
@@ -34,13 +42,19 @@ export default createReducer(initialState, {
     "emailSignInErrorModalVisible", true
   ),
 
-  [oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE]: state => state.set(
-    "oAuthSignInSuccessModalVisible", true
-  ),
+  [oAuthSignInActions.OAUTH_SIGN_IN_COMPLETE]: state => state.merge({
+    oAuthSignInSuccessModalVisible: true,
+    oAuthSignInLoadingProvider: null
+  }),
 
-  [oAuthSignInActions.OAUTH_SIGN_IN_ERROR]: state => state.set(
-    "oAuthSignInErrorModalVisible", true
-  ),
+  [oAuthSignInActions.OAUTH_SIGN_IN_ERROR]: state => state.merge({
+    oAuthSignInErrorModalVisible: true,
+    oAuthSignInLoadingProvider: null
+  }),
+
+  [oAuthSignInActions.OAUTH_SIGN_IN_START]: (state, { provider }) => state.merge({
+    oAuthSignInLoadingProvider: provider
+  }),
 
   [uiActions.HIDE_EMAIL_SIGN_IN_SUCCESS_MODAL]: state => state.set(
     "emailSignInSuccessModalVisible", false
@@ -142,5 +156,39 @@ export default createReducer(initialState, {
 
   [uiActions.HIDE_OAUTH_SIGN_IN_ERROR_MODAL]: state => state.set(
     "oAuthSignInErrorModalVisible", false
+  ),
+
+  [updatePasswordActions.UPDATE_PASSWORD_COMPLETE]: state => state.set(
+    "updatePasswordSuccessModalVisible", true
+  ),
+
+  [updatePasswordActions.UPDATE_PASSWORD_ERROR]: state => state.set(
+    "updatePasswordErrorModalVisible", true
+  ),
+
+  [uiActions.HIDE_UPDATE_PASSWORD_SUCCESS_MODAL]: state => state.set(
+    "updatePasswordSuccessModalVisible", false
+  ),
+
+  [uiActions.HIDE_UPDATE_PASSWORD_ERROR_MODAL]: state => state.set(
+    "updatePasswordErrorModalVisible", false
+  ),
+
+  [destroyAccountActions.DESTROY_ACCOUNT_COMPLETE]: (state, { message }) => state.merge({
+    destroyAccountSuccessModalVisible: true,
+    destroyAccountMessage: message
+  }),
+
+  [destroyAccountActions.DESTROY_ACCOUNT_ERROR]: state => state.set(
+    "destroyAccountErrorModalVisible", true
+  ),
+
+  [uiActions.HIDE_DESTROY_ACCOUNT_SUCCESS_MODAL]: state => state.merge({
+    destroyAccountSuccessModalVisible: false,
+    destroyAccountMessage: null
+  }),
+
+  [uiActions.HIDE_DESTROY_ACCOUNT_ERROR_MODAL]: state => state.set(
+    "destroyAccountErrorModalVisible", false
   )
 });

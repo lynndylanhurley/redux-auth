@@ -24,11 +24,21 @@ class AuthInput extends React.Component {
       return (
         <div className='auth-error-message has-error'>
           {this.props.errors.map((err, i) => {
-            return <p className="control-label" key={i}>
-              <Glyphicon glyph="exclamation-sign" /> {this.props.label} {err}
-            </p>;
+            return (
+              <p className="control-label"
+                 style={{paddingLeft: "20px", position: "relative", marginBottom: "28px"}}
+                 key={i}>
+
+                <Glyphicon glyph="exclamation-sign"
+                           style={{
+                             position: "absolute",
+                             left: 0,
+                             top: 2
+                           }}
+                /> {this.props.label} {err}
+              </p>
+            );
           })}
-          <br />
         </div>
       );
     } else {
