@@ -25,7 +25,7 @@ class EmailSignInSuccessModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <p>You are now signed in as {this.props.auth.getIn(["user", "attributes", "email"])}</p>
+          <p>You are now signed in as {this.props.auth.getIn(["user", "attributes", "email"])}.</p>
         </Modal.Body>
 
         <Modal.Footer>

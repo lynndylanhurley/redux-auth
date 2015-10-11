@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 import EmailSignInSuccessModal from "./modals/EmailSignInSuccessModal";
+import EmailSignInErrorModal from "./modals/EmailSignInErrorModal";
 import EmailSignUpSuccessModal from "./modals/EmailSignUpSuccessModal";
 import EmailSignUpErrorModal from "./modals/EmailSignUpErrorModal";
 import SignOutSuccessModal from "./modals/SignOutSuccessModal";
@@ -16,6 +17,7 @@ class AuthModals extends React.Component {
     signOutSuccessEnabled: PropTypes.bool,
     signOutErrorEnabled: PropTypes.bool,
     emailSignInSuccessEnabled: PropTypes.bool,
+    emailSignInErrorEnabled: PropTypes.bool,
     emailSignUpSuccessEnabled: PropTypes.bool,
     emailSignUpErrorEnabled: PropTypes.bool,
     firstTimeLoginSuccessEnabled: PropTypes.bool,
@@ -28,6 +30,7 @@ class AuthModals extends React.Component {
     signOutSuccessEnabled: true,
     signOutErrorEnabled: true,
     emailSignInSuccessEnabled: true,
+    emailSignInErrorEnabled: true,
     emailSignUpSuccessEnabled: true,
     emailSignUpErrorEnabled: true,
     firstTimeLoginSuccessEnabled: true,
@@ -40,6 +43,11 @@ class AuthModals extends React.Component {
     let showEmailSignInSuccess = (
       this.props.emailSignInSuccessEnabled &&
       this.props.authUi.get("emailSignInSuccessModalVisible")
+    );
+
+    let showEmailSignInError = (
+      this.props.emailSignInErrorEnabled &&
+      this.props.authUi.get("emailSignInErrorModalVisible")
     );
 
     let showEmailSignUpSuccess = (
@@ -85,6 +93,7 @@ class AuthModals extends React.Component {
     return (
       <div id="auth-modals">
         <EmailSignInSuccessModal show={showEmailSignInSuccess} />
+        <EmailSignInErrorModal show={showEmailSignInError} />
         <EmailSignUpSuccessModal show={showEmailSignUpSuccess} />
         <EmailSignUpErrorModal show={showEmailSignUpError} />
         <SignOutSuccessModal show={showSignOutSuccess} />
