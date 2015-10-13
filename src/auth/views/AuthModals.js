@@ -15,6 +15,7 @@ import UpdatePasswordErrorModal from "./modals/UpdatePasswordErrorModal";
 import UpdatePasswordSuccessModal from "./modals/UpdatePasswordSuccessModal";
 import DestroyAccountErrorModal from "./modals/DestroyAccountErrorModal";
 import DestroyAccountSuccessModal from "./modals/DestroyAccountSuccessModal";
+import PasswordResetSuccessModal from "./modals/PasswordResetSuccessModal";
 import { connect } from "react-redux";
 
 @connect(({authUi}) => ({authUi}))
@@ -35,7 +36,9 @@ class AuthModals extends React.Component {
     updatePasswordErrorEnabled: PropTypes.bool,
     updatePasswordSuccessEnabled: PropTypes.bool,
     destroyAccountErrorEnabled: PropTypes.bool,
-    destroyAccountSuccessEnabled: PropTypes.bool
+    destroyAccountSuccessEnabled: PropTypes.bool,
+    passwordResetSuccessEnabled: PropTypes.bool,
+    passwordResetErrorEnabled: PropTypes.bool
   }
 
   static defaultProps = {
@@ -54,7 +57,9 @@ class AuthModals extends React.Component {
     updatePasswordErrorEnabled: true,
     updatePasswordSuccessEnabled: true,
     destroyAccountErrorEnabled: true,
-    destroyAccountSuccessEnabled: true
+    destroyAccountSuccessEnabled: true,
+    passwordResetSuccessEnabled: true,
+    passwordResetErrorEnabled: true
   }
 
   render () {
@@ -138,6 +143,16 @@ class AuthModals extends React.Component {
       this.props.authUi.get("destroyAccountErrorModalVisible")
     );
 
+    let passwordResetSuccess = (
+      this.props.passwordResetSuccessEnabled &&
+      this.props.authUi.get("passwordResetSuccessModalVisible")
+    );
+
+    let passwordResetError = (
+      this.props.passwordResetErrorEnabled &&
+      this.props.authUi.get("passwordResetErrorModalVisible")
+    );
+
     return (
       <div id="auth-modals">
         <EmailSignInSuccessModal show={showEmailSignInSuccess} />
@@ -156,6 +171,7 @@ class AuthModals extends React.Component {
         <UpdatePasswordSuccessModal show={updatePasswordSuccess} />
         <DestroyAccountErrorModal show={destroyAccountError} />
         <DestroyAccountSuccessModal show={destroyAccountSuccess} />
+        <PasswordResetSuccessModal show={passwordResetSuccess} />
       </div>
     );
   }

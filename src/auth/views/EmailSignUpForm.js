@@ -6,14 +6,6 @@ import { connect } from "react-redux";
 
 @connect(({auth}) => ({auth}))
 class EmailSignUpForm extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  }
-
-  static defaultProps = {
-    title: "Sign Up"
-  }
-
   handleInput (key, val) {
     this.props.dispatch(emailSignUpFormUpdate(key, val));
   }
@@ -30,8 +22,8 @@ class EmailSignUpForm extends React.Component {
     );
 
     return (
-      <div className='redux-auth email-sign-up-form'>
-        <h2>{this.props.title}</h2>
+      <form className='redux-auth email-sign-up-form clearfix'
+            onSubmit={this.handleSubmit.bind(this)}>
         <Input type="text"
                label="Email"
                placeholder="Email"
@@ -58,12 +50,14 @@ class EmailSignUpForm extends React.Component {
 
 
         <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", "loading"])}
+                      type="submit"
+                      className="pull-right"
                       glyph="send"
                       disabled={disabled}
                       onClick={this.handleSubmit.bind(this)}>
           Sign Up
         </ButtonLoader>
-      </div>
+      </form>
     );
   }
 }

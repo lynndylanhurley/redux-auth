@@ -1,7 +1,12 @@
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~highlight.js/styles/zenburn.css";
 
 body {
-  background-color: purple;
-  color: orange;
+  /*background-color: purple;*/
+  /*color: orange;*/
+
+  .code-snippet {
+    margin-top: 10px;
+  }
 }

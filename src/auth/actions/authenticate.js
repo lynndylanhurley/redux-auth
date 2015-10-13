@@ -1,4 +1,5 @@
 import Auth from "j-toker";
+import ssTokenValidation from "./server";
 
 export const AUTHENTICATE_START    = "AUTHENTICATE_START";
 export const AUTHENTICATE_COMPLETE = "AUTHENTICATE_COMPLETE";
@@ -15,10 +16,10 @@ export function authenticateError(errors) {
 }
 export function authenticate(opts) {
   return dispatch => {
-    dispatch(authenticateStart());
-
     // only allow authenticaton from client-evaluated code.
-    if (window) {
+    if (typeof window !== "undefined") {
+      dispatch(authenticateStart());
+
       let jqPromise = Auth.validateToken(opts);
 
       jqPromise.then((user) => dispatch(authenticateComplete(user)));
@@ -26,11 +27,6 @@ export function authenticate(opts) {
       return Promise
         .resolve(jqPromise)
         .catch(({reason}) => dispatch(authenticateError([reason])));
-
-    } else {
-      let reason = "Must authenticate from browser.";
-      dispatch(authenticateError([reason]));
-      return Promise.reject(reason);
     }
   };
 }

@@ -1,42 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {createHistory} from "history";
-import {createStore, compose, applyMiddleware} from "redux";
-import {reduxReactRouter, ReduxRouter} from "redux-router";
-import { routes, reducer } from "./views/routes";
-import { Provider } from "react-redux";
-import thunk from "redux-thunk";
-import { configure } from "./auth/index";
+import { initialize } from "./app";
 
-var store = compose(
-  applyMiddleware(thunk),
-  reduxReactRouter({
-    createHistory,
-    getRoutes: (args) => {
-      // dispatch + getState are needed for the route resolvers / redirects. this
-      // is the only place to get a reference to them before the app is initialized.
-      //dispatch = args.dispatch;
-      //getState = args.getState;
-      return routes;
-    }
-  })
-)(createStore)(reducer);
-
-
-// configure redux-auth
-store.dispatch(configure({
-  apiUrl: "//devise-token-auth.dev"
-}));
 
 /**
  * Fire-up React Router.
  */
 const reactRoot = window.document.getElementById("react-root");
-ReactDOM.render(
-  <Provider store={store} key="provider">
-    <ReduxRouter children={routes} />
-  </Provider>
-, reactRoot);
+initialize().then(({provider}) => {
+  ReactDOM.render(provider, reactRoot);
+});
 
 
 /**

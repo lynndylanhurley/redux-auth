@@ -9,14 +9,6 @@ import {
 
 @connect(({auth}) => ({auth}))
 class RequestPasswordResetForm extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  }
-
-  static defaultProps = {
-    title: "Request Password Reset"
-  }
-
   handleInput (key, val) {
     this.props.dispatch(requestPasswordResetFormUpdate(key, val));
   }
@@ -33,8 +25,8 @@ class RequestPasswordResetForm extends React.Component {
     let submitDisabled = !this.props.auth.getIn(["requestPasswordReset", "form", "email"]);
 
     return (
-      <div className='redux-auth request-password-reset-form'>
-        <h2>{this.props.title}</h2>
+      <form className='redux-auth request-password-reset-form clearfix'
+            onSubmit={this.handleSubmit.bind(this)}>
         <Input type="text"
                label="Email Address"
                placeholder="Email Address"
@@ -44,12 +36,14 @@ class RequestPasswordResetForm extends React.Component {
                onChange={this.handleInput.bind(this, "email")} />
 
         <ButtonLoader loading={loading}
+                      type="submit"
                       glyph="lock"
+                      className="pull-right"
                       disabled={inputDisabled || submitDisabled}
                       onClick={this.handleSubmit.bind(this)}>
           Request Password Reset
         </ButtonLoader>
-      </div>
+      </form>
     );
   }
 }

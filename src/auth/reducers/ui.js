@@ -8,6 +8,7 @@ import * as requestPasswordResetActions from "../actions/request-password-reset"
 import * as oAuthSignInActions from "../actions/oauth-sign-in";
 import * as updatePasswordActions from "../actions/update-password";
 import * as destroyAccountActions from "../actions/destroy-account";
+import * as updatePasswordModalActions from "../actions/update-password-modal";
 
 const initialState = Immutable.fromJS({
   emailSignInSuccessModalVisible:          false,
@@ -20,9 +21,7 @@ const initialState = Immutable.fromJS({
   emailSignUpSuccessModalVisible:          false,
   emailSignUpAddress:                      null,
   firstTimeLoginModalSuccessVisible:       false,
-  passwordResetModalSuccessVisible:        false,
   firstTimeLoginModalErrorVisible:         false,
-  passwordResetModalErrorVisible:          false,
   requestPasswordResetSuccessModalVisible: false,
   requestPasswordResetErrorModalVisible:   false,
   requestPasswordResetSuccessMessage:      null,
@@ -30,7 +29,9 @@ const initialState = Immutable.fromJS({
   updatePasswordErrorModalVisible:         false,
   destroyAccountSuccessModalVisible:       false,
   destroyAccountErrorModalVisible:         false,
-  destroyAccountMessage:                   null
+  destroyAccountMessage:                   null,
+  passwordResetSuccessModalVisible:        false,
+  passwordResetErrorModalVisible:          false
 });
 
 export default createReducer(initialState, {
@@ -190,5 +191,18 @@ export default createReducer(initialState, {
 
   [uiActions.HIDE_DESTROY_ACCOUNT_ERROR_MODAL]: state => state.set(
     "destroyAccountErrorModalVisible", false
-  )
+  ),
+
+  [uiActions.HIDE_PASSWORD_RESET_SUCCESS_MODAL]: state => state.set(
+    "passwordResetSuccessModalVisible", false
+  ),
+
+  [uiActions.HIDE_PASSWORD_RESET_ERROR_MODAL]: state => state.set(
+    "passwordResetSuccessModalVisible", false
+  ),
+
+  [updatePasswordModalActions.UPDATE_PASSWORD_MODAL_COMPLETE]: state => state.merge({
+    passwordResetSuccessModalVisible: false,
+    updatePasswordSuccessModalVisible: true
+  })
 });

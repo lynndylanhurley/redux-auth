@@ -3,13 +3,10 @@ import {Server} from "hapi";
 import h2o2 from "h2o2";
 import inert from "inert";
 import {renderToString} from "react-dom/server";
-import { Provider } from "react-redux";
-import {match, reduxReactRouter} from "redux-router/server";
-import {ReduxRouter} from "redux-router";
-import {createStore} from "redux";
-import {routes, reducer} from "views/routes";
+import {match} from "redux-router/server";
 import url from "url";
 import qs from "query-string";
+import {initialize} from "./app";
 
 var hostname = process.env.HOSTNAME || "localhost";
 
@@ -17,24 +14,20 @@ var hostname = process.env.HOSTNAME || "localhost";
  * template
  */
 
-const getMarkup = (webserver, store) => {
-  const markup = renderToString(
-    <Provider store={store} key="provider">
-      <ReduxRouter children={routes} />
-    </Provider>
-  );
+function getMarkup(webserver, provider) {
+  var markup = renderToString(provider);
 
   return `<!doctype html>
           <html>
             <head>
-              <title>Redux React Router – Server rendering Example</title>
+              <title>Redux Auth – Isomorphic Example</title>
             </head>
             <body>
               <div id="react-root">${markup}</div>
               <script src="${webserver}/dist/client.js"></script>
             </body>
           </html>`;
-};
+}
 
 /**
  * Start Hapi server on port 8000.
@@ -45,7 +38,7 @@ server.connection({host: hostname, port: process.env.PORT || 8000});
 
 server.register([
   h2o2,
-    inert
+  inert
 ], function (err) {
   if (err) {
     throw err;
@@ -100,21 +93,25 @@ server.ext("onPreResponse", (request, reply) => {
     return reply.continue();
   }
 
-  var store  = reduxReactRouter({ routes  })(createStore)(reducer);
   var query    = qs.stringify(request.query);
   var location = request.path + (query.length ? "?" + query : "");
 
-  store.dispatch(match(location, (error, redirectLocation, renderProps) => {
-    if (redirectLocation) {
-      reply.redirect(redirectLocation.pathname + redirectLocation.search);
-    }
-    else if (error || !renderProps) {
-      reply.continue();
-    }
-    else {
-      var webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";
-      var output = getMarkup(webserver, store);
-      reply(output);
-    }
-  }));
+  initialize({
+    isServer: true,
+    cookies: request.headers.cookie
+  })
+    .then(({store, provider}) => {
+      store.dispatch(match(location, (error, redirectLocation, renderProps) => {
+        if (redirectLocation) {
+          reply.redirect(redirectLocation.pathname + redirectLocation.search);
+        }
+        else if (error || !renderProps) {
+          reply.continue();
+        } else {
+          var webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";
+          var output = getMarkup(webserver, provider);
+          reply(output);
+        }
+      }));
+    });
 });

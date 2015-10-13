@@ -1,24 +1,25 @@
 import React, { PropTypes } from "react";
-import { Well, Col } from "react-bootstrap";
+import { Panel, Col } from "react-bootstrap";
 
-class IndexWell extends React.Component {
+class IndexPanel extends React.Component {
   static propTypes = {
+    bsStyle: PropTypes.string,
+    header: PropTypes.string,
     children: PropTypes.node
   }
 
   static defaultProps = {
+    bsStyle: "info",
     children: <span />
   }
 
   render () {
     return (
       <Col sm={6}>
-        <Well>
-          {this.props.children}
-        </Well>
+        <Panel {...this.props} />
       </Col>
     );
   }
 }
 
-export default IndexWell;
+export default IndexPanel;

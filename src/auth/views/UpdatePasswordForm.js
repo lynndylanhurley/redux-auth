@@ -1,38 +1,30 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
-import { Button } from "react-bootstrap";
+import ButtonLoader from "./ButtonLoader";
 import { updatePassword, updatePasswordFormUpdate } from "../actions/update-password";
 import { connect } from "react-redux";
 
 @connect(({auth}) => ({auth}))
 class UpdatePasswordForm extends React.Component {
-  static propTypes = {
-    title: PropTypes.string
-  }
-
-  static defaultProps = {
-    title: "Update Password"
-  }
-
   handleInput (key, val) {
     this.props.dispatch(updatePasswordFormUpdate(key, val));
   }
 
   handleSubmit () {
     let formData = this.props.auth.getIn(["updatePassword", "form"]).toJS();
-    console.log("form data", formData);
     this.props.dispatch(updatePassword(formData));
   }
 
   render () {
+    let loading = this.props.auth.getIn(["updatePassword", "loading"]);
     let disabled = (
-      !this.props.auth.getIn(["user", "isSignedIn"]) ||
+      !this.props.auth.getIn(["user", "isSignedIn"]) || loading ||
       (this.props.auth.getIn(["user", "attributes", "provider"]) !== "email")
     );
 
     return (
-      <div className="redux-auth update-password-form">
-        <h2>{this.props.title}</h2>
+      <form className="redux-auth update-password-form clearfix"
+            onSubmit={this.handleSubmit.bind(this)}>
         <Input type="password"
                label="Password"
                placeholder="Password"
@@ -49,12 +41,15 @@ class UpdatePasswordForm extends React.Component {
                errors={this.props.auth.getIn(["updatePassword", "errors", "password_confirmation"])}
                onChange={this.handleInput.bind(this, "password_confirmation")} />
 
-        <Button onClick={this.handleSubmit.bind(this)}
-                disabled={disabled}>
-          Submit
-        </Button>
-
-      </div>
+        <ButtonLoader loading={loading}
+                      type="submit"
+                      className="pull-right"
+                      glyph="lock"
+                      disabled={disabled}
+                      onClick={this.handleSubmit.bind(this)}>
+          Update Password
+        </ButtonLoader>
+      </form>
     );
   }
 }

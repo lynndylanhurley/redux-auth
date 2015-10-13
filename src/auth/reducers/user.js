@@ -5,6 +5,7 @@ import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
 import { SIGN_OUT_COMPLETE } from "../actions/sign-out";
 import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
 import { DESTROY_ACCOUNT_COMPLETE } from "../actions/destroy-account";
+import * as ssActions from "../actions/server";
 
 const initialState = Immutable.fromJS({
   attributes: null,
@@ -19,6 +20,14 @@ export default createReducer(initialState, {
     isSignedIn: true
   }),
 
+  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user }) => {
+    console.log("user set to", user);
+    return state.merge({
+      attributes: user,
+      isSignedIn: true
+    });
+  },
+
   [EMAIL_SIGN_IN_COMPLETE]: (state, { user }) => state.merge({
     attributes: user.data,
     isSignedIn: true
@@ -29,7 +38,8 @@ export default createReducer(initialState, {
     isSignedIn: true
   }),
 
-  [authActions.AUTHENTICATE_FAILURE]: state => state.merge(initialState),
-  [SIGN_OUT_COMPLETE]:                state => state.merge(initialState),
-  [DESTROY_ACCOUNT_COMPLETE]:         state => state.merge(initialState)
+  [authActions.AUTHENTICATE_FAILURE]:    state => state.merge(initialState),
+  [ssActions.SS_TOKEN_VALIDATION_ERROR]: state => state.merge(initialState),
+  [SIGN_OUT_COMPLETE]:                   state => state.merge(initialState),
+  [DESTROY_ACCOUNT_COMPLETE]:            state => state.merge(initialState)
 });
