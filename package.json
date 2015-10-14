@@ -1,13 +1,13 @@
 {
-  "name": "react-isomorphic-starterkit",
-  "description": "Isomorphic starterkit with server-side React rendering.",
-  "version": "3.0.3",
+  "name": "redux-auth",
+  "description": "Token authentication for redux with isomorphic support.",
+  "version": "0.0.1-alpha1",
   "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
-    "url": "https://github.com/RickWong/react-isomorphic-starterkit.git"
+    "url": "https://github.com/lynndylanhurley/redux-auth.git"
   },
-  "homepage": "https://github.com/RickWong/react-isomorphic-starterkit",
+  "homepage": "https://github.com/lynndylanhurley/redux-auth",
   "keywords": [
     "react",
     "isomorphic",
@@ -25,7 +25,8 @@
     "build": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.client.js",
     "watch-client": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.client-watch.js && node ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --config webpack.client-watch.js",
     "watch": "node ./node_modules/concurrently/src/main.js --kill-others \"npm run watch-client\" \"npm run start\"",
-    "test": "node ./node_modules/karma/bin/karma start --auto-watch --browsers Chrome"
+    "test": "node ./node_modules/karma/bin/karma start --auto-watch --browsers Chrome",
+    "postinstall": "node ./node_modules/webpack/bin/webpack.js --config ./webpack.client.js --progress --colors"
   },
   "dependencies": {
     "babel": "5.8.23",

@@ -15,12 +15,18 @@ var hostname = process.env.HOSTNAME || "localhost";
  */
 
 function getMarkup(webserver, provider) {
-  var markup = renderToString(provider);
+  var markup = renderToString(provider),
+      styles = "";
+
+  if (process.env.NODE_ENV === "production") {
+    styles = `<link href="${webserver}/dist/main.css" rel="stylesheet"></link>`;
+  }
 
   return `<!doctype html>
           <html>
             <head>
               <title>Redux Auth – Isomorphic Example</title>
+              ${styles}
             </head>
             <body>
               <div id="react-root">${markup}</div>
