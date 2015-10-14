@@ -15,18 +15,13 @@ import Container from "./views/partials/Container";
 import Main from "./views/Main";
 import Account from "./views/Account";
 import SignIn from "./views/SignIn";
-import RequestTestSuccessModal from "./views/partials/RequestTestSuccessModal";
-import RequestTestErrorModal from "./views/partials/RequestTestErrorModal";
-import { AuthModals, TokenBridge } from "./auth/index";
+import GlobalComponents from "./views/partials/GlobalComponents";
 
 class App extends React.Component {
   render() {
     return (
       <Container>
-        <AuthModals />
-        <RequestTestSuccessModal />
-        <RequestTestErrorModal />
-        <TokenBridge />
+        <GlobalComponents />
         {this.props.children}
       </Container>
     );

@@ -3,7 +3,7 @@ import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
 import ExampleWell from "./partials/ExampleWell";
 import RequestTestButton from "./partials/RequestTestButton";
-import { Row, ButtonGroup } from "react-bootstrap";
+import { PageHeader, Row, ButtonGroup } from "react-bootstrap";
 import { connect } from "react-redux";
 import {
   EmailSignInForm,
@@ -23,7 +23,7 @@ class Main extends React.Component {
   render () {
     return (
       <div>
-        <h1>Main Page</h1>
+        <PageHeader>Redux Auth Demo</PageHeader>
 
         <Row>
           <IndexPanel header="Current User">

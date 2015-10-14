@@ -19,7 +19,7 @@ class Container extends React.Component {
             <NavBrand>Redux Auth</NavBrand>
           </LinkContainer>
           <Nav>
-            <LinkContainer to="/">
+            <LinkContainer to="/" onlyActiveOnIndex={true}>
               <NavItem eventKey={1}>Home</NavItem>
             </LinkContainer>
             <LinkContainer to="/account">
