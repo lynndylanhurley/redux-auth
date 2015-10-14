@@ -10,10 +10,23 @@ import { reduxReactRouter as serverRouter } from "redux-router/server";
 import {configure} from "./auth/index";
 import {combineReducers} from "redux";
 import thunk from "redux-thunk";
+import Container from "./views/partials/Container";
 import Main from "./views/Main";
 import Account from "./views/Account";
 import SignIn from "./views/SignIn";
+import { AuthModals, TokenBridge } from "./auth/index";
 
+class App extends React.Component {
+  render() {
+    return (
+      <Container>
+        <AuthModals />
+        <TokenBridge />
+        {this.props.children}
+      </Container>
+    );
+  }
+}
 
 export function initialize({cookies, isServer} = {}) {
   var reducer = combineReducers({
@@ -22,14 +35,33 @@ export function initialize({cookies, isServer} = {}) {
     router: routerStateReducer
   });
 
+  var store;
+
+  // access control method, used above in the "account" route
+  var requireAuth = (nextState, transition, cb) => {
+
+    // the setTimeout is necessary because of this bug:
+    // https://github.com/rackt/redux-router/pull/62
+    // this will result in a bunch of warnings
+    setTimeout(() => {
+      if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
+        console.log("failed auth check, transitioning to /login");
+        transition(null, "/login");
+      }
+      cb();
+    }, 0);
+  };
+
   // define app routes
   var routes = (
-    <Route path="/">
+    <Route path="/" component={App}>
       <IndexRoute component={Main} />
       <Route path="login" component={SignIn} />
-      <Route path="account" component={Account} />
+      <Route path="account" component={Account} onEnter={requireAuth} />
     </Route>
   );
+
+  console.log("created routes", routes);
 
   // these methods will differ from server to client
   var reduxReactRouter    = clientRouter;
@@ -39,14 +71,18 @@ export function initialize({cookies, isServer} = {}) {
     createHistoryMethod = createMemoryHistory;
   }
 
+  console.log("creating store...");
+
   // create the redux store
-  var store = compose(
+  store = compose(
     applyMiddleware(thunk),
     reduxReactRouter({
       routes,
       createHistory: createHistoryMethod
     })
   )(createStore)(reducer);
+
+  console.log("created store", store);
 
   /**
    * The React Router 1.0 routes for both the server and the client.
@@ -56,6 +92,7 @@ export function initialize({cookies, isServer} = {}) {
     cookies,
     isServer
   })).then(() => {
+    console.log("finished configure");
     return ({
       store,
       provider: (

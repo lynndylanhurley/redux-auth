@@ -1,7 +1,6 @@
 import React, { PropTypes } from "react";
 import { Grid, Navbar, NavItem, Nav, NavBrand } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { AuthModals, TokenBridge } from "../../auth/index";
 
 if (!global.__SERVER__) {
   require("../../styles/main.scss");
@@ -13,7 +12,6 @@ class Container extends React.Component {
   }
 
   render () {
-    console.log("rendering container");
     return (
       <div className="wrapper">
         <Navbar className="main-nav">
@@ -31,12 +29,8 @@ class Container extends React.Component {
         </Navbar>
 
         <Grid className="content">
-          <TokenBridge />
-
           {this.props.children}
         </Grid>
-
-        <AuthModals />
       </div>
     );
   }

@@ -1,5 +1,4 @@
 import React from "react";
-import Container from "./partials/Container";
 import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
 import RequestTestButton from "./partials/RequestTestButton";
@@ -22,7 +21,7 @@ import {
 class Main extends React.Component {
   render () {
     return (
-      <Container>
+      <div>
         <h1>Main Page</h1>
 
         <Row>
@@ -141,8 +140,7 @@ class Main extends React.Component {
           </IndexPanel>
         </Row>
 
-        {console.log("bang 2")}
-      </Container>
+      </div>
     );
   }
 }

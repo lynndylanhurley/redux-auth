@@ -19,14 +19,10 @@ export function configure(config) {
 
     let promise;
 
-    console.log("calling configure");
-
     if (config.isServer) {
       // this is a server side validation. don't actually run configure
-      console.log("verifying auth", config);
       promise = verifyAuth(config)
         .then(({user, newHeaders}) => {
-          console.log("got new headers");
           dispatch(ssAuthTokenUpdate(newHeaders));
           return user;
         });
@@ -52,11 +48,8 @@ export function configure(config) {
       promise = Promise.resolve(Auth.configure(config));
     }
 
-    console.log("promise", promise);
-
     return promise
       .then((user) => {
-        console.log("@-->auth complete", user);
         dispatch(authenticateComplete(user));
         if (Auth.firstTimeLogin) {
           dispatch(showFirstTimeLoginSuccessModal());
@@ -67,7 +60,6 @@ export function configure(config) {
         }
       })
       .catch(({reason}) => {
-        console.log("rejecting config bc", reason);
         if (Auth.firstTimeLogin) {
           dispatch(showFirstTimeLoginErrorModal());
         }

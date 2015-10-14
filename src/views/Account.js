@@ -1,14 +1,14 @@
 import React from "react";
-import Container from "./partials/Container";
 import { connect } from "react-redux";
 
 @connect(({auth}) => ({auth}))
 class Account extends React.Component {
   render () {
     return (
-      <Container>
+      <div>
         <h1>Account page</h1>
-      </Container>
+        <p>This page should only visible to authenticated users.</p>
+      </div>
     );
   }
 }

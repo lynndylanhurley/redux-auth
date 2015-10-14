@@ -1,12 +1,13 @@
 import React from "react";
-import Container from "./partials/Container";
+import { connect } from "react-redux";
 
+@connect(({routes}) => ({routes}))
 class SignIn extends React.Component {
   render () {
     return (
-      <Container>
+      <div>
         <h2>Sign In</h2>
-      </Container>
+      </div>
     );
   }
 }
