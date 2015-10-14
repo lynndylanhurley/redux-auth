@@ -41,7 +41,7 @@ class CodeSnippet extends React.Component {
   render () {
     return (
       <div className='code-snippet'>
-        <label>Example</label>
+        <label>Code</label>
         <pre ref="target" />
       </div>
     );

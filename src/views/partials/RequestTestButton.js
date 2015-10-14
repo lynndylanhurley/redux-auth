@@ -2,10 +2,13 @@ import React, { PropTypes } from "react";
 import Auth from "j-toker";
 import ButtonLoader from "../../auth/views/ButtonLoader";
 import { connect } from "react-redux";
-import $ from "jquery";
+import { requestTest } from "../../actions/request-test-buttons";
 
-@connect(({auth}) => {
-  return {signedIn: auth.getIn(["user", "isSignedIn"])};
+@connect(({auth, demoButtons}) => {
+  return {
+    signedIn: auth.getIn(["user", "isSignedIn"]),
+    demoButtons
+  };
 })
 class RequestTestButton extends React.Component {
   static propTypes = {
@@ -14,14 +17,14 @@ class RequestTestButton extends React.Component {
 
   handleClick () {
     let url = Auth.getConfig().apiUrl + this.props.path;
-    console.log("@-->request url", url);
-    $.ajax({url});
+    this.props.dispatch(requestTest(url, this.props.path));
   }
 
   render () {
     let text = "Will Fail",
         bsStyle = "danger",
-        glyph = "remove";
+        glyph = "remove",
+        loading = this.props.demoButtons.getIn(["buttons", this.props.path, "loading"]);
 
     if (this.props.signedIn) {
       text = "Should Succeed";
@@ -31,7 +34,7 @@ class RequestTestButton extends React.Component {
 
     return (
       <ButtonLoader {...this.props}
-                    loading={false}
+                    loading={loading}
                     type="button"
                     glyph={glyph}
                     onClick={this.handleClick.bind(this)}
@@ -43,4 +46,3 @@ class RequestTestButton extends React.Component {
 }
 
 export default RequestTestButton;
-

@@ -1,6 +1,7 @@
 import React from "react";
 import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
+import ExampleWell from "./partials/ExampleWell";
 import RequestTestButton from "./partials/RequestTestButton";
 import { Row, ButtonGroup } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -32,11 +33,14 @@ class Main extends React.Component {
             <label>uid</label>
             <p>{this.props.currentUserProvider}</p>
 
-            <RequestTestButton path="/demo/members_only" />
+            <label>ajax test</label>
+            <p><RequestTestButton path="/demo/members_only" /></p>
           </IndexPanel>
 
           <IndexPanel header="Email Sign In">
-            <EmailSignInForm />
+            <ExampleWell>
+              <EmailSignInForm />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -50,7 +54,9 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="Sign Out">
-            <SignOutButton />
+            <ExampleWell>
+              <SignOutButton />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -64,7 +70,9 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="Email Sign Up">
-            <EmailSignUpForm />
+            <ExampleWell>
+              <EmailSignUpForm />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -78,12 +86,13 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="OAuth Sign In">
-            <ButtonGroup>
-              <OAuthSignInButton provider="github">Github</OAuthSignInButton>
-              <OAuthSignInButton provider="facebook" bsStyle="primary">Facebook</OAuthSignInButton>
-              <OAuthSignInButton provider="google" bsStyle="warning">Google</OAuthSignInButton>
-            </ButtonGroup>
-
+            <ExampleWell>
+              <ButtonGroup>
+                <OAuthSignInButton provider="github">Github</OAuthSignInButton>
+                <OAuthSignInButton provider="facebook" bsStyle="primary">Facebook</OAuthSignInButton>
+                <OAuthSignInButton provider="google" bsStyle="warning">Google</OAuthSignInButton>
+              </ButtonGroup>
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -97,8 +106,9 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="Destroy Account" bsStyle="danger">
-            <DestroyAccountButton bsStyle="danger" />
-
+            <ExampleWell>
+              <DestroyAccountButton bsStyle="danger" />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -112,7 +122,9 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="Request Password Reset">
-            <RequestPasswordResetForm />
+            <ExampleWell>
+              <RequestPasswordResetForm />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
@@ -126,7 +138,9 @@ class Main extends React.Component {
           </IndexPanel>
 
           <IndexPanel header="Update Password">
-            <UpdatePasswordForm />
+            <ExampleWell>
+              <UpdatePasswordForm />
+            </ExampleWell>
 
             <CodeSnippet>
               {`
