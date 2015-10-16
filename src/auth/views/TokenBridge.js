@@ -7,12 +7,15 @@ import { connect } from "react-redux";
   return {
     initialCredentials: headers && JSON.stringify({
       user: auth.getIn(["user", "attributes"]),
+      mustResetPassword: auth.getIn(["server", "mustResetPassword"]),
+      firstTimeLogin: auth.getIn(["server", "firstTimeLogin"]),
       headers
     })
   };
 })
 class TokenBridge extends React.Component {
   render () {
+    console.log("bridging data", this.props.initialCredentials);
     return (
       <script id="token-bridge"
               type="application/json"

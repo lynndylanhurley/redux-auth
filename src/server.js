@@ -104,14 +104,14 @@ server.ext("onPreResponse", (request, reply) => {
 
   initialize({
     isServer: true,
-    cookies: request.headers.cookie
+    cookies: request.headers.cookie,
+    currentLocation: location
   })
     .then(({store, provider}) => {
       store.dispatch(match(location, (error, redirectLocation, renderProps) => {
         if (redirectLocation) {
           reply.redirect(redirectLocation.pathname + redirectLocation.search);
-        }
-        else if (error || !renderProps) {
+        } else if (error || !renderProps) {
           reply.continue();
         } else {
           var webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";

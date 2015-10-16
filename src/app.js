@@ -28,7 +28,7 @@ class App extends React.Component {
   }
 }
 
-export function initialize({cookies, isServer} = {}) {
+export function initialize({cookies, isServer, currentLocation} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
     authUi: authUiStateReducer,
@@ -84,10 +84,13 @@ export function initialize({cookies, isServer} = {}) {
   return store.dispatch(configure({
     apiUrl: "//devise-token-auth.dev",
     cookies,
-    isServer
-  })).then(() => {
+    isServer,
+    currentLocation
+  })).then(({redirectPath} = {}) => {
+    console.log("@-->next url", redirectPath);
     return ({
       store,
+      redirectPath,
       provider: (
         <Provider store={store} key="provider">
           <ReduxRouter children={routes} />

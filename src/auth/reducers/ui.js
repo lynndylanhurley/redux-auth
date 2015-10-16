@@ -9,6 +9,7 @@ import * as oAuthSignInActions from "../actions/oauth-sign-in";
 import * as updatePasswordActions from "../actions/update-password";
 import * as destroyAccountActions from "../actions/destroy-account";
 import * as updatePasswordModalActions from "../actions/update-password-modal";
+import * as serverActions from "../actions/server";
 
 const initialState = Immutable.fromJS({
   emailSignInSuccessModalVisible:          false,
@@ -20,8 +21,8 @@ const initialState = Immutable.fromJS({
   signOutErrorModalVisible:                false,
   emailSignUpSuccessModalVisible:          false,
   emailSignUpAddress:                      null,
-  firstTimeLoginModalSuccessVisible:       false,
-  firstTimeLoginModalErrorVisible:         false,
+  firstTimeLoginSuccessModalVisible:       false,
+  firstTimeLoginErrorModalVisible:         false,
   requestPasswordResetSuccessModalVisible: false,
   requestPasswordResetErrorModalVisible:   false,
   requestPasswordResetSuccessMessage:      null,
@@ -192,6 +193,15 @@ export default createReducer(initialState, {
   [uiActions.HIDE_DESTROY_ACCOUNT_ERROR_MODAL]: state => state.set(
     "destroyAccountErrorModalVisible", false
   ),
+
+
+  [uiActions.SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL]: state => state.set(
+  ),
+
+  [serverActions.SS_AUTH_TOKEN_UPDATE]: (state, {mustResetPassword, firstTimeLogin}) => state.merge({
+    passwordResetSuccessModalVisible: mustResetPassword,
+    firstTimeLoginSuccessModalVisible: firstTimeLogin
+  }),
 
   [uiActions.HIDE_PASSWORD_RESET_SUCCESS_MODAL]: state => state.set(
     "passwordResetSuccessModalVisible", false

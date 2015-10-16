@@ -4,10 +4,19 @@ import * as A from "../actions/server";
 
 const initialState = Immutable.fromJS({
   nextHeaders: null,
+  firstTimeLogin: false,
+  mustResetPassword: false,
   promise: null
 });
 
 export default createReducer(initialState, {
-  [A.SS_AUTH_TOKEN_UPDATE]: (state, {headers}) => state.set("nextHeaders", headers),
+  [A.SS_AUTH_TOKEN_UPDATE]: (state, {headers, mustResetPassword = false, firstTimeLogin = false}) => {
+    console.log("auth token update", headers, mustResetPassword, firstTimeLogin);
+    return state.merge({
+      nextHeaders: headers,
+      mustResetPassword,
+      firstTimeLogin
+    });
+  },
   [A.SS_SET_LOADING_PROMISE]: (state, {promise}) => state.set("promise", promise)
 });

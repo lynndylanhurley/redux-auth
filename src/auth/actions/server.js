@@ -6,8 +6,8 @@ export const SS_TOKEN_VALIDATION_START    = "SS_TOKEN_VALIDATION_START";
 export const SS_TOKEN_VALIDATION_COMPLETE = "SS_TOKEN_VALIDATION_COMPLETE";
 export const SS_TOKEN_VALIDATION_ERROR    = "SS_TOKEN_VALIDATION_ERROR";
 
-export function ssAuthTokenUpdate(headers) {
-  return { type: SS_AUTH_TOKEN_UPDATE, headers };
+export function ssAuthTokenUpdate({headers, mustResetPassword, firstTimeLogin}) {
+  return { type: SS_AUTH_TOKEN_UPDATE, headers, mustResetPassword, firstTimeLogin };
 }
 export function ssSetLoadingPromise(promise) {
   return { type: SS_SET_LOADING_PROMISE, promise };
@@ -26,8 +26,8 @@ export function ssTokenValidation(opts) {
     dispatch(ssTokenValidationStart());
 
     return fetchToken(opts)
-      .then(({user, newHeaders}) => {
-        dispatch(ssAuthTokenUpdate(newHeaders));
+      .then(({user, newHeaders, mustResetPassword, firstTimeLogin}) => {
+        dispatch(ssAuthTokenUpdate({headers: newHeaders, mustResetPassword, firstTimeLogin}));
         dispatch(ssTokenValidationComplete(user));
       })
       .catch(err => dispatch(ssTokenValidationError(err)));

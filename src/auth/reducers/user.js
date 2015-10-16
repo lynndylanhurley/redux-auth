@@ -20,11 +20,13 @@ export default createReducer(initialState, {
     isSignedIn: true
   }),
 
-  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user }) => {
-    console.log("user set to", user);
+  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => {
+    console.log("user set to", user, mustResetPassword, firstTimeLogin);
     return state.merge({
       attributes: user,
-      isSignedIn: true
+      isSignedIn: true,
+      firstTimeLogin,
+      mustResetPassword
     });
   },
 
@@ -37,6 +39,10 @@ export default createReducer(initialState, {
     attributes: user,
     isSignedIn: true
   }),
+
+  [ssActions.SS_AUTH_TOKEN_UPDATE]: (state, {mustResetPassword, firstTimeLogin}) => {
+    return state.merge({ mustResetPassword, firstTimeLogin });
+  },
 
   [authActions.AUTHENTICATE_FAILURE]:    state => state.merge(initialState),
   [ssActions.SS_TOKEN_VALIDATION_ERROR]: state => state.merge(initialState),

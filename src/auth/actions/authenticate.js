@@ -1,5 +1,4 @@
 import Auth from "j-toker";
-import ssTokenValidation from "./server";
 
 export const AUTHENTICATE_START    = "AUTHENTICATE_START";
 export const AUTHENTICATE_COMPLETE = "AUTHENTICATE_COMPLETE";

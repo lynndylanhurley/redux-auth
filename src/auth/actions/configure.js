@@ -1,4 +1,5 @@
 import Auth from "j-toker";
+import extend from "extend";
 import {
   authenticateStart,
   authenticateComplete,
@@ -12,6 +13,8 @@ import {
 } from "./ui";
 import {ssAuthTokenUpdate} from "./server";
 import verifyAuth from "../utils/verify-auth";
+import getRedirectInfo from "../utils/parse-url";
+import {pushState} from "redux-router";
 
 export function configure(config) {
   return dispatch => {
@@ -20,10 +23,10 @@ export function configure(config) {
     let promise;
 
     if (config.isServer) {
-      // this is a server side validation. don't actually run configure
+      // this is a server side validation. don't actually run Auth.configure
       promise = verifyAuth(config)
-        .then(({user, newHeaders}) => {
-          dispatch(ssAuthTokenUpdate(newHeaders));
+        .then(({user, newHeaders, firstTimeLogin, mustResetPassword}) => {
+          dispatch(ssAuthTokenUpdate({headers: newHeaders, firstTimeLogin, mustResetPassword}));
           return user;
         });
     } else {
@@ -35,14 +38,33 @@ export function configure(config) {
         if (rawServerCreds) {
           let serverCreds = JSON.parse(rawServerCreds);
 
+          console.log("@-->got server creds");
+
           // sync client dom to prevent React "out of sync" error
           dispatch(authenticateComplete(serverCreds.user));
-          dispatch(ssAuthTokenUpdate(serverCreds.headers));
+          dispatch(ssAuthTokenUpdate({
+            headers: serverCreds.headers,
+            mustResetPassword: serverCreds.mustResetPassword,
+            firstTimeLogin: serverCreds.firstTimeLogin
+          }));
 
           // instruct j-token to NOT send initial validation request, but to
           // instead use the credentials that were sent back by the server.
           config.initialCredentials = serverCreds;
         }
+      }
+
+      let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
+
+      console.log("auth redirect url", authRedirectPath);
+
+      dispatch(pushState(null, authRedirectPath));
+
+      Auth.firstTimeLogin    = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
+      Auth.mustResetPassword = JSON.parse(authRedirectHeaders.resetPassword || "false");
+
+      if (authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
+        config.initialCredentials = extend({}, config.initialCredentials, authRedirectHeaders);
       }
 
       promise = Promise.resolve(Auth.configure(config));
@@ -59,7 +81,8 @@ export function configure(config) {
           dispatch(showPasswordResetSuccessModal());
         }
       })
-      .catch(({reason}) => {
+      .catch((err) => {
+        console.log("rejected promise", err);
         if (Auth.firstTimeLogin) {
           dispatch(showFirstTimeLoginErrorModal());
         }
@@ -68,7 +91,9 @@ export function configure(config) {
           dispatch(showPasswordResetErrorModal());
         }
 
-        dispatch(authenticateError([reason]));
+        dispatch(authenticateError([err.reason]));
+
+        return Promise.resolve(err);
       });
   };
 }

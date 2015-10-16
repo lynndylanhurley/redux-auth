@@ -1,6 +1,8 @@
 import Auth from "j-toker";
 import fetch from "node-fetch";
 import cookie from "cookie";
+import getRedirectInfo from "../utils/parse-url";
+import url from "url";
 
 function parseHeaders (headers) {
   // set header for each key in `tokenFormat` config
@@ -32,49 +34,62 @@ function parseHeaders (headers) {
 }
 
 
-export function fetchToken({cookies, apiUrl}) {
-  console.log("@-->fetching token");
+export function fetchToken({cookies, apiUrl, currentLocation}) {
+  let {authRedirectHeaders} = getRedirectInfo(url.parse(currentLocation));
+
   let serverAuthPromise = new Promise((resolve, reject) => {
-    if (!cookies) {
-      reject("No cookies");
-    } else if (cookies) {
+    if (cookies || authRedirectHeaders) {
       let rawCookies = cookie.parse(cookies);
-      let parsedCookies = JSON.parse(rawCookies.authHeaders);
+      let parsedCookies = JSON.parse(rawCookies.authHeaders || "false");
+      let firstTimeLogin,
+          mustResetPassword,
+          headers;
+
+      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
+        headers           = parseHeaders(authRedirectHeaders);
+        mustResetPassword = JSON.parse(authRedirectHeaders.reset_password || "false");
+        firstTimeLogin    = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
+      } else {
+        headers           = parsedCookies;
+        mustResetPassword = JSON.parse(parsedCookies.mustResetPassword || "false");
+        firstTimeLogin    = JSON.parse(parsedCookies.firstTimeLogin || "false");
+      }
+
+      if (!headers) {
+        reject("No creds");
+      }
+
       var newHeaders;
 
       return fetch(`http:${apiUrl}/auth/validate_token`, {
-        headers: parsedCookies
+        headers
       }).then((resp) => {
         newHeaders = parseHeaders(resp.headers._headers);
         return resp.json();
       })
       .then((json) => {
         if (json.success) {
-          resolve({newHeaders, user: json.data});
+          resolve({newHeaders, user: json.data, mustResetPassword, firstTimeLogin});
         } else {
-          console.log("rejecting token", json);
           reject(json.errors);
         }
       }).catch((err) => {
         reject(err);
       });
-
     } else {
-      console.log("rejecting token");
-      reject("No tokens.");
+      reject("No creds");
     }
   });
 
   return serverAuthPromise;
 }
 
-function verifyAuth({isServer, cookies, apiUrl}) {
+function verifyAuth({isServer, cookies, apiUrl, currentLocation}) {
   return new Promise((resolve, reject) => {
     if (isServer) {
-      console.log("fetching token");
-      fetchToken({cookies, apiUrl})
-        .then(({user, newHeaders}) => {
-          resolve({user, newHeaders});
+      fetchToken({cookies, apiUrl, currentLocation})
+        .then(({user, newHeaders, mustResetPassword, firstTimeLogin}) => {
+          resolve({user, newHeaders, mustResetPassword, firstTimeLogin});
         })
         .catch((err) => {
           console.log("@-->err", err);
