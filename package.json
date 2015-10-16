@@ -69,7 +69,9 @@
     "serialize-javascript": "^1.1.2",
     "thunk": "0.0.1",
     "url-loader": "^0.5.6",
-    "whatwg-fetch": "^0.9.0",
+    "whatwg-fetch": "^0.9.0"
+  },
+  "devDependencies": {
     "babel-core": "5.8.25",
     "babel-loader": "5.3.2",
     "babel-runtime": "5.8.24",
