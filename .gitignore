@@ -4,3 +4,4 @@ dist/
 build/
 *.log
 *.map
+*.DS_Store

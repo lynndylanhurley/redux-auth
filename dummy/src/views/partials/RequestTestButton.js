@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import Auth from "j-toker";
-import ButtonLoader from "../../auth/views/ButtonLoader";
+import ButtonLoader from "../../../../src/views/ButtonLoader";
 import { connect } from "react-redux";
 import { requestTest } from "../../actions/request-test-buttons";
 

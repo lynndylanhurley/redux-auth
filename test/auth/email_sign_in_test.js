@@ -2,7 +2,7 @@ import chai, { expect } from "chai";
 import sinon, { spy } from "sinon";
 import sinonChai from "sinon-chai";
 import Auth from "j-toker";
-import {emailSignIn} from "../../src/auth/index";
+import {emailSignIn} from "../../src/index";
 import {getStore} from "./helper";
 
 chai.use(sinonChai);
