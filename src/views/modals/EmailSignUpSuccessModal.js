@@ -3,7 +3,7 @@ import { Button, Modal } from "react-bootstrap";
 import { hideEmailSignUpSuccessModal } from "../../actions/ui";
 import { connect } from "react-redux";
 
-@connect(({authUi}) => ({authUi}))
+@connect(({auth}) => ({auth}))
 class EmailSignUpSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -28,7 +28,7 @@ class EmailSignUpSuccessModal extends React.Component {
         <Modal.Body>
           <p>
             A confirmation email was sent to your account
-            at {this.props.authUi.get("emailSignUpAddress")}. Follow the
+            at {this.props.auth.getIn(["ui", "emailSignUpAddress"])}. Follow the
             instructions in the email to complete registration.
           </p>
         </Modal.Body>

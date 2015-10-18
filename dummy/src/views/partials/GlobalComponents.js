@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthModals, TokenBridge } from "../../../../src/index";
+import { AuthModals, TokenBridge } from "../../../../src";
 import RequestTestSuccessModal from "./RequestTestSuccessModal";
 import RequestTestErrorModal from "./RequestTestErrorModal";
 

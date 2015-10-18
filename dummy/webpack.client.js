@@ -39,6 +39,7 @@ module.exports = {
     },
     modulesDirectories: [
       "src",
+      "../src",
       "node_modules",
       "web_modules"
     ],

@@ -9,7 +9,7 @@ import {
   updatePasswordModalFormUpdate
 } from "../../actions/update-password-modal";
 
-@connect(({auth, authUi}) => ({auth, authUi}))
+@connect(({auth}) => ({auth}))
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool

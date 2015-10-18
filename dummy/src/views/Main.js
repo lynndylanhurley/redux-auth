@@ -13,7 +13,7 @@ import {
   OAuthSignInButton,
   UpdatePasswordForm,
   DestroyAccountButton
-} from "../../../src/index";
+} from "../../../src";
 
 @connect(({auth}) => ({
   currentUserUid: auth.getIn(["user", "attributes", "provider"]) || "none",

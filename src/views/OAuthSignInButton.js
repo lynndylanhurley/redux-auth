@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import ButtonLoader from "./ButtonLoader";
 import { oAuthSignIn } from "../actions/oauth-sign-in";
 
-@connect(({auth, authUi}) => ({auth, authUi}))
+@connect(({auth}) => ({auth}))
 class OAuthSignInButton extends React.Component {
   static propTypes = {
     provider: PropTypes.string.isRequired,
@@ -27,7 +27,7 @@ class OAuthSignInButton extends React.Component {
   render () {
     let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
     let loading = (
-      (this.props.authUi.get("oAuthSignInLoadingProvider") === this.props.provider) &&
+      (this.props.auth.getIn(["ui", "oAuthSignInLoadingProvider"]) === this.props.provider) &&
       this.props.auth.getIn(["oAuthSignIn", "loading"])
     );
 

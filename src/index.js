@@ -1,6 +1,7 @@
 import authentication from "./reducers/authenticate";
 import configure from "./reducers/configure";
 import user from "./reducers/user";
+import ui from "./reducers/ui";
 import emailSignIn from "./reducers/email-sign-in";
 import emailSignUp from "./reducers/email-sign-up";
 import oAuthSignIn from "./reducers/oauth-sign-in";
@@ -25,10 +26,9 @@ export const authStateReducer = combineReducers({
   updatePasswordModal,
   destroyAccount,
   server,
+  ui,
   user
 });
-
-export authUiStateReducer from "./reducers/ui";
 
 /* actions */
 export {configure} from "./actions/configure";
@@ -53,3 +53,4 @@ export OAuthSignInButton from "./views/OAuthSignInButton";
 export UpdatePasswordForm from "./views/UpdatePasswordForm";
 export DestroyAccountButton from "./views/DestroyAccountButton";
 export TokenBridge from "./views/TokenBridge";
+export ButtonLoader from "./views/ButtonLoader";

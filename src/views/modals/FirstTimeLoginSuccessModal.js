@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button, Modal } from "react-bootstrap";
 import { hideFirstTimeLoginSuccessModal } from "../../actions/ui";
 
-@connect(({auth, authUi}) => ({auth, authUi}))
+@connect(({auth}) => ({auth}))
 class FirstTimeLoginSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool

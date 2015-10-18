@@ -4,7 +4,7 @@ import { hideEmailSignUpErrorModal } from "../../actions/ui";
 import { Modal, Button } from "react-bootstrap";
 import ErrorList from "../ErrorList";
 
-@connect(({auth, authUi}) => ({auth, authUi}))
+@connect(({auth}) => ({auth}))
 class EmailSignUpErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool

@@ -2,12 +2,11 @@ import React from "react";
 import {Provider} from "react-redux";
 import {ReduxRouter} from "redux-router";
 import {Route, IndexRoute} from "react-router";
-import {authStateReducer, authUiStateReducer} from "../../src/index";
+import {configure, authStateReducer} from "../../src";
 import {createStore, compose, applyMiddleware} from "redux";
 import {createHistory, createMemoryHistory} from "history";
 import {routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
 import { reduxReactRouter as serverRouter } from "redux-router/server";
-import {configure} from "../../src/index";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
 import thunk from "redux-thunk";
@@ -31,7 +30,6 @@ class App extends React.Component {
 export function initialize({cookies, isServer, currentLocation} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
-    authUi: authUiStateReducer,
     router: routerStateReducer,
     demoButtons
   });

@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { hideDestroyAccountSuccessModal } from "../../actions/ui";
 
-@connect(({auth, authUi}) => ({auth, authUi}))
+@connect(({auth}) => ({auth}))
 class DestroyAccountSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -26,7 +26,7 @@ class DestroyAccountSuccessModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <p>{this.props.authUi.get("destroyAccountMessage")}</p>
+          <p>{this.props.auth.getIn(["ui", "destroyAccountMessage"])}</p>
         </Modal.Body>
 
         <Modal.Footer>

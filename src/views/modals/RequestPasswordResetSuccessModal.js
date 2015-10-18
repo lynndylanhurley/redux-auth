@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 import { hidePasswordResetRequestSuccessModal } from "../../actions/ui";
 
-@connect(({authUi}) => ({authUi}))
+@connect(({auth}) => ({auth}))
 class RequestPasswordResetSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -27,7 +27,7 @@ class RequestPasswordResetSuccessModal extends React.Component {
 
         <Modal.Body>
           <p>
-            {this.props.authUi.get("requestPasswordResetSuccessMessage")}
+            {this.props.auth.getIn(["ui", "requestPasswordResetSuccessMessage"])}
           </p>
         </Modal.Body>
 
