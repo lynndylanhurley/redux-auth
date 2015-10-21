@@ -56,12 +56,12 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
       }
 
       if (!headers) {
-        reject("No creds");
+        return reject("No creds");
       }
 
       var newHeaders;
 
-      return fetch(`http:${apiUrl}/auth/validate_token`, {
+      return fetch(`${apiUrl}/auth/validate_token`, {
         headers
       }).then((resp) => {
         newHeaders = parseHeaders(resp.headers._headers);
@@ -69,12 +69,12 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
       })
       .then((json) => {
         if (json.success) {
-          resolve({newHeaders, user: json.data, mustResetPassword, firstTimeLogin});
+          return resolve({newHeaders, user: json.data, mustResetPassword, firstTimeLogin});
         } else {
-          reject(json.errors);
+          return reject(json.errors);
         }
       }).catch((err) => {
-        reject(err);
+        return reject(err);
       });
     } else {
       reject("No creds");
@@ -87,13 +87,12 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
 function verifyAuth({isServer, cookies, apiUrl, currentLocation}) {
   return new Promise((resolve, reject) => {
     if (isServer) {
-      fetchToken({cookies, apiUrl, currentLocation})
+      return fetchToken({cookies, apiUrl, currentLocation})
         .then(({user, newHeaders, mustResetPassword, firstTimeLogin}) => {
-          resolve({user, newHeaders, mustResetPassword, firstTimeLogin});
+          return resolve({user, newHeaders, mustResetPassword, firstTimeLogin});
         })
         .catch((err) => {
-          console.log("@-->err", err);
-          reject({reason: err});
+          return reject({reason: err});
         });
     } else {
       Auth.validateToken().then((user) => resolve(user.data), (err) => reject({reason: err}));

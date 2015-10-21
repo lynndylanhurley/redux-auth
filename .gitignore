@@ -1,7 +1,9 @@
 .idea/
 node_modules/
+coverage/
 dist/
 build/
 *.log
 *.map
 *.DS_Store
+npm-debug.log

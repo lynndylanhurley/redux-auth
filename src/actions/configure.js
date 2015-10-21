@@ -33,12 +33,11 @@ export function configure(config) {
       // if the authentication happened server-side, find the resulting auth
       // credentials that were injected into the dom.
       let tokenBridge = document.getElementById("token-bridge");
+
       if (tokenBridge) {
         let rawServerCreds = tokenBridge.innerHTML;
         if (rawServerCreds) {
           let serverCreds = JSON.parse(rawServerCreds);
-
-          console.log("@-->got server creds");
 
           // sync client dom to prevent React "out of sync" error
           dispatch(authenticateComplete(serverCreds.user));
@@ -56,40 +55,46 @@ export function configure(config) {
 
       let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
 
-      console.log("auth redirect url", authRedirectPath);
-
-      dispatch(pushState(null, authRedirectPath));
+      if (authRedirectPath) {
+        dispatch(pushState(null, authRedirectPath));
+      }
 
       Auth.firstTimeLogin    = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
       Auth.mustResetPassword = JSON.parse(authRedirectHeaders.resetPassword || "false");
 
       if (authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
         config.initialCredentials = extend({}, config.initialCredentials, authRedirectHeaders);
+      } else {
+
       }
 
       promise = Promise.resolve(Auth.configure(config));
     }
 
     return promise
-      .then((user) => {
+      .then(user => {
+        console.log("returning user", user);
+
         dispatch(authenticateComplete(user));
-        if (Auth.firstTimeLogin) {
-          dispatch(showFirstTimeLoginSuccessModal());
-        }
 
-        if (Auth.mustResetPassword) {
-          dispatch(showPasswordResetSuccessModal());
-        }
+        //if (Auth.firstTimeLogin) {
+          //dispatch(showFirstTimeLoginSuccessModal());
+        //}
+
+        //if (Auth.mustResetPassword) {
+          //dispatch(showPasswordResetSuccessModal());
+        //}
       })
-      .catch((err) => {
-        console.log("rejected promise", err);
-        if (Auth.firstTimeLogin) {
-          dispatch(showFirstTimeLoginErrorModal());
-        }
+      .catch(err => {
+        console.log("returning without user", err);
 
-        if (Auth.mustResetPassword) {
-          dispatch(showPasswordResetErrorModal());
-        }
+        //if (Auth.firstTimeLogin) {
+          //dispatch(showFirstTimeLoginErrorModal());
+        //}
+
+        //if (Auth.mustResetPassword) {
+          //dispatch(showPasswordResetErrorModal());
+        //}
 
         dispatch(authenticateError([err.reason]));
 

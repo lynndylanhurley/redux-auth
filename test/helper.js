@@ -1,20 +1,21 @@
 import React from "react";
 import {Provider} from "react-redux";
-import {ReduxRouter} from "redux-router";
 import {Route, IndexRoute} from "react-router";
-import {configure, authStateReducer} from "../../src";
-import {createStore, compose, applyMiddleware} from "redux";
+import {combineReducers, createStore, compose, applyMiddleware} from "redux";
 import {createHistory, createMemoryHistory} from "history";
-import {routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
-import { reduxReactRouter as serverRouter } from "redux-router/server";
-import {combineReducers} from "redux";
-import demoButtons from "./reducers/request-test-buttons";
+import {ReduxRouter, routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
 import thunk from "redux-thunk";
-import Container from "./views/partials/Container";
-import Main from "./views/Main";
-import Account from "./views/Account";
-import SignIn from "./views/SignIn";
-import GlobalComponents from "./views/partials/GlobalComponents";
+import { reduxReactRouter as serverRouter } from "redux-router/server";
+import { configure, authStateReducer } from "../src/index";
+
+/* dummy components */
+import demoButtons from "../dummy/src/reducers/request-test-buttons";
+import Container from "../dummy/src/views/partials/Container";
+import Main from "../dummy/src/views/Main";
+import Account from "../dummy/src/views/Account";
+import SignIn from "../dummy/src/views/SignIn";
+import GlobalComponents from "../dummy/src/views/partials/GlobalComponents";
+
 
 class App extends React.Component {
   render() {
@@ -26,6 +27,7 @@ class App extends React.Component {
     );
   }
 }
+
 
 export function initialize({cookies, isServer, currentLocation} = {}) {
   var reducer = combineReducers({
@@ -62,7 +64,7 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
   // these methods will differ from server to client
   var reduxReactRouter    = clientRouter;
   var createHistoryMethod = createHistory;
-  if (isServer) {
+  if (isServer || global.__TEST__) {
     reduxReactRouter    = serverRouter;
     createHistoryMethod = createMemoryHistory;
   }
@@ -76,17 +78,17 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     })
   )(createStore)(reducer);
 
+
   /**
    * The React Router 1.0 routes for both the server and the client.
    */
   return store.dispatch(configure({
-    apiUrl: "http://devise-token-auth.dev",
+    apiUrl: "http://api.site.com",
     cookies,
     isServer,
     currentLocation
   })).then(({redirectPath} = {}) => {
-    console.log("@-->next url", redirectPath);
-    return ({
+    return {
       store,
       redirectPath,
       provider: (
@@ -94,6 +96,6 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
           <ReduxRouter children={routes} />
         </Provider>
       )
-    });
+    };
   });
 }
