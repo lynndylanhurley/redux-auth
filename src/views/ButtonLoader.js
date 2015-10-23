@@ -8,7 +8,8 @@ class ButtonLoader extends React.Component {
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     children: PropTypes.node,
-    onClick: PropTypes.func.isRequired
+    onClick: PropTypes.func.isRequired,
+    style: PropTypes.object
   }
 
   static defaultProps = {
@@ -20,7 +21,8 @@ class ButtonLoader extends React.Component {
       width: 2,
       radius: 3
     },
-    children: <span>Submit</span>
+    children: <span>Submit</span>,
+    style: {}
   }
 
   renderIcon () {
@@ -59,6 +61,7 @@ class ButtonLoader extends React.Component {
               bsStyle={this.props.bsStyle}
               className={this.props.className}
               type={this.props.type}
+              style={this.props.style}
               bsSize={this.props.bsSize}>
         {this.renderIcon()} {this.props.children}
       </Button>
