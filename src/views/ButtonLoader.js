@@ -4,6 +4,7 @@ import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
   static propTypes = {
+    glyph: PropTypes.string,
     icon: PropTypes.node,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
@@ -12,6 +13,7 @@ class ButtonLoader extends React.Component {
   }
 
   static defaultProps = {
+    glyph: "heart",
     icon: <Glyphicon glyph="heart" />,
     loading: false,
     spinConfig: {
@@ -24,9 +26,19 @@ class ButtonLoader extends React.Component {
   }
 
   renderIcon () {
-    let icon = (this.props.loading)
-      ? <Spinner {...this.props.spinConfig} loaded={false} />
-      : <this.props.icon />;
+    let icon;
+
+    if (this.props.loading) {
+      let spinColor;
+      if (!this.props.bsStyle || this.props.bsStyle === "default") {
+        spinColor = "#444";
+      } else {
+        spinColor = "#fff";
+      }
+      icon = <Spinner {...this.props.spinConfig} color={spinColor} loaded={false} />;
+    } else {
+      icon = this.props.icon;
+    }
 
     return (
       <div style={{
