@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Modal, Button, Glyphicon } from "react-bootstrap";
 import ButtonLoader from "../ButtonLoader";
 import Input from "../Input";
 import { connect } from "react-redux";
@@ -12,11 +12,13 @@ import {
 @connect(({auth}) => ({auth}))
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
-    show: PropTypes.bool
+    show: PropTypes.bool,
+    icon: PropTypes.node
   }
 
   static defaultProps = {
-    show: false
+    show: false,
+    icon: <Glyphicon glyph="lock" />
   }
 
   handleInput (key, val) {
@@ -70,7 +72,7 @@ class PasswordResetSuccessModal extends React.Component {
             <ButtonLoader {...this.props}
                           loading={loading}
                           type="submit"
-                          glyph="lock"
+                          icon={this.props.icon}
                           onClick={this.handleSubmit.bind(this)} />
           </Modal.Footer>
         </form>

@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
+import { Glyphicon } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signOut } from "../actions/sign-out";
 
@@ -7,12 +8,12 @@ import { signOut } from "../actions/sign-out";
 class SignOutButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    glyph: PropTypes.string
+    icon: PropTypes.node
   }
 
   static defaultProps = {
     children: <span>Sign Out</span>,
-    glyph: "log-out"
+    icon: <Glyphicon glyph="log-out" />
   }
 
   handleClick () {
@@ -24,7 +25,7 @@ class SignOutButton extends React.Component {
     return (
       <ButtonLoader {...this.props}
                     loading={this.props.auth.getIn(["signOut", "loading"])}
-                    glyph={this.props.glyph}
+                    icon={this.props.icon}
                     disabled={disabled}
                     onClick={this.handleClick.bind(this)} />
     );

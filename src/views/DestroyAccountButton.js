@@ -2,17 +2,18 @@ import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
 import { destroyAccount } from "../actions/destroy-account";
 import { connect } from "react-redux";
+import { Glyphicon } from "react-bootstrap";
 
 @connect(({auth}) => ({auth}))
 class DestroyAccountButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
-    glyph: PropTypes.string
+    icon: PropTypes.node
   }
 
   static defaultProps = {
     children: <span>Destroy Account</span>,
-    glyph: "remove"
+    icon: <Glyphicon glyph="remove" />
   }
 
   handleClick () {
@@ -24,7 +25,7 @@ class DestroyAccountButton extends React.Component {
     return (
       <ButtonLoader {...this.props}
                     loading={this.props.auth.getIn(["destroyAccount", "loading"])}
-                    glyph={this.props.glyph}
+                    icon={this.props.icon}
                     disabled={disabled}
                     onClick={this.handleClick.bind(this)} />
     );

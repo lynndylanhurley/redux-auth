@@ -3,9 +3,18 @@ import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "../actions/email-sign-up";
 import { connect } from "react-redux";
+import { Glyphicon } from "react-bootstrap";
 
 @connect(({auth}) => ({auth}))
 class EmailSignUpForm extends React.Component {
+  static propTypes = {
+    submitIcon: PropTypes.node
+  }
+
+  static defaultProps = {
+    submitIcon: <Glyphicon glyph="send" />
+  }
+
   handleInput (key, val) {
     this.props.dispatch(emailSignUpFormUpdate(key, val));
   }
@@ -52,7 +61,7 @@ class EmailSignUpForm extends React.Component {
         <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", "loading"])}
                       type="submit"
                       className="pull-right"
-                      glyph="send"
+                      icon={this.props.submitIcon}
                       disabled={disabled}
                       onClick={this.handleSubmit.bind(this)}>
           Sign Up

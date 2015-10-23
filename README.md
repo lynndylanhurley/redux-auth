@@ -2,16 +2,16 @@
 
 # React Isomorphic Starterkit
 
-Isomorphic starterkit with server-side React rendering using 
-[npm](https://www.npmjs.com/), 
-[piping](https://github.com/mdlawson/piping), 
-[webpack](https://webpack.github.io/), 
+Isomorphic starterkit with server-side React rendering using
+[npm](https://www.npmjs.com/),
+[piping](https://github.com/mdlawson/piping),
+[webpack](https://webpack.github.io/),
 [webpack-dev-server](https://github.com/webpack/webpack-dev-server),
-[hapi.js](http://www.hapijs.com/), 
-[babel.js](http://babeljs.io/), 
-[react.js](https://facebook.github.io/react), 
-[react-router](https://github.com/rackt/react-router), 
-[react-hot-loader](https://gaearon.github.io/react-hot-loader), 
+[hapi.js](http://www.hapijs.com/),
+[babel.js](http://babeljs.io/),
+[react.js](https://facebook.github.io/react),
+[react-router](https://github.com/rackt/react-router),
+[react-hot-loader](https://gaearon.github.io/react-hot-loader),
 [react-transmit](https://github.com/RickWong/react-transmit),
 [react-inline-css](https://github.com/RickWong/react-inline-css)
 
@@ -35,7 +35,7 @@ Development
 ```bash
 git clone https://github.com/RickWong/react-isomorphic-starterkit.git
 cd react-isomorphic-starterkit
-	
+
 npm install
 npm run watch     # Yes, ONE command for server AND client development!
 ```
@@ -44,7 +44,7 @@ Production
 
 ```bash
 NODE_ENV=production npm run build
-NODE_ENV=production npm run start  
+NODE_ENV=production npm run start
 ```
 
 ## Usage
@@ -60,3 +60,61 @@ on Twitter.
 ## License
 
 BSD 3-Clause license. Copyright © 2015, Rick Wong. All rights reserved.
+
+## Progress
+
+[x] coverage
+[x] client configuration
+[x] server configuration
+[x] firstTimeLogin success
+[x] firstTimeLogin error
+[x] mustResetPassword success
+[x] mustResetPassword error
+
+[x] $.ajax -> fetch
+  [x] generic
+  [ ] configure
+  [ ] signUp
+  [ ] signIn
+  [ ] destroyAccount
+  [ ] updatePassword
+  [ ] requestPasswordReset
+
+[x] namespace bootstrap views
+
+[ ] button loader glyph -> icon
+
+[ ] test bootstrap views
+  [ ] ButtonLoader.js
+  [ ] DestroyAccountButton.js
+  [ ] EmailSignInForm.js
+  [ ] EmailSignUpForm.js
+  [ ] ErrorList.js
+  [ ] Input.js
+  [ ] OAuthSignInButton.js
+  [ ] RequestPasswordResetForm.js
+  [ ] SignOutButton.js
+  [ ] UpdatePasswordForm.js
+
+  [ ] modals
+    [ ] AuthModals.js
+    [ ] DestroyAccountErrorModal.js
+    [ ] DestroyAccountSuccessModal.js
+    [ ] EmailSignInErrorModal.js
+    [ ] EmailSignInSuccessModal.js
+    [ ] EmailSignUpErrorModal.js
+    [ ] EmailSignUpSuccessModal.js
+    [ ] FirstTimeLoginErrorModal.js
+    [ ] FirstTimeLoginSuccessModal.js
+    [ ] OAuthSignInErrorModal.js
+    [ ] OAuthSignInSuccessModal.js
+    [ ] PasswordResetSuccessModal.js
+    [ ] RequestPasswordResetErrorModal.js
+    [ ] RequestPasswordResetSuccessModal.js
+    [ ] SignOutErrorModal.js
+    [ ] SignOutSuccessModal.js
+    [ ] UpdatePasswordErrorModal.js
+    [ ] UpdatePasswordSuccessModal.js
+
+[ ] create material ui views
+[ ] react native demo
