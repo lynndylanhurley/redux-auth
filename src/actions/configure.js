@@ -28,6 +28,9 @@ export function configure(config) {
         .then(({user, newHeaders, firstTimeLogin, mustResetPassword}) => {
           dispatch(ssAuthTokenUpdate({headers: newHeaders, firstTimeLogin, mustResetPassword}));
           return user;
+        }).catch(({reason, firstTimeLogin, mustResetPassword}) => {
+          dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
+          return Promise.reject(reason);
         });
     } else {
       // if the authentication happened server-side, find the resulting auth
@@ -59,13 +62,14 @@ export function configure(config) {
         dispatch(pushState(null, authRedirectPath));
       }
 
-      Auth.firstTimeLogin    = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
-      Auth.mustResetPassword = JSON.parse(authRedirectHeaders.resetPassword || "false");
-
-      if (authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
+      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
         config.initialCredentials = extend({}, config.initialCredentials, authRedirectHeaders);
-      } else {
+      }
 
+      // if tokens were invalidated by server, make sure to clear browser
+      // credentials
+      if (!config.initialCredentials) {
+        Auth.destroySession();
       }
 
       promise = Promise.resolve(Auth.configure(config));
@@ -74,30 +78,12 @@ export function configure(config) {
     return promise
       .then(user => {
         console.log("returning user", user);
-
         dispatch(authenticateComplete(user));
-
-        //if (Auth.firstTimeLogin) {
-          //dispatch(showFirstTimeLoginSuccessModal());
-        //}
-
-        //if (Auth.mustResetPassword) {
-          //dispatch(showPasswordResetSuccessModal());
-        //}
+        return user;
       })
       .catch(err => {
         console.log("returning without user", err);
-
-        //if (Auth.firstTimeLogin) {
-          //dispatch(showFirstTimeLoginErrorModal());
-        //}
-
-        //if (Auth.mustResetPassword) {
-          //dispatch(showPasswordResetErrorModal());
-        //}
-
         dispatch(authenticateError([err.reason]));
-
         return Promise.resolve(err);
       });
   };

@@ -56,7 +56,7 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
       }
 
       if (!headers) {
-        return reject("No creds");
+        return reject({reason: "No creds"});
       }
 
       var newHeaders;
@@ -71,13 +71,17 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
         if (json.success) {
           return resolve({newHeaders, user: json.data, mustResetPassword, firstTimeLogin});
         } else {
-          return reject(json.errors);
+          return reject({
+            reason: json.errors,
+            mustResetPassword,
+            firstTimeLogin
+          });
         }
-      }).catch((err) => {
-        return reject(err);
+      }).catch(reason => {
+        return reject({reason});
       });
     } else {
-      reject("No creds");
+      reject({reason: "No creds"});
     }
   });
 
@@ -91,8 +95,8 @@ function verifyAuth({isServer, cookies, apiUrl, currentLocation}) {
         .then(({user, newHeaders, mustResetPassword, firstTimeLogin}) => {
           return resolve({user, newHeaders, mustResetPassword, firstTimeLogin});
         })
-        .catch((err) => {
-          return reject({reason: err});
+        .catch(({reason, firstTimeLogin, mustResetPassword}) => {
+          return reject({reason, firstTimeLogin, mustResetPassword});
         });
     } else {
       Auth.validateToken().then((user) => resolve(user.data), (err) => reject({reason: err}));

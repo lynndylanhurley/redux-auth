@@ -43,7 +43,6 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     // this will result in a bunch of warnings, but it doesn't seem to be a serious problem
     setTimeout(() => {
       if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
-        console.log("failed auth check, transitioning to /login");
         transition(null, "/login");
       }
       cb();

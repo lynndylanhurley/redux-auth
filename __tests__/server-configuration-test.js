@@ -27,6 +27,7 @@ const fakeErrorResponse = function(url, headers) {
 }
 
 const fakeSuccessResponse = function(url) {
+  console.log("returning success resp");
   return Promise.resolve({
     json: () => ({
       success: true,
@@ -36,13 +37,14 @@ const fakeSuccessResponse = function(url) {
       "Content-Type": "application/json",
       "access-token": testToken,
       "client": testClient,
-      "uid": testUid
+      "uid": testUid,
+      "expiry": testExpiry
     }}
   });
 }
 
 
-describe("client configuration", () => {
+describe("server configuration", () => {
   var {pushState} = require ("redux-router"),
       {match}     = require("redux-router/server");
 
@@ -57,7 +59,6 @@ describe("client configuration", () => {
       errRespMock = jest.genMockFn().mockImpl(fakeErrorResponse);
       jest.setMock("node-fetch", errRespMock);
       ({initialize} = require("../test/helper"));
-      var fetch = require("node-fetch");
     });
 
     afterEach(() => {
@@ -73,6 +74,8 @@ describe("client configuration", () => {
           currentLocation: "/"
         }).then(({provider, store}) => {
           let user = store.getState().auth.get("user");
+
+          console.log("@-->user", user);
 
           // user should not be signed in
           expect(user.get("isSignedIn")).toBe(false);
@@ -149,33 +152,62 @@ describe("client configuration", () => {
     });
   });
 
-  xdescribe("authenticated user", () => {
+  describe("authenticated user", () => {
+    var successRespMock;
+
     beforeEach(() => {
-      //fetchMock.registerRoute({
-        //name: "validation",
-        //matcher: `${apiUrl}/auth/validate_token`,
-        //response: {
-          //body: {
-            //data: {
-              //uid: testUid
-            //}
-          //},
-          //opts: {
-            //headers: {
-              //"access-token": testToken,
-              //uid: testUid,
-              //client: testClient
-            //},
-            //status: 200
-          //}
-        //}
-      //});
+      successRespMock = jest.genMockFn().mockImpl(fakeSuccessResponse);
+      jest.setMock("node-fetch", successRespMock);
+      ({initialize} = require("../test/helper"));
     });
 
     afterEach(() => {
-      //fetchMock.restore();
+      jest.dontMock("node-fetch");
     });
 
-    xit("includes user info in the initial render", () => {});
+    pit("allows authenticated users to access restricted pages", () => {
+      return new Promise(res => {
+        initialize({
+          apiUrl,
+          isServer: true,
+          currentLocation: "/account",
+          cookies: rawTestCookies
+        })
+          .then(({provider, store}) => {
+            // user should be signed in
+            let user = store.getState().auth.get("user");
+            expect(user.get("isSignedIn")).toBe(true);
+            expect(user.getIn(["attributes", "uid"])).toBe(testUid);
+
+            console.log("@-->user", user);
+
+            // one call should have been made to API
+            expect(successRespMock.mock.calls.length).toBe(1);
+
+            let [[url, {headers}]] = successRespMock.mock.calls;
+
+            // ensure that API call has credentials as defined in cookies
+            expect(headers).toEqual({
+              "access-token": testToken,
+              "token-type": "Bearer",
+              client: testClient,
+              uid: testUid,
+              expiry: `${testExpiry}`
+            });
+
+            console.log("@-->dispatching account page");
+
+            store.dispatch(match("/account", (error, redirect, renderProps) => {
+              // authorized user should not be redirected
+              expect(redirect).toBe(null);
+              res();
+            }));
+
+            jest.runAllTimers();
+          });
+
+        jest.runAllTimers();
+      });
+    });
   });
 });

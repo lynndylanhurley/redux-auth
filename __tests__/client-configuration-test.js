@@ -3,15 +3,23 @@ jest.autoMockOff();
 var initialize,
     server;
 
+
+var testUid        = "test@test.com",
+    testToken      = "xyz",
+    testClient     = "123",
+    apiUrl         = "http://api.site.com",
+    testExpiry     = new Date().getTime() + 500;
+
 describe("client configuration", () => {
-  var React       = require("react");
+  var React       = require("react"),
       sinon       = require("sinon"),
       $           = require("jquery"),
       Auth        = require("j-toker"),
-      {pushState} = require ("redux-router"),
+      {pushState} = require("redux-router"),
       {match}     = require("redux-router/server");
 
   beforeEach(() => {
+    Auth.reset();
     ({initialize} = require("../test/helper"));
   });
 
@@ -30,22 +38,23 @@ describe("client configuration", () => {
         });
 
       jest.runAllTimers();
-
-      // TODO: test that existing cookies were cleared?
     });
 
     pit("should redirect unauthenticated users to login page", () => {
       return new Promise((res, rej) => {
         initialize()
           .then(({provider, store}) => {
+            // TODO: test that existing cookies were cleared?
+
+            //console.log("@-->remaining cookie", cookie("accessToken"));
+
             store.dispatch(match("/account", (err, {pathname}, renderProps) => {
               expect(pathname).toBe("/login");
               res();
             }));
 
             jest.runAllTimers();
-          })
-          .catch(e => rej(e));
+          });
 
         jest.runAllTimers();
       });
@@ -92,7 +101,7 @@ describe("client configuration", () => {
     pit("should handle authenticated users", () => {
       const nextToken = "abc";
 
-      server.respondWith("GET", "/api/hello", (request) => {
+      server.respondWith("GET", `${apiUrl}/api/hello`, (request) => {
         let reqHeaders = request.requestHeaders;
         expect(reqHeaders["access-token"]).toBe(headers["access-token"]);
         expect(reqHeaders["uid"]).toBe(headers["uid"]);
@@ -118,7 +127,7 @@ describe("client configuration", () => {
 
       return new Promise((ok) => {
         // next request should include auth headers
-        $.get("/api/hello").then(resp => {
+        $.get(`${apiUrl}/api/hello`).then(resp => {
           // cookie should have been updated to latest
           setTimeout(() => {
             expect(Auth.retrieveData("authHeaders")["access-token"]).toBe(nextToken);

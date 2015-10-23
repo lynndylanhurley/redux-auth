@@ -40,14 +40,16 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
 
   // access control method, used above in the "account" route
   var requireAuth = (nextState, transition, cb) => {
+    console.log("running require auth");
     // the setTimeout is necessary because of this bug:
     // https://github.com/rackt/redux-router/pull/62
-    // this will result in a bunch of warnings, but it doesn't seem to be a serious problem
+    // this will result in a bunch of warnings, but it's not a show stopper
     setTimeout(() => {
       if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
         console.log("failed auth check, transitioning to /login");
         transition(null, "/login");
       }
+      console.log("calling requireAuth callback");
       cb();
     }, 0);
   };
