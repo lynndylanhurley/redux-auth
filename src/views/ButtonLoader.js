@@ -19,7 +19,7 @@ class ButtonLoader extends React.Component {
     spinConfig: {
       lines: 10,
       length: 4,
-      width: 1,
+      width: 2,
       radius: 3
     },
     children: <span>Submit</span>
