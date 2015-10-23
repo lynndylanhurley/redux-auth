@@ -20,6 +20,7 @@ import {
   currentUserProvider: auth.getIn(["user", "attributes", "uid"]) || "none"
 }))
 class Main extends React.Component {
+
   render () {
     return (
       <div>

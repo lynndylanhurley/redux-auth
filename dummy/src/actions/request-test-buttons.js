@@ -1,4 +1,5 @@
 import $ from "jquery";
+import {fetch} from "../../../src/index";
 
 export const REQUEST_TEST_START    = "REQUEST_TEST_START";
 export const REQUEST_TEST_COMPLETE = "REQUEST_TEST_COMPLETE";
@@ -25,8 +26,18 @@ export function requestTest(url, key) {
   return dispatch => {
     dispatch(requestTestStart(key));
 
-    return Promise.resolve($.get(url))
-      .then(() => dispatch(requestTestComplete(key)))
-      .catch(() => dispatch(requestTestError(key)));
+    return fetch(url, {credentials: "include"})
+      .then(resp => {
+        console.log("resp", resp);
+        if (resp && resp.statusText === "OK") {
+          return dispatch(requestTestComplete(key))
+        } else {
+          dispatch(requestTestError(key));
+        }
+      })
+      .catch(resp => {
+        console.log("fail", resp);
+        dispatch(requestTestError(key))
+      });
   };
 }

@@ -20,7 +20,11 @@ export function configure(config) {
   return dispatch => {
     dispatch(authenticateStart());
 
-    let promise;
+    let promise,
+        firstTimeLogin,
+        mustResetPassword,
+        user,
+        headers;
 
     if (config.isServer) {
       // this is a server side validation. don't actually run Auth.configure
@@ -42,17 +46,24 @@ export function configure(config) {
         if (rawServerCreds) {
           let serverCreds = JSON.parse(rawServerCreds);
 
-          // sync client dom to prevent React "out of sync" error
-          dispatch(authenticateComplete(serverCreds.user));
-          dispatch(ssAuthTokenUpdate({
-            headers: serverCreds.headers,
-            mustResetPassword: serverCreds.mustResetPassword,
-            firstTimeLogin: serverCreds.firstTimeLogin
-          }));
+          ({headers, user, firstTimeLogin, mustResetPassword} = serverCreds);
 
-          // instruct j-token to NOT send initial validation request, but to
-          // instead use the credentials that were sent back by the server.
-          config.initialCredentials = serverCreds;
+          console.log("@-->server creds", serverCreds);
+
+          if (user) {
+            dispatch(authenticateComplete(user));
+
+            // instruct j-token to NOT send initial validation request, but to
+            // instead use the credentials that were sent back by the server.
+            config.initialCredentials = serverCreds;
+          }
+
+          // sync client dom to prevent React "out of sync" error
+          dispatch(ssAuthTokenUpdate({
+            headers,
+            mustResetPassword,
+            firstTimeLogin
+          }));
         }
       }
 
@@ -79,11 +90,29 @@ export function configure(config) {
       .then(user => {
         console.log("returning user", user);
         dispatch(authenticateComplete(user));
+
+        if (firstTimeLogin) {
+          dispatch(showFirstTimeLoginSuccessModal());
+        }
+
+        if (mustResetPassword) {
+          dispatch(showPasswordResetSuccessModal());
+        }
+
         return user;
       })
       .catch(err => {
         console.log("returning without user", err);
         dispatch(authenticateError([err.reason]));
+
+        if (firstTimeLogin) {
+          dispatch(showFirstTimeLoginErrorModal());
+        }
+
+        if (mustResetPassword) {
+          dispatch(showPasswordResetErrorModal());
+        }
+
         return Promise.resolve(err);
       });
   };

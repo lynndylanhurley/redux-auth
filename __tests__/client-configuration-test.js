@@ -1,14 +1,49 @@
 jest.autoMockOff();
 
-var initialize,
-    server;
+var initialize;
 
 
 var testUid        = "test@test.com",
     testToken      = "xyz",
     testClient     = "123",
     apiUrl         = "http://api.site.com",
-    testExpiry     = new Date().getTime() + 500;
+    testExpiry     = new Date().getTime() + 500,
+    tokenBridge,
+    fetch;
+
+
+
+function fetchSuccessResp () {
+  console.log("@-->fetch mock", arguments);
+
+  var respHeaders = {
+    "Content-Type": "application/json",
+    "access-token": "abc"
+  };
+
+  return Promise.resolve({
+    url: `${apiUrl}/api/hello`,
+    json: () => ({
+      success: true,
+      data: {uid: testUid}
+    }),
+    headers: {
+      get: (key) => respHeaders[key]
+    }
+  });
+};
+
+function createTokenBridge(creds) {
+  let credStr = JSON.stringify(creds);
+  tokenBridge = document.createElement("DIV");
+  tokenBridge.setAttribute("id", "token-bridge");
+  tokenBridge.textContent = credStr;
+  document.body.appendChild(tokenBridge);
+}
+
+function destroyTokenBridge() {
+  document.body.removeChild(tokenBridge);
+}
 
 describe("client configuration", () => {
   var React       = require("react"),
@@ -20,11 +55,15 @@ describe("client configuration", () => {
 
   beforeEach(() => {
     Auth.reset();
+    var fetchMock = jest.genMockFn().mockImpl(fetchSuccessResp);
+    jest.setMock("isomorphic-fetch", fetchMock);
     ({initialize} = require("../test/helper"));
+    fetch = require("../src/utils/fetch");
   });
 
   afterEach(() => {
     initialize = null;
+    jest.dontMock("isomorphic-fetch");
     Auth.reset();
   });
 
@@ -59,11 +98,55 @@ describe("client configuration", () => {
         jest.runAllTimers();
       });
     });
+
+    pit("should show error modal for failed account confirmations", () => {
+      return new Promise(res => {
+        createTokenBridge({
+          headers: undefined,
+          firstTimeLogin: true,
+        });
+
+        initialize()
+          .then(({provider, store}) => {
+            let user = store.getState().auth.get("user");
+            let ui = store.getState().auth.get("ui");
+            expect(user.get("isSignedIn")).toBe(false);
+            expect(user.get("attributes")).toBe(null);
+            expect(ui.get("firstTimeLoginErrorModalVisible")).toBe(true);
+            destroyTokenBridge();
+            res();
+          });
+
+        jest.runAllTimers();
+      });
+    });
+
+
+    pit("should show error modal for failed password resets", () => {
+      return new Promise(res => {
+        createTokenBridge({
+          headers: undefined,
+          mustResetPassword: true,
+        });
+
+        initialize()
+          .then(({provider, store}) => {
+            let user = store.getState().auth.get("user");
+            let ui = store.getState().auth.get("ui");
+            expect(user.get("isSignedIn")).toBe(false);
+            expect(user.get("attributes")).toBe(null);
+            expect(ui.get("passwordResetErrorModalVisible")).toBe(true);
+            destroyTokenBridge();
+            res();
+          });
+
+        jest.runAllTimers();
+      });
+    });
   });
 
   describe("authenticated user", () => {
     var credentials,
-        tokenBridge,
         headers = {
           "access-token": "xyz",
           client: "123",
@@ -74,46 +157,21 @@ describe("client configuration", () => {
         };
 
     beforeEach(() => {
-      server = sinon.fakeServer.create();
-
-      // create "token bridge" element containing credentials
-      credentials = {
-        user,
-        headers,
-        mustResetPassword: false,
-        firstTimeLogin: true
-      };
-
-      let credStr = JSON.stringify(credentials);
-
-      tokenBridge = document.createElement("DIV");
-      tokenBridge.setAttribute("id", "token-bridge");
-      tokenBridge.textContent = credStr;
-      document.body.appendChild(tokenBridge);
     });
 
     afterEach(() => {
       // remove "token bridge" element from the DOM
-      document.body.removeChild(tokenBridge);
-      server.restore();
+      destroyTokenBridge();
     });
 
     pit("should handle authenticated users", () => {
       const nextToken = "abc";
 
-      server.respondWith("GET", `${apiUrl}/api/hello`, (request) => {
-        let reqHeaders = request.requestHeaders;
-        expect(reqHeaders["access-token"]).toBe(headers["access-token"]);
-        expect(reqHeaders["uid"]).toBe(headers["uid"]);
-        expect(reqHeaders["client"]).toBe(headers["client"]);
-
-        request.respond(
-          200, {
-            "Content-Type": "application/json",
-            "access-token": nextToken
-          },
-          JSON.stringify([{message: "hello"}])
-        );
+      createTokenBridge({
+        user,
+        headers,
+        mustResetPassword: false,
+        firstTimeLogin: true
       });
 
       initialize()
@@ -125,17 +183,60 @@ describe("client configuration", () => {
 
       jest.runAllTimers();
 
+      console.log("@-->making fetch request");
+
       return new Promise((ok) => {
+        console.log("@-->fetching results");
         // next request should include auth headers
-        $.get(`${apiUrl}/api/hello`).then(resp => {
+        fetch(`${apiUrl}/api/hello`).then(resp => {
+          console.log("@-->get response", resp);
           // cookie should have been updated to latest
-          setTimeout(() => {
-            expect(Auth.retrieveData("authHeaders")["access-token"]).toBe(nextToken);
-            ok();
-          });
+          expect(Auth.retrieveData("authHeaders")["access-token"]).toBe(nextToken);
+          ok();
+        });
+      });
+    });
+
+    pit("should show success modal for account confirmations", () => {
+      return new Promise(res => {
+        createTokenBridge({
+          user,
+          headers,
+          firstTimeLogin: true
         });
 
-        server.respond();
+        initialize()
+          .then(({provider, store}) => {
+            let user = store.getState().auth.get("user");
+            let ui = store.getState().auth.get("ui");
+            expect(user.get("isSignedIn")).toBe(true);
+            expect(user.getIn(["attributes", "uid"])).toBe("test@test.com");
+            expect(ui.get("firstTimeLoginSuccessModalVisible")).toBe(true);
+            res();
+          });
+
+        jest.runAllTimers();
+      });
+    });
+
+    pit("should show success modal for password resets", () => {
+      return new Promise(res => {
+        createTokenBridge({
+          user,
+          headers,
+          mustResetPassword: true
+        });
+
+        initialize()
+          .then(({provider, store}) => {
+            let user = store.getState().auth.get("user");
+            let ui = store.getState().auth.get("ui");
+            expect(user.get("isSignedIn")).toBe(true);
+            expect(user.getIn(["attributes", "uid"])).toBe("test@test.com");
+            expect(ui.get("passwordResetSuccessModalVisible")).toBe(true);
+            res();
+          });
+
         jest.runAllTimers();
       });
     });

@@ -84,7 +84,6 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     isServer,
     currentLocation
   })).then(({redirectPath} = {}) => {
-    console.log("@-->next url", redirectPath);
     return ({
       store,
       redirectPath,

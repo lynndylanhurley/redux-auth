@@ -87,7 +87,38 @@ describe("server configuration", () => {
         });
 
         jest.runAllTimers();
+      });
+    });
+
+    pit("handles failed first time logins and password resets", () => {
+      let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
+
+      return new Promise((res, rej) => {
+        initialize({
+          apiUrl,
+          isServer: true,
+          cookies: "",
+          currentLocation: authRedirectUrl
+        }).then(({provider, store}) => {
+          let user = store.getState().auth.get("user");
+          let server = store.getState().auth.get("server");
+
+          // user should not be signed in
+          expect(user.get("isSignedIn")).toBe(false);
+          expect(user.get("attributes")).toBe(null);
+
+          // should still flag first time logins + password resets
+          expect(server.get("mustResetPassword")).toBe(true);
+          expect(server.get("firstTimeLogin")).toBe(true);
+
+          // ensure that the call to the API was made
+          expect(errRespMock.mock.calls.length).toBe(1);
+          res();
+        });
+
+        jest.runAllTimers();
       })
+
     });
 
     pit("should handle failed validations from the API", () => {
@@ -165,6 +196,59 @@ describe("server configuration", () => {
       jest.dontMock("node-fetch");
     });
 
+
+    pit("identifies first time logins and sets flag in store for token bridge", () => {
+      // this is what urls look like when coming from email confirmation links
+      let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oLPqKS5_HvroVw4F_juY3w&config=default&expiry=&token=k5taSSIfQD4hWShkqAjzNQ&uid=z1%40test.com`;
+
+      return new Promise(res => {
+        initialize({
+          apiUrl,
+          isServer: true,
+          currentLocation: authRedirectUrl,
+          cookies: ""
+        })
+          .then(({provider, store}) => {
+            // user should be signed in
+            let user = store.getState().auth.get("user");
+            let server = store.getState().auth.get("server");
+            expect(user.get("isSignedIn")).toBe(true);
+            expect(user.getIn(["attributes", "uid"])).toBe(testUid);
+            expect(server.get("mustResetPassword")).toBe(false);
+            expect(server.get("firstTimeLogin")).toBe(true);
+            res();
+          });
+
+        jest.runAllTimers();
+      });
+    });
+
+    pit("identifies password reset redirects and sets flag in store for token bridge", () => {
+      // this is what urls look like when coming from email confirmation links
+      let authRedirectUrl = `${apiUrl}/?client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
+
+      return new Promise(res => {
+        initialize({
+          apiUrl,
+          isServer: true,
+          currentLocation: authRedirectUrl,
+          cookies: ""
+        })
+        .then(({provider, store}) => {
+          // user should be signed in
+          let user = store.getState().auth.get("user");
+          let server = store.getState().auth.get("server");
+          expect(user.get("isSignedIn")).toBe(true);
+          expect(user.getIn(["attributes", "uid"])).toBe(testUid);
+          expect(server.get("mustResetPassword")).toBe(true);
+          expect(server.get("firstTimeLogin")).toBe(false);
+          res();
+        });
+
+        jest.runAllTimers();
+      });
+    });
+
     pit("allows authenticated users to access restricted pages", () => {
       return new Promise(res => {
         initialize({
@@ -178,6 +262,8 @@ describe("server configuration", () => {
             let user = store.getState().auth.get("user");
             expect(user.get("isSignedIn")).toBe(true);
             expect(user.getIn(["attributes", "uid"])).toBe(testUid);
+            expect(user.get("mustResetPassword")).toBe(false);
+            expect(user.get("firstTimeLogin")).toBe(false);
 
             console.log("@-->user", user);
 
@@ -194,8 +280,6 @@ describe("server configuration", () => {
               uid: testUid,
               expiry: `${testExpiry}`
             });
-
-            console.log("@-->dispatching account page");
 
             store.dispatch(match("/account", (error, redirect, renderProps) => {
               // authorized user should not be redirected

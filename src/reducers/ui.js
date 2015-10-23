@@ -194,10 +194,6 @@ export default createReducer(initialState, {
     "destroyAccountErrorModalVisible", false
   ),
 
-
-  [uiActions.SHOW_FIRST_TIME_LOGIN_SUCCESS_MODAL]: state => state.set(
-  ),
-
   [serverActions.SS_AUTH_TOKEN_UPDATE]: (state, {mustResetPassword, firstTimeLogin}) => state.merge({
     passwordResetSuccessModalVisible: mustResetPassword,
     firstTimeLoginSuccessModalVisible: firstTimeLogin

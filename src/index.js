@@ -54,3 +54,6 @@ export UpdatePasswordForm from "./views/UpdatePasswordForm";
 export DestroyAccountButton from "./views/DestroyAccountButton";
 export TokenBridge from "./views/TokenBridge";
 export ButtonLoader from "./views/ButtonLoader";
+
+/* utils */
+export fetch from "./utils/fetch";

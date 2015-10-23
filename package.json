@@ -107,12 +107,16 @@
   "jest": {
     "scriptPreprocessor": "<rootDir>/node_modules/babel-jest",
     "verbose": true,
-    "collectCoverage": false,
+    "collectCoverage": true,
     "globals": {
       "__TEST__": true
     },
     "collectCoverageOnlyFrom": {
-      "<rootDir>/src/**/*": true
+      "<rootDir>/src/actions/configure.js": true,
+      "<rootDir>/src/reducers/configure.js": true,
+      "<rootDir>/src/utils/parse-url.js": true,
+      "<rootDir>/src/utils/verify-auth.js": true,
+      "<rootDir>/src/utils/fetch.js": true
     },
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/classnames",
