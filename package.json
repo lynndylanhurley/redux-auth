@@ -116,7 +116,8 @@
       "<rootDir>/src/reducers/configure.js": true,
       "<rootDir>/src/utils/parse-url.js": true,
       "<rootDir>/src/utils/verify-auth.js": true,
-      "<rootDir>/src/utils/fetch.js": true
+      "<rootDir>/src/utils/fetch.js": true,
+      "<rootDir>/src/views/bootstrap/ButtonLoader.js": true
     },
     "unmockedModulePathPatterns": [
       "<rootDir>/node_modules/classnames",

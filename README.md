@@ -82,7 +82,9 @@ BSD 3-Clause license. Copyright © 2015, Rick Wong. All rights reserved.
 
 [x] namespace bootstrap views
 
-[ ] button loader glyph -> icon
+[x] button loader glyph -> icon
+
+[ ] fix token bridge bug
 
 [ ] test bootstrap views
   [ ] ButtonLoader.js
@@ -117,4 +119,35 @@ BSD 3-Clause license. Copyright © 2015, Rick Wong. All rights reserved.
     [ ] UpdatePasswordSuccessModal.js
 
 [ ] create material ui views
+  [ ] ButtonLoader.js
+  [ ] DestroyAccountButton.js
+  [ ] EmailSignInForm.js
+  [ ] EmailSignUpForm.js
+  [ ] ErrorList.js
+  [ ] Input.js
+  [ ] OAuthSignInButton.js
+  [ ] RequestPasswordResetForm.js
+  [ ] SignOutButton.js
+  [ ] UpdatePasswordForm.js
+
+  [ ] modals
+    [ ] AuthModals.js
+    [ ] DestroyAccountErrorModal.js
+    [ ] DestroyAccountSuccessModal.js
+    [ ] EmailSignInErrorModal.js
+    [ ] EmailSignInSuccessModal.js
+    [ ] EmailSignUpErrorModal.js
+    [ ] EmailSignUpSuccessModal.js
+    [ ] FirstTimeLoginErrorModal.js
+    [ ] FirstTimeLoginSuccessModal.js
+    [ ] OAuthSignInErrorModal.js
+    [ ] OAuthSignInSuccessModal.js
+    [ ] PasswordResetSuccessModal.js
+    [ ] RequestPasswordResetErrorModal.js
+    [ ] RequestPasswordResetSuccessModal.js
+    [ ] SignOutErrorModal.js
+    [ ] SignOutSuccessModal.js
+    [ ] UpdatePasswordErrorModal.js
+    [ ] UpdatePasswordSuccessModal.js
+
 [ ] react native demo

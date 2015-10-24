@@ -7,6 +7,8 @@ class ButtonLoader extends React.Component {
     icon: PropTypes.node,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
+    spinColorDark: PropTypes.string,
+    spinColorLight: PropTypes.string,
     children: PropTypes.node,
     onClick: PropTypes.func.isRequired,
     style: PropTypes.object
@@ -21,6 +23,8 @@ class ButtonLoader extends React.Component {
       width: 2,
       radius: 3
     },
+    spinColorDark: "#444",
+    spinColorLight: "#fff",
     children: <span>Submit</span>,
     style: {}
   }
@@ -29,13 +33,11 @@ class ButtonLoader extends React.Component {
     let icon;
 
     if (this.props.loading) {
-      let spinColor;
-      if (!this.props.bsStyle || this.props.bsStyle === "default") {
-        spinColor = "#444";
-      } else {
-        spinColor = "#fff";
-      }
-      icon = <Spinner {...this.props.spinConfig} color={spinColor} loaded={false} />;
+      let spinColor = (!this.props.bsStyle || this.props.bsStyle === "default")
+        ? this.props.spinColorDark
+        : this.props.spinColorLight;
+
+      icon = <Spinner ref="spinner" {...this.props.spinConfig} color={spinColor} loaded={false} />;
     } else {
       icon = this.props.icon;
     }
