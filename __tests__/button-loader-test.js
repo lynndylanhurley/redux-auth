@@ -2,15 +2,9 @@ jest.autoMockOn();
 jest.dontMock("../src/views/bootstrap/ButtonLoader");
 describe("ButtonLoader", () => {
   var TestUtils,
-      BSButtonLoader,
       ReactDOM,
       React,
-      ButtonLoader,
-      onClick,
-      children,
-      spinConfig,
-      loading,
-      glyph;
+      ButtonLoader;
 
   [
     "../src/views/bootstrap/ButtonLoader"

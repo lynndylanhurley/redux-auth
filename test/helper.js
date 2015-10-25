@@ -101,3 +101,12 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     };
   });
 }
+
+
+export function genStore() {
+  // merge all relevant reducers
+  let reducer = combineReducers({auth: authStateReducer});
+
+  // create the redux store
+  return compose(applyMiddleware(thunk))(createStore)(reducer);
+}

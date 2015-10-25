@@ -1,4 +1,6 @@
-import Auth from "j-toker";
+import {getEmailSignInUrl}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import fetch from "../utils/fetch";
 
 export const EMAIL_SIGN_IN_START       = "EMAIL_SIGN_IN_START";
 export const EMAIL_SIGN_IN_COMPLETE    = "EMAIL_SIGN_IN_COMPLETE";
@@ -17,16 +19,20 @@ export function emailSignInComplete(user, showModal) {
 export function emailSignInError(errors) {
   return { type: EMAIL_SIGN_IN_ERROR, errors };
 }
-export function emailSignIn(opts) {
+export function emailSignIn(body, endpointKey) {
   return dispatch => {
     dispatch(emailSignInStart());
 
-    let jqPromise = Auth.emailSignIn(opts);
-
-    jqPromise.then((user) => dispatch(emailSignInComplete(user)));
-
-    return Promise
-      .resolve(jqPromise)
-      .catch(({ data }) => dispatch(emailSignInError(data.errors)));
+    return fetch(getEmailSignInUrl(endpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "post",
+      body: JSON.stringify(body)
+    })
+      .then(parseResponse)
+      .then((user) => dispatch(emailSignInComplete(user)))
+      .catch((errors) => dispatch(emailSignInError(errors)));
   };
 }

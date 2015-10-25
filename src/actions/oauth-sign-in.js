@@ -1,4 +1,5 @@
-import Auth from "j-toker";
+import {getOAuthUrl} from "../utils/session-storage";
+import authenticate from "../utils/oauth-popup";
 
 export const OAUTH_SIGN_IN_START    = "OAUTH_SIGN_IN_START";
 export const OAUTH_SIGN_IN_COMPLETE = "OAUTH_SIGN_IN_COMPLETE";
@@ -13,17 +14,14 @@ export function oAuthSignInComplete(user) {
 export function oAuthSignInError(errors) {
   return { type: OAUTH_SIGN_IN_ERROR, errors };
 }
-export function oAuthSignIn(opts) {
+export function oAuthSignIn({provider, params, endpointKey}) {
   return dispatch => {
-    dispatch(oAuthSignInStart(opts.provider));
+    dispatch(oAuthSignInStart(provider));
 
-    let jqPromise = Auth.oAuthSignIn(opts);
-    jqPromise.then((user) => {
-      dispatch(oAuthSignInComplete(user));
-    });
+    let url = getOAuthUrl({provider, params, endpointKey});
 
-    return Promise
-      .resolve(jqPromise)
-      .catch(({ data }) => dispatch(oAuthSignInError(data.errors)));
+    authenticate({provider, url})
+      .then(user => dispatch(oAuthSignInComplete(user)))
+      .catch(({ errors }) => dispatch(oAuthSignInError(errors)));
   };
 }

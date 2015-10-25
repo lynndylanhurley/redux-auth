@@ -1,4 +1,6 @@
-import Auth from "j-toker";
+import {getDestroyAccountUrl}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import fetch from "../utils/fetch";
 
 export const DESTROY_ACCOUNT_START = "DESTROY_ACCOUNT_START";
 export const DESTROY_ACCOUNT_COMPLETE = "DESTROY_ACCOUNT_COMPLETE";
@@ -18,12 +20,18 @@ export function destroyAccount() {
   return dispatch => {
     dispatch(destroyAccountStart());
 
-    let jqPromise = Auth.destroyAccount();
+    //let jqPromise = Auth.destroyAccount();
 
-    jqPromise.then(({message}) => dispatch(destroyAccountComplete(message)));
+    return fetch(getDestroyAccountUrl(), {method: "delete"})
+      .then(parseResponse)
+      .then(({message}) => dispatch(destroyAccountComplete(message)))
+      .catch(({errors}) => dispatch(destroyAccountError(errors)));
 
-    return Promise
-      .resolve(jqPromise)
-      .catch(({data}) => dispatch(destroyAccountError(data.errors)));
+
+    //jqPromise.then(({message}) => );
+
+    //return Promise
+      //.resolve(jqPromise)
+      //.catch(({data}) => dispatch(destroyAccountError(data.errors)));
   };
 }

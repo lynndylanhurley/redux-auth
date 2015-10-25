@@ -1,4 +1,7 @@
-import Auth from "j-toker";
+import {getPasswordResetRequestUrl, getPasswordResetRedirectUrl}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import extend from "extend";
+import fetch from "../utils/fetch";
 
 export const REQUEST_PASSWORD_RESET_START       = "REQUEST_PASSWORD_RESET_START";
 export const REQUEST_PASSWORD_RESET_COMPLETE    = "REQUEST_PASSWORD_RESET_COMPLETE";
@@ -18,16 +21,22 @@ export function requestPasswordResetComplete(message) {
 export function requestPasswordResetError(errors) {
   return { type: REQUEST_PASSWORD_RESET_ERROR, errors };
 }
-export function requestPasswordReset(opts) {
+export function requestPasswordReset(body, endpointKey) {
   return dispatch => {
     dispatch(requestPasswordResetStart());
 
-    let jqPromise = Auth.requestPasswordReset(opts);
-
-    jqPromise.then(({message}) => dispatch(requestPasswordResetComplete(message)));
-
-    return Promise
-      .resolve(jqPromise)
-      .catch(({data}) => dispatch(requestPasswordResetError(data.errors)));
+    return fetch(getPasswordResetRequestUrl(endpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "post",
+      body: JSON.stringify(extend(body, {
+        redirect_url: getPasswordResetRedirectUrl()
+      }))
+    })
+      .then(parseResponse)
+      .then(({message}) => dispatch(requestPasswordResetComplete(message)))
+      .catch(({errors}) => dispatch(requestPasswordResetError(errors)));
   };
 }

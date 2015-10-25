@@ -3,7 +3,7 @@ import extend from "extend";
 import url from "url";
 import Auth from "j-toker";
 
-const normalizeTokenKeys = function(params) {
+export function normalizeTokenKeys (params) {
   // normalize keys
   if (params.token) {
     params['access-token'] = params.token;
@@ -45,7 +45,7 @@ const getAnchorQs = function(location) {
 };
 
 
-const getAllParams = function(location) {
+export function getAllParams (location) {
   return extend({}, getAnchorQs(location), getSearchQs(location));
 };
 

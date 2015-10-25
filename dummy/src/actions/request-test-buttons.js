@@ -1,4 +1,3 @@
-import $ from "jquery";
 import {fetch} from "../../../src/index";
 
 export const REQUEST_TEST_START    = "REQUEST_TEST_START";
@@ -26,14 +25,22 @@ export function requestTest(url, key) {
   return dispatch => {
     dispatch(requestTestStart(key));
 
-    return fetch(url, {credentials: "include"})
+    return fetch(url, {
+      credentials: "include"
+    })
       .then(resp => {
-        console.log("resp", resp);
+        console.log();
         if (resp && resp.statusText === "OK") {
-          return dispatch(requestTestComplete(key))
+          dispatch(requestTestComplete(key))
         } else {
           dispatch(requestTestError(key));
         }
+
+        return resp.json();
+      })
+      .then(json => {
+        console.log("@-->resp json", json);
+        return json;
       })
       .catch(resp => {
         console.log("fail", resp);

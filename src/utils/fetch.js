@@ -1,27 +1,32 @@
 import originalFetch from "isomorphic-fetch";
+import * as C from "./constants";
 import extend from "extend";
-import Auth from "j-toker";
+import {
+  getApiUrl,
+  retrieveData,
+  persistData,
+  getTokenFormat
+} from "./session-storage";
 
 var isApiRequest = function(url) {
-  return (url.match(Auth.getApiUrl()));
+  return (url.match(getApiUrl()));
 };
 
 function getAuthHeaders(url) {
-  console.log("building auth headers");
   if (isApiRequest(url)) {
     // fetch current auth headers from storage
-    var currentHeaders = Auth.retrieveData("authHeaders") || {},
+    var currentHeaders = retrieveData(C.SAVED_CREDS_KEY) || {},
         nextHeaders = {};
 
     // bust IE cache
-    nextHeaders['If-Modified-Since'] = 'Mon, 26 Jul 1997 05:00:00 GMT';
+    nextHeaders["If-Modified-Since"] = "Mon, 26 Jul 1997 05:00:00 GMT";
 
     // set header for each key in `tokenFormat` config
-    for (var key in Auth.getConfig().tokenFormat) {
+    for (var key in getTokenFormat()) {
       nextHeaders[key] = currentHeaders[key];
     }
 
-    console.log("@-->next headers", nextHeaders);
+    console.log("using headers", nextHeaders);
 
     return nextHeaders;
   } else {
@@ -30,7 +35,6 @@ function getAuthHeaders(url) {
 }
 
 function updateAuthCredentials(resp) {
-  console.log("updating auth creds with", resp);
   // check config apiUrl matches the current response url
   if (isApiRequest(resp.url)) {
     // set header for each key in `tokenFormat` config
@@ -41,7 +45,7 @@ function updateAuthCredentials(resp) {
     var blankHeaders = true;
 
     // set header key + val for each key in `tokenFormat` config
-    for (var key in Auth.getConfig().tokenFormat) {
+    for (var key in getTokenFormat()) {
       newHeaders[key] = resp.headers.get(key);
 
       if (newHeaders[key]) {
@@ -51,7 +55,7 @@ function updateAuthCredentials(resp) {
 
     // persist headers for next request
     if (!blankHeaders) {
-      Auth.persistData("authHeaders", newHeaders);
+      persistData(C.SAVED_CREDS_KEY, newHeaders);
     }
   }
 
@@ -63,8 +67,6 @@ export default function (url, options={}) {
     options.headers = {}
   }
   extend(options.headers, getAuthHeaders(url));
-
-  console.log("@-->orig fetch", originalFetch);
-
-  return originalFetch(url, options).then(updateAuthCredentials);
+  return originalFetch(url, options)
+    .then(resp => updateAuthCredentials(resp));
 }

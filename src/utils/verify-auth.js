@@ -61,7 +61,7 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
 
       var newHeaders;
 
-      return fetch(`${apiUrl}/auth/validate_token`, {
+      return fetch(`${apiUrl}/auth/validate_token?unbatch=true`, {
         headers
       }).then((resp) => {
         newHeaders = parseHeaders(resp.headers._headers);
@@ -88,7 +88,7 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
   return serverAuthPromise;
 }
 
-function verifyAuth({isServer, cookies, apiUrl, currentLocation}) {
+function verifyAuth({apiUrl}, {isServer, cookies, currentLocation}) {
   return new Promise((resolve, reject) => {
     if (isServer) {
       return fetchToken({cookies, apiUrl, currentLocation})

@@ -1,4 +1,3 @@
-import Auth from "j-toker";
 import extend from "extend";
 import {
   authenticateStart,
@@ -12,12 +11,21 @@ import {
   showPasswordResetErrorModal
 } from "./ui";
 import {ssAuthTokenUpdate} from "./server";
+import {applyConfig} from "../utils/client-settings";
+import {destroySession} from "../utils/session-storage";
 import verifyAuth from "../utils/verify-auth";
 import getRedirectInfo from "../utils/parse-url";
 import {pushState} from "redux-router";
 
-export function configure(config) {
+export function configure(endpoint, settings) {
   return dispatch => {
+    // don't render anything for OAuth redirects
+    console.log("current location", settings.currentLocation);
+    if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
+      console.log("@-->rendering blank page");
+      return Promise.resolve({blank: true});
+    }
+
     dispatch(authenticateStart());
 
     let promise,
@@ -26,9 +34,9 @@ export function configure(config) {
         user,
         headers;
 
-    if (config.isServer) {
+    if (settings.isServer) {
       // this is a server side validation. don't actually run Auth.configure
-      promise = verifyAuth(config)
+      promise = verifyAuth(endpoint, settings)
         .then(({user, newHeaders, firstTimeLogin, mustResetPassword}) => {
           dispatch(ssAuthTokenUpdate({headers: newHeaders, firstTimeLogin, mustResetPassword}));
           return user;
@@ -48,14 +56,12 @@ export function configure(config) {
 
           ({headers, user, firstTimeLogin, mustResetPassword} = serverCreds);
 
-          console.log("@-->server creds", serverCreds);
-
           if (user) {
             dispatch(authenticateComplete(user));
 
             // instruct j-token to NOT send initial validation request, but to
             // instead use the credentials that were sent back by the server.
-            config.initialCredentials = serverCreds;
+           settings.initialCredentials = serverCreds;
           }
 
           // sync client dom to prevent React "out of sync" error
@@ -74,21 +80,20 @@ export function configure(config) {
       }
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
-        config.initialCredentials = extend({}, config.initialCredentials, authRedirectHeaders);
+        settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
       }
 
       // if tokens were invalidated by server, make sure to clear browser
       // credentials
-      if (!config.initialCredentials) {
-        Auth.destroySession();
+      if (!settings.initialCredentials) {
+        destroySession();
       }
 
-      promise = Promise.resolve(Auth.configure(config));
+      promise = Promise.resolve(applyConfig({endpoint, settings}));
     }
 
     return promise
       .then(user => {
-        console.log("returning user", user);
         dispatch(authenticateComplete(user));
 
         if (firstTimeLogin) {
@@ -101,9 +106,8 @@ export function configure(config) {
 
         return user;
       })
-      .catch(err => {
-        console.log("returning without user", err);
-        dispatch(authenticateError([err.reason]));
+      .catch(({reason}) => {
+        dispatch(authenticateError([reason]));
 
         if (firstTimeLogin) {
           dispatch(showFirstTimeLoginErrorModal());
@@ -113,7 +117,7 @@ export function configure(config) {
           dispatch(showPasswordResetErrorModal());
         }
 
-        return Promise.resolve(err);
+        return Promise.resolve({reason});
       });
   };
 }

@@ -1,4 +1,7 @@
-import Auth from "j-toker";
+import {getEmailSignUpUrl, getConfirmationSuccessUrl}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import extend from "extend";
+import fetch from "../utils/fetch";
 
 export const EMAIL_SIGN_UP_START       = "EMAIL_SIGN_UP_START";
 export const EMAIL_SIGN_UP_COMPLETE    = "EMAIL_SIGN_UP_COMPLETE";
@@ -17,16 +20,22 @@ export function emailSignUpComplete(user) {
 export function emailSignUpError(errors) {
   return { type: EMAIL_SIGN_UP_ERROR, errors };
 }
-export function emailSignUp(opts) {
+export function emailSignUp(body, endpointKey) {
   return dispatch => {
     dispatch(emailSignUpStart());
 
-    let jqPromise = Auth.emailSignUp(opts);
-
-    jqPromise.then(({data}) => dispatch(emailSignUpComplete(data)));
-
-    return Promise
-      .resolve(jqPromise)
-      .catch(({data}) => dispatch(emailSignUpError(data.errors)));
+    return fetch(getEmailSignUpUrl(endpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "post",
+      body: JSON.stringify(extend(body, {
+        confirm_success_url: getConfirmationSuccessUrl()
+      }))
+    })
+      .then(parseResponse)
+      .then((user) => dispatch(emailSignUpComplete(user)))
+      .catch(({errors}) => dispatch(emailSignUpError(errors)));
   };
 }

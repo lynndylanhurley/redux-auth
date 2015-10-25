@@ -1,4 +1,6 @@
-import Auth from "j-toker";
+import {getSignOutUrl, destroySession}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import fetch from "../utils/fetch";
 
 export const SIGN_OUT_START    = "SIGN_OUT_START";
 export const SIGN_OUT_COMPLETE = "SIGN_OUT_COMPLETE";
@@ -13,16 +15,19 @@ export function signOutComplete(user) {
 export function signOutError(errors) {
   return { type: SIGN_OUT_ERROR, errors };
 }
-export function signOut(opts) {
+export function signOut() {
   return dispatch => {
     dispatch(signOutStart());
 
-    let jqPromise = Auth.signOut(opts);
-
-    jqPromise.then(user => dispatch(signOutComplete(user)));
-
-    return Promise
-      .resolve(jqPromise)
-      .catch(({data}) => dispatch(signOutError(data.errors)));
+    return fetch(getSignOutUrl(), {method: "delete"})
+      .then(parseResponse)
+      .then((user) => {
+        dispatch(signOutComplete(user))
+        destroySession();
+      })
+      .catch(({data}) => {
+        dispatch(signOutError(data.errors))
+        destroySession();
+      });
   };
 }

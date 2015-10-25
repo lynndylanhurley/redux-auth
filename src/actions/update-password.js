@@ -1,4 +1,6 @@
-import Auth from "j-toker";
+import {getPasswordUpdateUrl}  from "../utils/session-storage";
+import {parseResponse} from "../utils/handle-fetch-response";
+import fetch from "../utils/fetch";
 
 export const UPDATE_PASSWORD_START       = "UPDATE_PASSWORD_START";
 export const UPDATE_PASSWORD_COMPLETE    = "UPDATE_PASSWORD_COMPLETE";
@@ -17,15 +19,20 @@ export function updatePasswordComplete(user) {
 export function updatePasswordError(errors) {
   return { type: UPDATE_PASSWORD_ERROR, errors };
 }
-export function updatePassword(opts) {
+export function updatePassword(body, endpointKey) {
   return dispatch => {
     dispatch(updatePasswordStart());
 
-    let jqPromise = Auth.updatePassword(opts);
-    jqPromise.then(({user}) => dispatch(updatePasswordComplete(user)));
-
-    return Promise
-      .resolve(jqPromise)
-      .catch(({data}) => dispatch(updatePasswordError(data.errors)));
+    return fetch(getPasswordUpdateUrl(endpointKey), {
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      method: "put",
+      body: JSON.stringify(body)
+    })
+      .then(parseResponse)
+      .then(({user}) => dispatch(updatePasswordComplete(user)))
+      .catch(({errors}) => dispatch(updatePasswordError(errors)));
   };
 }

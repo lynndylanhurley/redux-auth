@@ -79,12 +79,14 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
    * The React Router 1.0 routes for both the server and the client.
    */
   return store.dispatch(configure({
-    apiUrl: "http://devise-token-auth.dev",
+    apiUrl: "http://devise-token-auth.dev"
+  }, {
     cookies,
     isServer,
     currentLocation
-  })).then(({redirectPath} = {}) => {
+  })).then(({redirectPath, blank} = {}) => {
     return ({
+      blank,
       store,
       redirectPath,
       provider: (
