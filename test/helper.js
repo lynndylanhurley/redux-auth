@@ -40,16 +40,13 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
 
   // access control method, used above in the "account" route
   var requireAuth = (nextState, transition, cb) => {
-    console.log("running require auth");
     // the setTimeout is necessary because of this bug:
     // https://github.com/rackt/redux-router/pull/62
     // this will result in a bunch of warnings, but it's not a show stopper
     setTimeout(() => {
       if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
-        console.log("failed auth check, transitioning to /login");
         transition(null, "/login");
       }
-      console.log("calling requireAuth callback");
       cb();
     }, 0);
   };
@@ -80,8 +77,6 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
     })
   )(createStore)(reducer);
 
-  console.log("disptaching config");
-
   /**
    * The React Router 1.0 routes for both the server and the client.
    */
@@ -92,7 +87,6 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
     isServer,
     currentLocation
   })).then(({redirectPath} = {}) => {
-    console.log("finished config");
     return {
       store,
       redirectPath,

@@ -26,8 +26,6 @@ function getAuthHeaders(url) {
       nextHeaders[key] = currentHeaders[key];
     }
 
-    console.log("using headers", nextHeaders);
-
     return nextHeaders;
   } else {
     return {};

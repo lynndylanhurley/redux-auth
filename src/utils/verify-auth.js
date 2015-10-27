@@ -89,7 +89,6 @@ export function fetchToken({cookies, apiUrl, currentLocation}) {
 }
 
 function verifyAuth({apiUrl}, {isServer, cookies, currentLocation}) {
-  console.log("@-->verifying auth");
   return new Promise((resolve, reject) => {
     if (isServer) {
       return fetchToken({cookies, apiUrl, currentLocation})

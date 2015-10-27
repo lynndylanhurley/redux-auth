@@ -21,7 +21,6 @@ var testUid        = "test@test.com",
 
 
 const fakeErrorResponse = function() {
-  console.log("returning fake error resp", arguments);
   return Promise.resolve({
     json: () => ({
       success: false,
@@ -107,9 +106,6 @@ describe("server configuration", () => {
         // should still flag first time logins + password resets
         expect(server.get("mustResetPassword")).to.equal(true);
         expect(server.get("firstTimeLogin")).to.equal(true);
-
-        console.log("err resp spy not called?", errRespSpy.notCalled);
-        console.log("err resp spy called once?", errRespSpy.calledOnce);
 
         // ensure that the call to the API was made
         expect(errRespSpy.calledOnce).to.equal(true);

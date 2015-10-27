@@ -47,18 +47,12 @@ function destroyTokenBridge() {
 describe("client configuration", () => {
   jsdom();
 
-  before(() => {
+  beforeEach(() => {
     mockery.enable({
       warnOnReplace: false,
-      warnOnUnregistered: false
+      warnOnUnregistered: false,
+      useCleanCache: true
     });
-  });
-
-  after(() => {
-    mockery.disable();
-  });
-
-  beforeEach(() => {
     resetConfig();
     registerMock("isomorphic-fetch", sinon.spy(fetchSuccessResp));
     ({initialize} = require("../helper"));
@@ -67,6 +61,7 @@ describe("client configuration", () => {
   afterEach(() => {
     initialize = null;
     deregisterMock("isomorphic-fetch");
+    mockery.disable();
     resetConfig();
   });
 

@@ -91,7 +91,6 @@ export function getSessionEndpointKey (k) {
 }
 
 export function getSessionEndpoint (k) {
-  console.log("current endpoint", getCurrentEndpoint());
   return getCurrentEndpoint()[getSessionEndpointKey(k)];
 }
 
