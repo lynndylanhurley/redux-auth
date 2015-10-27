@@ -76,7 +76,7 @@ function unescapeQuotes (val) {
 export function getInitialEndpointKey () {
   return unescapeQuotes(
     Cookies.get(C.SAVED_CONFIG_KEY) ||
-    root.localStorage.getItem(C.SAVED_CONFIG_KEY)
+    (root.localStorage && root.localStorage.getItem(C.SAVED_CONFIG_KEY))
   );
 }
 
@@ -182,7 +182,7 @@ export function retrieveData (key) {
 
   switch (root.authState.currentSettings.storage) {
     case "localStorage":
-      val = root.localStorage.getItem(key);
+      val = root.localStorage && root.localStorage.getItem(key);
       break;
 
     default:

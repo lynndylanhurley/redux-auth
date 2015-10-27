@@ -17,12 +17,11 @@ import verifyAuth from "../utils/verify-auth";
 import getRedirectInfo from "../utils/parse-url";
 import {pushState} from "redux-router";
 
-export function configure(endpoint, settings) {
+export function configure(endpoint={}, settings={}) {
   return dispatch => {
+    console.log("running config", endpoint, settings);
     // don't render anything for OAuth redirects
-    console.log("current location", settings.currentLocation);
     if (settings.currentLocation && settings.currentLocation.match(/blank=true/)) {
-      console.log("@-->rendering blank page");
       return Promise.resolve({blank: true});
     }
 
@@ -35,12 +34,15 @@ export function configure(endpoint, settings) {
         headers;
 
     if (settings.isServer) {
+      console.log("running server config");
       // this is a server side validation. don't actually run Auth.configure
       promise = verifyAuth(endpoint, settings)
         .then(({user, newHeaders, firstTimeLogin, mustResetPassword}) => {
+          console.log("got user", user);
           dispatch(ssAuthTokenUpdate({headers: newHeaders, firstTimeLogin, mustResetPassword}));
           return user;
         }).catch(({reason, firstTimeLogin, mustResetPassword}) => {
+          console.log("failed auth");
           dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
           return Promise.reject(reason);
         });
@@ -116,6 +118,8 @@ export function configure(endpoint, settings) {
         if (mustResetPassword) {
           dispatch(showPasswordResetErrorModal());
         }
+
+        console.log("@-->failed auth", reason);
 
         return Promise.resolve({reason});
       });

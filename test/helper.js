@@ -29,7 +29,7 @@ class App extends React.Component {
 }
 
 
-export function initialize({cookies, isServer, currentLocation} = {}) {
+export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
     router: routerStateReducer,
@@ -80,16 +80,19 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     })
   )(createStore)(reducer);
 
+  console.log("disptaching config");
 
   /**
    * The React Router 1.0 routes for both the server and the client.
    */
   return store.dispatch(configure({
-    apiUrl: "http://api.site.com",
+    apiUrl: "http://api.site.com"
+  }, {
     cookies,
     isServer,
     currentLocation
   })).then(({redirectPath} = {}) => {
+    console.log("finished config");
     return {
       store,
       redirectPath,

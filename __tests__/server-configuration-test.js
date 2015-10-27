@@ -1,6 +1,10 @@
-jest.autoMockOff();
-
-var React = require("react");
+import React from "react";
+import sinon from "sinon";
+import {resetConfig, retrieveData} from "../../src/utils/session-storage";
+import {match} from "redux-router/server";
+import {pushState} from "redux-router";
+import {expect} from "chai";
+import jsdom from "mocha-jsdom";
 
 var initialize;
 
@@ -27,7 +31,6 @@ const fakeErrorResponse = function(url, headers) {
 }
 
 const fakeSuccessResponse = function(url) {
-  console.log("returning success resp");
   return Promise.resolve({
     json: () => ({
       success: true,
@@ -45,9 +48,6 @@ const fakeSuccessResponse = function(url) {
 
 
 describe("server configuration", () => {
-  var {pushState} = require ("redux-router"),
-      {match}     = require("redux-router/server");
-
   afterEach(() => {
     initialize = null;
   });
@@ -58,6 +58,8 @@ describe("server configuration", () => {
     beforeEach(() => {
       errRespMock = jest.genMockFn().mockImpl(fakeErrorResponse);
       jest.setMock("node-fetch", errRespMock);
+      errRespMock = sinon.spy(fakeErrorResponse);
+      requireSubvert.subvert("isomorphic-fetch", errRespMock);
       ({initialize} = require("../test/helper"));
     });
 
@@ -65,32 +67,29 @@ describe("server configuration", () => {
       jest.dontMock("node-fetch");
     });
 
-    pit("should not make request for users with no credentials", () => {
-      return new Promise((res, rej) => {
+    it.only("should not make request for users with no credentials", done => {
+      return new Promise((res) => {
         initialize({
           apiUrl,
           isServer: true,
           cookies: "",
           currentLocation: "/"
-        }).then(({provider, store}) => {
+        }).then(({store}) => {
           let user = store.getState().auth.get("user");
-
-          console.log("@-->user", user);
 
           // user should not be signed in
           expect(user.get("isSignedIn")).toBe(false);
           expect(user.get("attributes")).toBe(null);
 
           // ensure that no calls were made to the API
-          expect(errRespMock.mock.calls.length).toBe(0);
+          expect(errRespMock.notCalled);
+          done();
           res();
         });
-
-        jest.runAllTimers();
       });
     });
 
-    pit("handles failed first time logins and password resets", () => {
+    it("handles failed first time logins and password resets", () => {
       let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
 
       return new Promise((res, rej) => {
@@ -121,7 +120,7 @@ describe("server configuration", () => {
 
     });
 
-    pit("should handle failed validations from the API", () => {
+    it("should handle failed validations from the API", () => {
       return new Promise((res, rej) => {
         initialize({
           apiUrl,
@@ -157,7 +156,7 @@ describe("server configuration", () => {
       })
     });
 
-    pit("should redirect unauthenticated users trying to access restricted pages", () => {
+    it("should redirect unauthenticated users trying to access restricted pages", () => {
       return new Promise((res, rej) => {
         initialize({
           apiUrl,
@@ -197,7 +196,7 @@ describe("server configuration", () => {
     });
 
 
-    pit("identifies first time logins and sets flag in store for token bridge", () => {
+    it("identifies first time logins and sets flag in store for token bridge", () => {
       // this is what urls look like when coming from email confirmation links
       let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oLPqKS5_HvroVw4F_juY3w&config=default&expiry=&token=k5taSSIfQD4hWShkqAjzNQ&uid=z1%40test.com`;
 
@@ -223,7 +222,7 @@ describe("server configuration", () => {
       });
     });
 
-    pit("identifies password reset redirects and sets flag in store for token bridge", () => {
+    it("identifies password reset redirects and sets flag in store for token bridge", () => {
       // this is what urls look like when coming from email confirmation links
       let authRedirectUrl = `${apiUrl}/?client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
 
@@ -249,7 +248,7 @@ describe("server configuration", () => {
       });
     });
 
-    pit("allows authenticated users to access restricted pages", () => {
+    it("allows authenticated users to access restricted pages", () => {
       return new Promise(res => {
         initialize({
           apiUrl,
