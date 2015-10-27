@@ -23,7 +23,7 @@
   "scripts": {
     "release": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.release.js",
     "test": "mocha --compilers .:test/compiler.js test/**/*-test.js",
-    "test-coverage": "istanbul cover node_modules/.bin/_mocha -- --compilers .:test/compiler.js test/**/*-test.js"
+    "test-coverage": "istanbul cover --root ./src node_modules/.bin/_mocha -- --compilers .:test/compiler.js test/**/*-test.js"
   },
   "dependencies": {
     "classnames": "^2.1.5",

@@ -40,6 +40,7 @@ export function getDefaultEndpointKey () {
 
 // reset stateful variables
 export function resetConfig () {
+  root.authState = root.authState || {};
   root.authState.currentSettings    = {};
   root.authState.currentEndpoint    = {};
   root.authState.defaultEndpointKey = null;

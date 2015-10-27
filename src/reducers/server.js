@@ -5,8 +5,7 @@ import * as A from "../actions/server";
 const initialState = Immutable.fromJS({
   nextHeaders: null,
   firstTimeLogin: false,
-  mustResetPassword: false,
-  promise: null
+  mustResetPassword: false
 });
 
 export default createReducer(initialState, {
@@ -16,6 +15,5 @@ export default createReducer(initialState, {
       mustResetPassword,
       firstTimeLogin
     });
-  },
-  [A.SS_SET_LOADING_PROMISE]: (state, {promise}) => state.set("promise", promise)
+  }
 });

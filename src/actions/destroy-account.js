@@ -20,18 +20,9 @@ export function destroyAccount() {
   return dispatch => {
     dispatch(destroyAccountStart());
 
-    //let jqPromise = Auth.destroyAccount();
-
     return fetch(getDestroyAccountUrl(), {method: "delete"})
       .then(parseResponse)
       .then(({message}) => dispatch(destroyAccountComplete(message)))
       .catch(({errors}) => dispatch(destroyAccountError(errors)));
-
-
-    //jqPromise.then(({message}) => );
-
-    //return Promise
-      //.resolve(jqPromise)
-      //.catch(({data}) => dispatch(destroyAccountError(data.errors)));
   };
 }
