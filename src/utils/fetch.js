@@ -5,11 +5,12 @@ import {
   getApiUrl,
   retrieveData,
   persistData,
-  getTokenFormat
+  getTokenFormat,
+  getSessionEndpointKey
 } from "./session-storage";
 
 var isApiRequest = function(url) {
-  return (url.match(getApiUrl()));
+  return (url.match(getApiUrl(getSessionEndpointKey())));
 };
 
 function getAuthHeaders(url) {

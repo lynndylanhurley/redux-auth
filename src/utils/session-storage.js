@@ -30,6 +30,14 @@ export function getCurrentEndpoint () {
   return root.authState.currentEndpoint;
 }
 
+export function setCurrentEndpointKey (k) {
+  root.authState.currentEndpointKey = k;
+}
+
+export function getCurrentEndpointKey () {
+  return root.authState.currentEndpointKey;
+}
+
 export function setDefaultEndpointKey (k) {
   root.authState.defaultEndpointKey = k;
 }
@@ -106,23 +114,23 @@ export function getSignOutUrl () {
 }
 
 export function getEmailSignInUrl (endpointKey) {
-  return `${getApiUrl()}${getSessionEndpoint(endpointKey).emailSignInPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailSignInPath}`
 }
 
 export function getEmailSignUpUrl (endpointKey) {
-  return `${getApiUrl()}${getSessionEndpoint(endpointKey).emailRegistrationPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailRegistrationPath}`
 }
 
 export function getPasswordResetRequestUrl (endpointKey) {
-  return `${getApiUrl()}${getSessionEndpoint(endpointKey).passwordResetPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordResetPath}`
 }
 
 export function getPasswordUpdateUrl (endpointKey) {
-  return `${getApiUrl()}${getSessionEndpoint(endpointKey).passwordUpdatePath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordUpdatePath}`
 }
 
 export function getTokenValidationPath (endpointKey) {
-  return `${getApiUrl()}${getSessionEndpoint(endpointKey).tokenValidationPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).tokenValidationPath}`
 }
 
 export function getOAuthUrl ({provider, params, endpointKey}) {

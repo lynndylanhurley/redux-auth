@@ -107,3 +107,30 @@ export function genStore() {
   // create the redux store
   return compose(applyMiddleware(thunk))(createStore)(reducer);
 }
+
+export function renderConnectedComponent(markup, endpointConfig) {
+  // must re-require TestUtils because of mockery
+  var TestUtils = require("react-addons-test-utils");
+  var store = genStore();
+  return store.dispatch(configure(endpointConfig)).then(() => {
+    return {
+      store,
+      instance: TestUtils.renderIntoDocument(
+        <Provider store={store}>
+          {markup}
+        </Provider>
+      )
+    };
+  });
+}
+
+export function mockFetchResponse(url, status=200, body={}, headers={}) {
+  return Promise.resolve({
+    url,
+    status,
+    headers: {
+      get: (key) => headers[key]
+    },
+    json: () => body
+  });
+}
