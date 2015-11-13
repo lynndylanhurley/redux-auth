@@ -4,7 +4,7 @@ import {resetConfig, retrieveData} from "../../src/utils/session-storage";
 import {match} from "redux-router/server";
 import {expect} from "chai";
 import jsdom from "mocha-jsdom";
-import mockery, {registerMock, deregisterMock} from "mockery";
+import mockery, {registerMock} from "mockery";
 
 global.__TEST__ = true;
 
@@ -48,32 +48,31 @@ describe("client configuration", () => {
   jsdom();
 
   beforeEach(() => {
+    resetConfig();
     mockery.enable({
       warnOnReplace: false,
       warnOnUnregistered: false,
       useCleanCache: true
     });
-    resetConfig();
     registerMock("isomorphic-fetch", sinon.spy(fetchSuccessResp));
     ({initialize} = require("../helper"));
   });
 
   afterEach(() => {
-    initialize = null;
-    deregisterMock("isomorphic-fetch");
+    mockery.deregisterAll();
     mockery.disable();
-    resetConfig();
   });
 
-  describe("unauthenticated user", done => {
-    it("should handle unauthenticated users", () => {
+  describe("unauthenticated user", () => {
+    it("should handle unauthenticated users", done => {
       initialize()
         .then(({store}) => {
           let user = store.getState().auth.get("user");
           expect(user.get("isSignedIn")).to.equal(false);
           expect(user.get("attributes")).to.equal(null);
           done();
-        });
+        })
+        .catch(e => console.log("caught error:", e));
     });
 
     it("should redirect unauthenticated users to login page", done => {
@@ -158,7 +157,7 @@ describe("client configuration", () => {
           expect(user.getIn(["attributes", "uid"])).to.equal("test@test.com");
 
           // next request should include auth headers
-          fetch(`${apiUrl}/api/hello`).then(resp => {
+          fetch(`${apiUrl}/api/hello`).then(() => {
             // cookie should have been updated to latest
             expect(retrieveData("authHeaders")["access-token"]).to.equal(nextToken);
             done();

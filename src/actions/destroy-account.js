@@ -10,17 +10,16 @@ export function destroyAccountStart() {
   return { type: DESTROY_ACCOUNT_START };
 }
 export function destroyAccountComplete(message) {
-  console.log("destroy account message", message);
   return { type: DESTROY_ACCOUNT_COMPLETE, message };
 }
 export function destroyAccountError(errors) {
   return { type: DESTROY_ACCOUNT_ERROR, errors };
 }
-export function destroyAccount() {
+export function destroyAccount(endpoint) {
   return dispatch => {
     dispatch(destroyAccountStart());
 
-    return fetch(getDestroyAccountUrl(), {method: "delete"})
+    return fetch(getDestroyAccountUrl(endpoint), {method: "delete"})
       .then(parseResponse)
       .then(({message}) => dispatch(destroyAccountComplete(message)))
       .catch(({errors}) => dispatch(destroyAccountError(errors)));

@@ -2,7 +2,7 @@ import Immutable from "immutable";
 import { createReducer } from "redux-immutablejs";
 import * as authActions from "../actions/authenticate";
 import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
-import { SIGN_OUT_COMPLETE } from "../actions/sign-out";
+import { SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "../actions/sign-out";
 import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
 import { DESTROY_ACCOUNT_COMPLETE } from "../actions/destroy-account";
 import * as ssActions from "../actions/server";
@@ -21,7 +21,6 @@ export default createReducer(initialState, {
   }),
 
   [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => {
-    console.log("user set to", user, mustResetPassword, firstTimeLogin);
     return state.merge({
       attributes: user,
       isSignedIn: true,
@@ -47,5 +46,6 @@ export default createReducer(initialState, {
   [authActions.AUTHENTICATE_FAILURE]:    state => state.merge(initialState),
   [ssActions.SS_TOKEN_VALIDATION_ERROR]: state => state.merge(initialState),
   [SIGN_OUT_COMPLETE]:                   state => state.merge(initialState),
+  [SIGN_OUT_ERROR]:                      state => state.merge(initialState),
   [DESTROY_ACCOUNT_COMPLETE]:            state => state.merge(initialState)
 });

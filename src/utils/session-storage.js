@@ -10,8 +10,7 @@ var root = Function("return this")() || (42, eval)("this");
 root.authState = {
   currentSettings:    {},
   currentEndpoint:    {},
-  defaultEndpointKey: null,
-  currentEndpointKey: null
+  defaultEndpointKey: null
 }
 
 export function setCurrentSettings (s) {
@@ -31,11 +30,11 @@ export function getCurrentEndpoint () {
 }
 
 export function setCurrentEndpointKey (k) {
-  root.authState.currentEndpointKey = k;
+  persistData(C.SAVED_CONFIG_KEY, k || getDefaultEndpointKey());
 }
 
 export function getCurrentEndpointKey () {
-  return root.authState.currentEndpointKey;
+  return retrieveData(C.SAVED_CONFIG_KEY);
 }
 
 export function setDefaultEndpointKey (k) {
@@ -52,6 +51,7 @@ export function resetConfig () {
   root.authState.currentSettings    = {};
   root.authState.currentEndpoint    = {};
   root.authState.defaultEndpointKey = null;
+  destroySession();
 }
 
 export function destroySession () {
@@ -73,8 +73,6 @@ export function destroySession () {
       path: root.authState.currentSettings.cookiePath || "/"
     });
   }
-
-  root.authState.currentEndpointKey = null;
 }
 
 function unescapeQuotes (val) {
@@ -91,7 +89,7 @@ export function getInitialEndpointKey () {
 
 // TODO: make this really work
 export function getSessionEndpointKey (k) {
-  let key = k || root.authState.currentEndpointKey || root.authState.defaultEndpointKey;
+  let key = k || retrieveData(C.SAVED_CONFIG_KEY) || root.authState.defaultEndpointKey;
   if (!key) {
     throw "You must configure redux-auth before use.";
   } else {
@@ -104,8 +102,8 @@ export function getSessionEndpoint (k) {
 }
 
 // only should work for current session
-export function getDestroyAccountUrl () {
-  return `${getApiUrl()}${getSessionEndpoint().accountDeletePath}`
+export function getDestroyAccountUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).accountDeletePath}`
 }
 
 // only should work for current session
@@ -136,7 +134,7 @@ export function getTokenValidationPath (endpointKey) {
 export function getOAuthUrl ({provider, params, endpointKey}) {
   var oAuthUrl = getApiUrl() + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
     "?auth_origin_url="+encodeURIComponent(root.location.href) +
-    "&config_name="+encodeURIComponent(endpointKey || getSessionEndpointKey());
+    "&config_name="+encodeURIComponent(getSessionEndpointKey(endpointKey));
 
   if (params) {
     for(var key in params) {
@@ -159,7 +157,7 @@ export function getPasswordResetRedirectUrl () {
 }
 
 export function getApiUrl(key) {
-  let configKey = key || root.authState.defaultEndpointKey || root.authState.defaultEndpointKey;
+  let configKey = getSessionEndpointKey(key);
   return root.authState.currentEndpoint[configKey].apiUrl;
 }
 

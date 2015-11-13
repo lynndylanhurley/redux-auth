@@ -19,8 +19,10 @@ class FirstTimeLoginSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        className="first-time-login-success-modal"
+        onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>
             Welcome {this.props.auth.getIn(["user", "attributes", "email"])}!
@@ -32,7 +34,9 @@ class FirstTimeLoginSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            className="first-time-login-success-modal-close"
+            onClick={this.close.bind(this)}>
             Close
           </Button>
         </Modal.Footer>

@@ -19,8 +19,10 @@ class SignOutErrorModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        className="sign-out-error-modal"
+        onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Sign Out Error</Modal.Title>
         </Modal.Header>
@@ -34,7 +36,9 @@ class SignOutErrorModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            className="sign-out-error-modal-close"
+            onClick={this.close.bind(this)}>
             Ok
           </Button>
         </Modal.Footer>

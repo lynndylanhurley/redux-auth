@@ -19,7 +19,6 @@ export default createReducer(initialState, {
   }),
 
   [A.REQUEST_PASSWORD_RESET_FORM_UPDATE]: (state, {key, value}) => {
-    console.log("updating password request form", key, value);
     return state.mergeDeep({
       form: {
         [key]: value

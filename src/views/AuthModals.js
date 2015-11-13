@@ -148,10 +148,10 @@ class AuthModals extends React.Component {
       this.props.auth.getIn(["ui", "passwordResetSuccessModalVisible"])
     );
 
-    let passwordResetError = (
-      this.props.passwordResetErrorEnabled &&
-      this.props.auth.getIn(["ui", "passwordResetErrorModalVisible"])
-    );
+    //let passwordResetError = (
+      //this.props.passwordResetErrorEnabled &&
+      //this.props.auth.getIn(["ui", "passwordResetErrorModalVisible"])
+    //);
 
     return (
       <div id="auth-modals">

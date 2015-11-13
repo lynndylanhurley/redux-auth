@@ -19,8 +19,10 @@ class FirstTimeLoginErrorModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        className="first-time-login-error-modal"
+        onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Confirmation Error</Modal.Title>
         </Modal.Header>
@@ -30,7 +32,9 @@ class FirstTimeLoginErrorModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            className="first-time-login-error-modal-close"
+            onClick={this.close.bind(this)}>
             Ok
           </Button>
         </Modal.Footer>

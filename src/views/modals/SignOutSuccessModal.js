@@ -20,6 +20,7 @@ class SignOutSuccessModal extends React.Component {
   render () {
     return (
       <Modal show={this.props.show}
+             className="sign-out-success-modal"
              onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Goodbye!</Modal.Title>
@@ -30,7 +31,9 @@ class SignOutSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            onClick={this.close.bind(this)}
+            className="sign-out-success-modal-close">
             Ok
           </Button>
         </Modal.Footer>

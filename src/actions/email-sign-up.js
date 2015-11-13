@@ -35,7 +35,7 @@ export function emailSignUp(body, endpointKey) {
       }))
     })
       .then(parseResponse)
-      .then((user) => dispatch(emailSignUpComplete(user)))
+      .then(({data}) => dispatch(emailSignUpComplete(data)))
       .catch(({errors}) => dispatch(emailSignUpError(errors)));
   };
 }

@@ -43,6 +43,7 @@ class EmailSignInForm extends React.Component {
       <form className='redux-auth email-sign-in-form clearfix'
             onSubmit={this.handleSubmit.bind(this)}>
         <Input type="text"
+               className="email-sign-in-email"
                label="Email"
                placeholder="Email"
                disabled={disabled}
@@ -53,6 +54,7 @@ class EmailSignInForm extends React.Component {
 
         <Input type="password"
                label="Password"
+               className="email-sign-in-password"
                placeholder="Password"
                disabled={disabled}
                value={this.props.auth.getIn(["emailSignIn", "form", "password"])}
@@ -63,7 +65,7 @@ class EmailSignInForm extends React.Component {
         <ButtonLoader loading={this.props.auth.getIn(["emailSignIn", "loading"])}
                       type="submit"
                       icon={<Glyphicon glyph="log-in" />}
-                      className='pull-right'
+                      className='email-sign-in-submit pull-right'
                       disabled={disabled}
                       onClick={this.handleSubmit.bind(this)}
                       {...this.props.inputProps.submit}>

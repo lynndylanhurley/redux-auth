@@ -19,7 +19,10 @@ class EmailSignInSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show} onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        onHide={this.close.bind(this)}
+        className="email-sign-in-success-modal">
         <Modal.Header closeButton>
           <Modal.Title>Welcome Back</Modal.Title>
         </Modal.Header>
@@ -29,7 +32,11 @@ class EmailSignInSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>Close</Button>
+          <Button
+            onClick={this.close.bind(this)}
+            className="email-sign-in-success-modal-close">
+            Close
+          </Button>
         </Modal.Footer>
       </Modal>
     );

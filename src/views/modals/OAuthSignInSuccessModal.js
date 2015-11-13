@@ -20,6 +20,7 @@ class OAuthSignInSuccessModal extends React.Component {
   render () {
     return (
       <Modal show={this.props.show}
+             className="oauth-sign-in-success-modal"
              onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Welcome</Modal.Title>
@@ -30,7 +31,9 @@ class OAuthSignInSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            onClick={this.close.bind(this)}
+            className="oauth-sign-in-success-modal-close">
             Close
           </Button>
         </Modal.Footer>

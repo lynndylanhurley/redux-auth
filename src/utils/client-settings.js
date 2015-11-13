@@ -131,11 +131,6 @@ export function applyConfig({endpoint={}, settings={}, reset=false}={}) {
   setDefaultEndpointKey(defaultEndpointKey);
   setCurrentEndpoint(currentEndpoint);
 
-  // TODO: use session storage instead
-  //if (window.addEventListener) {
-  //window.addEventListener("message", handlePostMessage, false);
-  //}
-
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {

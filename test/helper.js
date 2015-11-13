@@ -7,6 +7,7 @@ import {ReduxRouter, routerStateReducer, reduxReactRouter as clientRouter} from 
 import thunk from "redux-thunk";
 import { reduxReactRouter as serverRouter } from "redux-router/server";
 import { configure, authStateReducer } from "../src/index";
+import Immutable from "immutable";
 
 /* dummy components */
 import demoButtons from "../dummy/src/reducers/request-test-buttons";
@@ -100,18 +101,21 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
 }
 
 
-export function genStore() {
+export function genStore(initialState={}) {
   // merge all relevant reducers
   let reducer = combineReducers({auth: authStateReducer});
 
+  // set initial state
+  let auth = Immutable.fromJS(initialState);
+
   // create the redux store
-  return compose(applyMiddleware(thunk))(createStore)(reducer);
+  return compose(applyMiddleware(thunk))(createStore)(reducer, {auth});
 }
 
-export function renderConnectedComponent(markup, endpointConfig) {
+export function renderConnectedComponent(markup, endpointConfig, initialState={}) {
   // must re-require TestUtils because of mockery
   var TestUtils = require("react-addons-test-utils");
-  var store = genStore();
+  var store = genStore(initialState);
   return store.dispatch(configure(endpointConfig)).then(() => {
     return {
       store,
@@ -131,6 +135,6 @@ export function mockFetchResponse(url, status=200, body={}, headers={}) {
     headers: {
       get: (key) => headers[key]
     },
-    json: () => body
+    json: () => Promise.resolve(body)
   });
 }

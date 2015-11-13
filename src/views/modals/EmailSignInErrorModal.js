@@ -21,6 +21,7 @@ class EmailSignInErrorModal extends React.Component {
   render () {
     return (
       <Modal show={this.props.show}
+             className="email-sign-in-error-modal"
              onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Sign In Error</Modal.Title>
@@ -31,7 +32,7 @@ class EmailSignInErrorModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button onClick={this.close.bind(this)} className="email-sign-in-error-modal-close">
             Ok
           </Button>
         </Modal.Footer>

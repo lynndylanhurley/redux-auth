@@ -19,8 +19,10 @@ class UpdatePasswordSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        className="update-password-success-modal"
+        onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Success</Modal.Title>
         </Modal.Header>
@@ -32,7 +34,9 @@ class UpdatePasswordSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            onClick={this.close.bind(this)}
+            className="update-password-success-modal-close">
             Ok
           </Button>
         </Modal.Footer>

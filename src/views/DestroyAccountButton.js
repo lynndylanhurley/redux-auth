@@ -17,17 +17,19 @@ class DestroyAccountButton extends React.Component {
   }
 
   handleClick () {
-    this.props.dispatch(destroyAccount());
+    this.props.dispatch(destroyAccount(this.props.endpoint));
   }
 
   render () {
     let disabled = !this.props.auth.getIn(["user", "isSignedIn"]);
     return (
-      <ButtonLoader {...this.props}
-                    loading={this.props.auth.getIn(["destroyAccount", "loading"])}
-                    icon={this.props.icon}
-                    disabled={disabled}
-                    onClick={this.handleClick.bind(this)} />
+      <ButtonLoader
+        loading={this.props.auth.getIn(["destroyAccount", "loading"])}
+        icon={this.props.icon}
+        disabled={disabled}
+        className="destroy-account-submit"
+        onClick={this.handleClick.bind(this)}
+        {...this.props} />
     );
   }
 }

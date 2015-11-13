@@ -1,16 +1,15 @@
 import querystring from "querystring";
 import extend from "extend";
-import url from "url";
 import Auth from "j-toker";
 
 export function normalizeTokenKeys (params) {
   // normalize keys
   if (params.token) {
-    params['access-token'] = params.token;
+    params["access-token"] = params.token;
     delete params.token;
   }
   if (params.auth_token) {
-    params['access-token'] = params.auth_token;
+    params["access-token"] = params.auth_token;
     delete params.auth_token;
   }
   if (params.client_id) {
@@ -20,6 +19,7 @@ export function normalizeTokenKeys (params) {
 
   return params;
 };
+
 
 const getAnchorSearch = function(location) {
   var rawAnchor = location.anchor || "",
@@ -110,7 +110,6 @@ export default function getRedirectInfo(currentLocation) {
       "account_confirmation_success"
     ];
 
-    //var parsedUrl = url.parse(currentLocation);
     var authRedirectHeaders = buildCredentials(currentLocation, authKeys);
     var authRedirectPath = getLocationWithoutParams(currentLocation, authKeys);
 

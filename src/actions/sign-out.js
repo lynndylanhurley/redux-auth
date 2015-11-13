@@ -25,8 +25,8 @@ export function signOut() {
         dispatch(signOutComplete(user))
         destroySession();
       })
-      .catch(({data}) => {
-        dispatch(signOutError(data.errors))
+      .catch(({errors}) => {
+        dispatch(signOutError(errors))
         destroySession();
       });
   };

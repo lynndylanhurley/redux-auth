@@ -40,7 +40,7 @@ export function configure(endpoint={}, settings={}) {
           return user;
         }).catch(({reason, firstTimeLogin, mustResetPassword}) => {
           dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
-          return Promise.reject(reason);
+          return Promise.reject({reason});
         });
     } else {
       // if the authentication happened server-side, find the resulting auth

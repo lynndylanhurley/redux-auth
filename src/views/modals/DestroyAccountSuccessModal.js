@@ -19,8 +19,10 @@ class DestroyAccountSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             onHide={this.close.bind(this)}>
+      <Modal
+        show={this.props.show}
+        className="destroy-account-success-modal"
+        onHide={this.close.bind(this)}>
         <Modal.Header closeButton>
           <Modal.Title>Destroy Account Success</Modal.Title>
         </Modal.Header>
@@ -30,7 +32,9 @@ class DestroyAccountSuccessModal extends React.Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={this.close.bind(this)}>
+          <Button
+            className="destroy-account-success-modal-close"
+            onClick={this.close.bind(this)}>
             Ok
           </Button>
         </Modal.Footer>

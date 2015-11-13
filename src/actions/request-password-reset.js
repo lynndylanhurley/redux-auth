@@ -15,7 +15,6 @@ export function requestPasswordResetStart() {
   return { type: REQUEST_PASSWORD_RESET_START };
 }
 export function requestPasswordResetComplete(message) {
-  console.log("request password reset complete", message);
   return { type: REQUEST_PASSWORD_RESET_COMPLETE, message };
 }
 export function requestPasswordResetError(errors) {

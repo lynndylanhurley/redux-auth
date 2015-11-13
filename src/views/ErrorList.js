@@ -12,7 +12,7 @@ class ErrorList extends React.Component {
   }
 
   renderErrorList () {
-    let errorCount = this.props.errors.size;
+    let errorCount = (this.props.errors || Immutable.fromJS([])).size;
 
     if (errorCount > 0) {
       // pluralize message
@@ -24,7 +24,10 @@ class ErrorList extends React.Component {
           <p>Please correct the following {errorWord}:</p>
           {this.props.errors.map((err, i) => {
             return (
-              <p key={i} className="control-label" style={{paddingLeft: "20px", position: "relative"}}>
+              <p
+                key={i}
+                className="control-label modal-error-item"
+                style={{paddingLeft: "20px", position: "relative"}}>
                 <Glyphicon glyph="exclamation-sign"
                            style={{position: "absolute", left: 0, top: 2}} /> {err}
               </p>
