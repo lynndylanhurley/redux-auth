@@ -3,6 +3,7 @@ import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
 import {resetConfig, retrieveData, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -15,6 +16,7 @@ describe("UpdatePasswordForm", () => {
   var UpdatePasswordForm,
       TestUtils,
       findClass,
+      findTag,
       requirePath,
       renderConnectedComponent,
       successRespSpy,
@@ -52,7 +54,9 @@ describe("UpdatePasswordForm", () => {
       };
 
   [
-    "bootstrap"
+    "bootstrap",
+    "material-ui",
+    "default"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/UpdatePasswordForm`;
 
@@ -64,6 +68,7 @@ describe("UpdatePasswordForm", () => {
         warnOnUnregistered: false,
         useCleanCache: true
       });
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
     });
 
     afterEach(() => {
@@ -76,23 +81,23 @@ describe("UpdatePasswordForm", () => {
         UpdatePasswordForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         findClass = TestUtils.findRenderedDOMComponentWithClass;
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
 
         let inputProps = {
           password: {style: {color: "red"}, className: "password-class-override"},
           passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
-          submit: {style: {color: "orange"}, className: "submit-class-override"}
+          submit: {className: "submit-class-override"}
         };
 
         renderConnectedComponent(
           <UpdatePasswordForm inputProps={inputProps} />
         ).then(({instance}) => {
-          let passwordEl             = findClass(instance, "password-class-override");
-          let passwordConfirmationEl = findClass(instance, "password-confirmation-class-override");
+          let passwordEl             = findTag(instance, "input")[0];
+          let passwordConfirmationEl = findTag(instance, "input")[1];
           let submitEl               = findClass(instance, "submit-class-override");
           expect(passwordEl.getAttribute("style")).to.match(/color:red/);
           expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:pink/);
-          expect(submitEl.getAttribute("style")).to.match(/color:orange/);
           done();
         }).catch(e => console.log("error:", e));
       });
@@ -108,6 +113,7 @@ describe("UpdatePasswordForm", () => {
         UpdatePasswordForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         findClass = TestUtils.findRenderedDOMComponentWithClass;
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
 
         let endpointConfig = [
@@ -115,16 +121,16 @@ describe("UpdatePasswordForm", () => {
           {alt: {apiUrl: testUrl}}
         ];
 
-
         renderConnectedComponent((
           <UpdatePasswordForm />
-        ), endpointConfig, initialState).then(({instance}) => {
+        ), endpointConfig, initialState).then(({instance, store}) => {
           // establish that we're using the "alt" endpoint config
+          store.dispatch(storeCurrentEndpointKey("alt"));
           persistData(C.SAVED_CONFIG_KEY, "alt");
 
           // change input values
-          let passwordEl = findClass(instance, "update-password-password")
-          let passwordConfirmationEl = findClass(instance, "update-password-password-confirmation")
+          let passwordEl = findTag(instance, "input")[0];
+          let passwordConfirmationEl = findTag(instance, "input")[1];
 
           passwordEl.value = "whatever";
           passwordConfirmationEl.value = "whatever";
@@ -160,6 +166,7 @@ describe("UpdatePasswordForm", () => {
           UpdatePasswordForm = require(requirePath);
           TestUtils = require("react-addons-test-utils");
           findClass = TestUtils.findRenderedDOMComponentWithClass;
+          findTag = TestUtils.scryRenderedDOMComponentsWithTag;
           ({renderConnectedComponent} = require("../helper"));
         } catch (e) {
           console.log("@-->caught error", e);
@@ -173,8 +180,8 @@ describe("UpdatePasswordForm", () => {
         renderConnectedComponent((
           <UpdatePasswordForm />
         ), {apiUrl}, initialState).then(({instance, store}) => {
-          let passwordEl = findClass(instance, "update-password-password")
-          let passwordConfirmationEl = findClass(instance, "update-password-password-confirmation")
+          let passwordEl = findTag(instance, "input")[0];
+          let passwordConfirmationEl = findTag(instance, "input")[1];
 
           // change input values
           passwordEl.value = testPassword;
@@ -185,8 +192,8 @@ describe("UpdatePasswordForm", () => {
           TestUtils.Simulate.change(passwordConfirmationEl);
 
           // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["updatePassword", "form", "password"])).to.equal(testPassword);
-          expect(store.getState().auth.getIn(["updatePassword", "form", "password_confirmation"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
           // submit the form
           let submitEl = findClass(instance, "update-password-submit");
@@ -231,7 +238,7 @@ describe("UpdatePasswordForm", () => {
           <UpdatePasswordForm />, {apiUrl}, initialState
         ).then(({instance, store}) => {
           // change input values
-          let passwordEl = TestUtils.findRenderedDOMComponentWithClass(instance, "update-password-password");
+          let passwordEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
           passwordEl.value = testUid;
           TestUtils.Simulate.change(passwordEl);
 
@@ -240,7 +247,7 @@ describe("UpdatePasswordForm", () => {
           TestUtils.Simulate.click(submitEl);
 
           setTimeout(() => {
-            let errors = store.getState().auth.getIn(["updatePassword", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["updatePassword", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp["errors"]);
 
             // ensure modal is to be shown

@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hideEmailSignUpSuccessModal } from "../../../actions/ui";
 import { connect } from "react-redux";
 
@@ -19,30 +19,24 @@ class EmailSignUpSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        className="email-sign-up-success-modal"
-        show={this.props.show}
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Sign Up Success</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>
-            A confirmation email was sent to your account
-            at {this.props.auth.getIn(["ui", "emailSignUpAddress"])}. Follow the
-            instructions in the email to complete registration.
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        contentClassName="redux-auth-modal email-sign-up-success-modal"
+        open={this.props.show}
+        title="Sign Up Success"
+        actions={[
+          <FlatButton
+            key="close"
             className="email-sign-up-success-modal-close"
             onClick={this.close.bind(this)}>
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <p>
+          A confirmation email was sent to your account
+          at {this.props.auth.getIn(["ui", "emailSignUpAddress"])}. Follow the
+          instructions in the email to complete registration.
+        </p>
+      </Dialog>
     );
   }
 }

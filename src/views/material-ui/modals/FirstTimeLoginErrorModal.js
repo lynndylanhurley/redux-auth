@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hideFirstTimeLoginErrorModal } from "../../../actions/ui";
 
 @connect()
@@ -19,27 +19,20 @@ class FirstTimeLoginErrorModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        className="first-time-login-error-modal"
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Confirmation Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>There was a problem confirming your account. Please try again.</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal first-time-login-error-modal"
+        title="Confirmation Error"
+        actions={[
+          <FlatButton
+            key="close"
             className="first-time-login-error-modal-close"
             onClick={this.close.bind(this)}>
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
-
+          </FlatButton>
+        ]}>
+        <p>There was a problem confirming your account. Please try again.</p>
+      </Dialog>
     );
   }
 }

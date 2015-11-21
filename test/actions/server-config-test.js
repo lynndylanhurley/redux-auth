@@ -26,7 +26,7 @@ const fakeErrorResponse = function() {
       success: false,
       errors: "Invalid credentials"
     }),
-    headers: {_headers: {}}
+    headers: {raw: () => {}}
   });
 }
 
@@ -36,13 +36,15 @@ const fakeSuccessResponse = function() {
       success: true,
       data: {uid: testUid}
     }),
-    headers: {_headers: {
-      "Content-Type": "application/json",
-      "access-token": testToken,
-      "client": testClient,
-      "uid": testUid,
-      "expiry": testExpiry
-    }}
+    headers: {
+      raw: () => ({
+        "Content-Type": "application/json",
+        "access-token": testToken,
+        "client": testClient,
+        "uid": testUid,
+        "expiry": testExpiry
+      })
+    }
   });
 }
 
@@ -78,12 +80,13 @@ describe("server configuration", () => {
 
         // user should not be signed in
         expect(user.get("isSignedIn")).to.equal(false);
-        expect(user.get("attributes")).to.equal(null);
+        expect(user.get("attributes")).to.equal(undefined);
 
         // ensure that no calls were made to the API
         expect(errRespSpy.notCalled).to.equal(true);
         done();
-      });
+      })
+      .catch(err => console.log("error:", err.stack));
     });
 
     it("handles failed first time logins and password resets", done => {
@@ -101,7 +104,7 @@ describe("server configuration", () => {
 
         // user should not be signed in
         expect(user.get("isSignedIn")).to.equal(false);
-        expect(user.get("attributes")).to.equal(null);
+        expect(user.get("attributes")).to.equal(undefined);
 
         // should still flag first time logins + password resets
         expect(server.get("mustResetPassword")).to.equal(true);
@@ -125,7 +128,7 @@ describe("server configuration", () => {
 
         // user should not be signed in
         expect(user.get("isSignedIn")).to.equal(false);
-        expect(user.get("attributes")).to.equal(null);
+        expect(user.get("attributes")).to.equal(undefined);
 
         // one call should have been made to API
         expect(errRespSpy.calledOnce).to.equal(true);
@@ -167,7 +170,8 @@ describe("server configuration", () => {
 
             done();
           }));
-        });
+        })
+        .catch(err => console.log("error:", err.stack));
     });
   });
 
@@ -205,12 +209,15 @@ describe("server configuration", () => {
           let user = store.getState().auth.get("user");
           let server = store.getState().auth.get("server");
 
+          console.log("user", user);
+
           expect(user.get("isSignedIn")).to.equal(true);
           expect(user.getIn(["attributes", "uid"])).to.equal(testUid);
           expect(server.get("mustResetPassword")).to.equal(false);
           expect(server.get("firstTimeLogin")).to.equal(true);
           done();
-        });
+        })
+        .catch(err => console.log("error:", err.stack));
     });
 
     it("identifies password reset redirects and sets flag in store for token bridge", done => {

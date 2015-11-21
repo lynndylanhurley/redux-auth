@@ -2,7 +2,7 @@ import React from "react";
 import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
-import {resetConfig, retrieveData} from "../../src/utils/session-storage";
+import {resetConfig, retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -78,6 +78,7 @@ describe("OAuthSignInButton", () => {
       warnOnUnregistered: false,
       useCleanCache: true
     });
+    global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
   });
 
   afterEach(() => {
@@ -87,6 +88,8 @@ describe("OAuthSignInButton", () => {
 
   [
     "bootstrap",
+    "material-ui",
+    "default"
   ].forEach(theme => {
 
     describe(`${theme}`, () => {
@@ -97,15 +100,71 @@ describe("OAuthSignInButton", () => {
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           ({renderConnectedComponent} = require("../helper"));
 
-          let inputProps = {style: {color: "red"}, className: "oauth-class-override"};
+          let inputProps = {className: "oauth-class-override"};
 
           renderConnectedComponent(
             <OAuthSignInButton provider="github" {...inputProps} />
           ).then(({instance}) => {
-            let oauthEl = findClass(instance, "oauth-class-override")
-            expect(oauthEl.getAttribute("style")).to.equal("color:red;")
+            findClass(instance, "oauth-class-override")
             done();
           }).catch(e => console.log("error:", e));
+        });
+
+        it("should allow the use of alternate endpoints", done => {
+          let apiUrl = "http://alt.dev";
+
+          var tokenValidationSpy = sinon.spy((url) => {
+            return mockFetchResponse(url, 200, successResp, successRespHeaders);
+          });
+
+          var popupSpy = sinon.spy(popupSuccessMock);
+
+          // note that this is relative to src/actions/oauth-sign-in, not this file
+          registerMock("../utils/popup", popupSpy);
+          registerMock("isomorphic-fetch", tokenValidationSpy);
+
+          OAuthSignInButton = require(`../../src/views/${theme}/OAuthSignInButton`);
+          TestUtils = require("react-addons-test-utils");
+          findClass = TestUtils.findRenderedDOMComponentWithClass;
+          ({renderConnectedComponent} = require("../helper"));
+
+          let endpointConfig = [
+            {default: {apiUrl: "http://default.dev"}},
+            {alt: {apiUrl}}
+          ];
+
+          renderConnectedComponent(
+            <OAuthSignInButton provider="github" endpoint="alt" />
+          , endpointConfig).then(({instance, store}) => {
+
+        // click button
+            let submitEl = findClass(instance, "oauth-sign-in-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              // ensure popup was created to the correct API endpoint
+              let [[popupProvider, popupUrl, popupName]] = popupSpy.args;
+              expect(popupName).to.equal("github");
+              expect(popupProvider).to.equal("github");
+              expect(popupUrl).to.match(/^http:\/\/alt.dev\/auth\/github/);
+
+              // ensure token validation request was called with creds returned from oauth redirect
+              let [[validationUrl]] = tokenValidationSpy.args;
+              expect(validationUrl).to.equal(`${apiUrl}/auth/validate_token`);
+
+              // ensure config is set to "default"
+              expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("alt");
+              expect(getCurrentEndpointKey()).to.equal("alt");
+
+              // ensure user exists in store
+              let currentUser = store.getState().auth.get("user");
+              expect(currentUser.get("isSignedIn")).to.equal(true);
+
+              done();
+            }, 100);
+
+          }).catch(e => console.log("error:", e));
+
         });
       });
 
@@ -147,6 +206,10 @@ describe("OAuthSignInButton", () => {
               let [[validationUrl, {headers}]] = tokenValidationSpy.args;
               expect(validationUrl).to.equal(`${apiUrl}/auth/validate_token`);
               expect(headers["access-token"]).to.deep.equal(popupSuccessParams["access-token"]);
+
+              // ensure config is set to "default"
+              expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
+              expect(getCurrentEndpointKey()).to.equal("default");
 
               // ensure creds were set to response of token validation request
               let currentCreds = retrieveData(C.SAVED_CREDS_KEY);
@@ -206,7 +269,6 @@ describe("OAuthSignInButton", () => {
           let apiUrl = "http://api.dev";
 
           var tokenValidationSpy = sinon.spy((url) => {
-            console.log("calling token validation err", url);
             return mockFetchResponse(url, 401, errorResp, {});
           });
 

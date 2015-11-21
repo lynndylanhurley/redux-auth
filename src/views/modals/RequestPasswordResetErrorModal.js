@@ -18,6 +18,15 @@ class RequestPasswordResetErrorModal extends React.Component {
     this.props.dispatch(hidePasswordResetRequestErrorModal());
   }
 
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
       <Modal
@@ -29,7 +38,7 @@ class RequestPasswordResetErrorModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["requestPasswordReset", "errors"])} />
+          <ErrorList errors={this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "errors"])} />
         </Modal.Body>
 
         <Modal.Footer>

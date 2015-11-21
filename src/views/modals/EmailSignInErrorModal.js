@@ -18,6 +18,15 @@ class EmailSignInErrorModal extends React.Component {
     this.props.dispatch(hideEmailSignInErrorModal());
   }
 
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
       <Modal show={this.props.show}
@@ -28,7 +37,7 @@ class EmailSignInErrorModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["emailSignIn", "errors"])} />
+          <ErrorList errors={this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "errors"])} />
         </Modal.Body>
 
         <Modal.Footer>

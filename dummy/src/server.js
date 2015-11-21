@@ -105,7 +105,8 @@ server.ext("onPreResponse", (request, reply) => {
   initialize({
     isServer: true,
     cookies: request.headers.cookie,
-    currentLocation: location
+    currentLocation: location,
+    userAgent: request.headers["user-agent"]
   })
     .then(({store, provider, blank}) => {
       store.dispatch(match(location, (error, redirectLocation, renderProps) => {
@@ -115,11 +116,10 @@ server.ext("onPreResponse", (request, reply) => {
           reply.continue();
         } else {
           var webserver = process.env.NODE_ENV === "production" ? "" : "//" + hostname + ":8080";
-
           var output = (blank) ? "" : getMarkup(webserver, provider);
 
           reply(output);
         }
       }));
-    });
+    }).catch(e => console.log("@-->server error", e, e.stack));
 });

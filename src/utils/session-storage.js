@@ -34,7 +34,7 @@ export function setCurrentEndpointKey (k) {
 }
 
 export function getCurrentEndpointKey () {
-  return retrieveData(C.SAVED_CONFIG_KEY);
+  return retrieveData(C.SAVED_CONFIG_KEY) || getDefaultEndpointKey();
 }
 
 export function setDefaultEndpointKey (k) {
@@ -107,8 +107,8 @@ export function getDestroyAccountUrl (endpointKey) {
 }
 
 // only should work for current session
-export function getSignOutUrl () {
-  return `${getApiUrl()}${getSessionEndpoint().signOutPath}`
+export function getSignOutUrl (endpointKey) {
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).signOutPath}`
 }
 
 export function getEmailSignInUrl (endpointKey) {
@@ -116,7 +116,7 @@ export function getEmailSignInUrl (endpointKey) {
 }
 
 export function getEmailSignUpUrl (endpointKey) {
-  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailRegistrationPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).emailRegistrationPath}?config_name=${endpointKey}`
 }
 
 export function getPasswordResetRequestUrl (endpointKey) {
@@ -132,7 +132,7 @@ export function getTokenValidationPath (endpointKey) {
 }
 
 export function getOAuthUrl ({provider, params, endpointKey}) {
-  var oAuthUrl = getApiUrl() + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
+  var oAuthUrl = getApiUrl(endpointKey) + getSessionEndpoint(endpointKey).authProviderPaths[provider] +
     "?auth_origin_url="+encodeURIComponent(root.location.href) +
     "&config_name="+encodeURIComponent(getSessionEndpointKey(endpointKey));
 

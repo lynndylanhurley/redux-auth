@@ -9,9 +9,11 @@ import {routerStateReducer, reduxReactRouter as clientRouter} from "redux-router
 import { reduxReactRouter as serverRouter } from "redux-router/server";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
+import demoUi from "./reducers/demo-ui";
 import thunk from "redux-thunk";
 import Container from "./views/partials/Container";
 import Main from "./views/Main";
+import Alt from "./views/Alt";
 import Account from "./views/Account";
 import SignIn from "./views/SignIn";
 import GlobalComponents from "./views/partials/GlobalComponents";
@@ -27,11 +29,12 @@ class App extends React.Component {
   }
 }
 
-export function initialize({cookies, isServer, currentLocation} = {}) {
+export function initialize({cookies, isServer, currentLocation, userAgent} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
     router: routerStateReducer,
-    demoButtons
+    demoButtons,
+    demoUi
   });
 
   var store;
@@ -53,6 +56,7 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
   var routes = (
     <Route path="/" component={App}>
       <IndexRoute component={Main} />
+      <Route path="alt" component={Alt} />
       <Route path="login" component={SignIn} />
       <Route path="account" component={Account} onEnter={requireAuth} />
     </Route>
@@ -75,16 +79,44 @@ export function initialize({cookies, isServer, currentLocation} = {}) {
     })
   )(createStore)(reducer);
 
+
   /**
    * The React Router 1.0 routes for both the server and the client.
    */
-  return store.dispatch(configure({
-    apiUrl: "http://devise-token-auth.dev"
-  }, {
+  return store.dispatch(configure([
+    {
+      default: {
+        apiUrl: "http://devise-token-auth.dev"
+      }
+    }, {
+      evilUser: {
+        apiUrl:                "http://devise-token-auth.dev",
+        signOutPath:           "/mangs/sign_out",
+        emailSignInPath:       "/mangs/sign_in",
+        emailRegistrationPath: "/mangs",
+        accountUpdatePath:     "/mangs",
+        accountDeletePath:     "/mangs",
+        passwordResetPath:     "/mangs/password",
+        passwordUpdatePath:    "/mangs/password",
+        tokenValidationPath:   "/mangs/validate_token",
+        authProviderPaths: {
+          github:    "/mangs/github",
+          facebook:  "/mangs/facebook",
+          google:    "/mangs/google_oauth2"
+        }
+      }
+    }
+  ], {
     cookies,
     isServer,
     currentLocation
   })).then(({redirectPath, blank} = {}) => {
+    // hack for material-ui server-side rendering.
+    // see https://github.com/callemall/material-ui/pull/2007
+    if (userAgent) {
+      global.navigator = {userAgent};
+    }
+
     return ({
       blank,
       store,

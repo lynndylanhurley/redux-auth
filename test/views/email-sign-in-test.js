@@ -2,7 +2,7 @@ import React from "react";
 import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
-import {resetConfig, retrieveData} from "../../src/utils/session-storage";
+import {resetConfig, retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -25,30 +25,35 @@ describe("EmailSignInForm", () => {
       errorResp = {"errors":["Invalid login credentials. Please try again."]};
 
   [
-    ["bootstrap", "../../src/views/bootstrap/EmailSignInForm"]
-  ].forEach(([theme, requirePath]) => {
+    "material-ui",
+    "bootstrap",
+    "default"
+  ].forEach((theme) => {
+    var requirePath = `../../src/views/${theme}/EmailSignInForm`;
 
     beforeEach(() => {
       resetConfig();
+
+      mockery.enable({
+        warnOnReplace: false,
+        warnOnUnregistered: false,
+        useCleanCache: true
+      });
+
+      mockery.resetCache();
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
+    });
+
+    afterEach(() => {
+      mockery.deregisterAll();
+      mockery.disable();
     });
 
     describe(`${theme} params`, () => {
-      beforeEach(() => {
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-      });
-
-      afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
-      });
-
       it("should accept styling params", done => {
         EmailSignInForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
+        findClass = TestUtils.findRenderedDOMComponentWithClass;
         ({renderConnectedComponent} = require("../helper"));
 
         let inputProps = {
@@ -60,12 +65,11 @@ describe("EmailSignInForm", () => {
         renderConnectedComponent(
           <EmailSignInForm inputProps={inputProps} />
         ).then(({instance}) => {
-          let emailEl    = TestUtils.findRenderedDOMComponentWithClass(instance, "email-class-override")
-          let passwordEl = TestUtils.findRenderedDOMComponentWithClass(instance, "password-class-override")
-          let submitEl   = TestUtils.findRenderedDOMComponentWithClass(instance, "submit-class-override")
-          expect(emailEl.getAttribute("style")).to.equal("color:red;")
-          expect(passwordEl.getAttribute("style")).to.equal("color:green;")
-          expect(submitEl.getAttribute("style")).to.equal("color:orange;")
+          let emailEl    = findClass(instance, "email-class-override");
+          let passwordEl = findClass(instance, "password-class-override");
+          findClass(instance, "submit-class-override");
+          expect(emailEl.getAttribute("style")).to.match(/color:red/);
+          expect(passwordEl.getAttribute("style")).to.match(/color:green/);
           done();
         }).catch(e => console.log("error:", e));
       });
@@ -100,6 +104,15 @@ describe("EmailSignInForm", () => {
             let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
             expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
 
+            // ensure default endpoint key was set to "default"
+            let defaultEndpoint = store.getState().auth.getIn(["configure", "defaultEndpointKey"]);
+            expect(defaultEndpoint).to.equal("default");
+
+            // ensure endpoint key was saved
+            let currentEndpoint = store.getState().auth.getIn(["configure", "currentEndpointKey"]);
+            expect(currentEndpoint).to.equal("alt");
+            expect(getCurrentEndpointKey()).to.equal("alt");
+
             // ensure user was set
             let uid = store.getState().auth.getIn(["user", "attributes", "uid"]);
             expect(uid).to.equal(testUid)
@@ -117,12 +130,6 @@ describe("EmailSignInForm", () => {
 
     describe(`${theme} success`, () => {
       beforeEach(() => {
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-
         // mock succes response
         successRespSpy = sinon.spy((url) => {
           return mockFetchResponse(url, 200, {data: {uid: testUid}}, successRespHeaders);
@@ -135,11 +142,6 @@ describe("EmailSignInForm", () => {
         ({renderConnectedComponent} = require("../helper"));
       });
 
-      afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
-      });
-
       it("should handle successful sign in", done => {
         var testEmail    = "test@test.com";
         var testPassword = "test@test.com";
@@ -148,8 +150,9 @@ describe("EmailSignInForm", () => {
         renderConnectedComponent((
           <EmailSignInForm />
         ), {apiUrl}).then(({instance, store}) => {
-          let emailEl = findClass(instance, "email-sign-in-email")
-          let passwordEl = findClass(instance, "email-sign-in-password")
+          // find inputs
+          let emailEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
+          let passwordEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[1];
 
           // change input values
           emailEl.value = testEmail;
@@ -159,9 +162,11 @@ describe("EmailSignInForm", () => {
           TestUtils.Simulate.change(emailEl);
           TestUtils.Simulate.change(passwordEl);
 
+          console.log("checking form", store.getState().auth.getIn(["emailSignIn", "default", "form", "email"]));
+
           // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["emailSignIn", "form", "email"])).to.equal(testEmail);
-          expect(store.getState().auth.getIn(["emailSignIn", "form", "password"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["emailSignIn", "default", "form", "email"])).to.equal(testEmail);
+          expect(store.getState().auth.getIn(["emailSignIn", "default", "form", "password"])).to.equal(testPassword);
 
           // submit the form
           let submitEl = findClass(instance, "email-sign-in-submit");
@@ -184,6 +189,10 @@ describe("EmailSignInForm", () => {
             let [[url, ]] = successRespSpy.args;
             expect(url).to.equal(`${apiUrl}/auth/sign_in`);
 
+            // ensure configuration is set to default
+            expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
+            expect(getCurrentEndpointKey()).to.equal("default");
+
             done();
           }, 0);
         }).catch(e => console.log("errors", e));
@@ -193,12 +202,6 @@ describe("EmailSignInForm", () => {
 
     describe(`${theme} error`, () => {
       beforeEach(() => {
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-
         // mock succes response
         errorRespSpy = sinon.spy((url) => {
           return mockFetchResponse(url, 401, errorResp, {});
@@ -208,11 +211,6 @@ describe("EmailSignInForm", () => {
         EmailSignInForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         ({renderConnectedComponent} = require("../helper"));
-      });
-
-      afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
       });
 
       it("should handle failed sign in", done => {
@@ -230,7 +228,7 @@ describe("EmailSignInForm", () => {
             let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
             expect(authHeaders).to.equal(undefined);
 
-            let errors = store.getState().auth.getIn(["emailSignIn", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["emailSignIn", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp);
 
             // ensure user was not set

@@ -1,5 +1,6 @@
 import React, { PropTypes } from "react";
-import { Modal, Button, Glyphicon } from "react-bootstrap";
+import { ActionLock } from "material-ui/lib/svg-icons";
+import { Dialog, FlatButton } from "material-ui";
 import ButtonLoader from "../ButtonLoader";
 import Input from "../Input";
 import { connect } from "react-redux";
@@ -12,6 +13,7 @@ import {
 @connect(({auth}) => ({auth}))
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
+    endpoint: PropTypes.string,
     show: PropTypes.bool,
     inputProps: PropTypes.object
   }
@@ -21,13 +23,21 @@ class PasswordResetSuccessModal extends React.Component {
     inputProps: {}
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleInput (key, val) {
-    this.props.dispatch(updatePasswordModalFormUpdate(key, val));
+    this.props.dispatch(updatePasswordModalFormUpdate(this.getEndpoint(), key, val));
   }
 
   handleSubmit () {
-    let formData = this.props.auth.getIn(["updatePasswordModal", "form"]).toJS();
-    this.props.dispatch(updatePasswordModal(formData));
+    let formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
+    this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
   }
 
   close () {
@@ -35,57 +45,56 @@ class PasswordResetSuccessModal extends React.Component {
   }
 
   render () {
-    let loading = this.props.auth.getIn(["updatePasswordModal", "loading"]);
+    let endpoint = this.getEndpoint();
+    let loading = this.props.auth.getIn(["updatePasswordModal", endpoint, "loading"]);
 
     return (
-      <Modal show={this.props.show}
-             className="password-reset-success-modal"
-             onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Reset Your Password</Modal.Title>
-        </Modal.Header>
-
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal password-reset-success-modal"
+        actions={[
+          <FlatButton
+            key="cancel"
+            className="password-reset-success-modal-close"
+            onClick={this.close.bind(this)}
+            secondary={true}
+            {...this.props.inputProps.cancel}>
+            Cancel
+          </FlatButton>,
+          <ButtonLoader
+            key="submit"
+            {...this.props}
+            loading={loading}
+            type="submit"
+            primary={true}
+            className="password-reset-success-modal-submit"
+            icon={ActionLock}
+            onClick={this.handleSubmit.bind(this)}
+            {...this.props.inputProps.submit} />
+        ]}
+        title="Reset Your Password">
         <form>
-          <Modal.Body>
-            <Input type="password"
-                  label="Password"
-                  placeholder="Password"
-                  disabled={loading}
-                  className="password-reset-success-modal-password"
-                  value={this.props.auth.getIn(["updatePasswordModal", "form", "password"])}
-                  errors={this.props.auth.getIn(["updatePasswordModal", "errors", "password"])}
-                  onChange={this.handleInput.bind(this, "password")}
-                  {...this.props.inputProps.password} />
+          <Input type="password"
+                label="Password"
+                placeholder="Password"
+                disabled={loading}
+                className="password-reset-success-modal-password"
+                value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"])}
+                errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"])}
+                onChange={this.handleInput.bind(this, "password")}
+                {...this.props.inputProps.password} />
 
-            <Input type="password"
-                  label="Password Confirmation"
-                  placeholder="Password Confirmation"
-                  disabled={loading}
-                  className="password-reset-success-modal-password-confirmation"
-                  value={this.props.auth.getIn(["updatePasswordModal", "form", "password_confirmation"])}
-                  errors={this.props.auth.getIn(["updatePasswordModal", "errors", "password_confirmation"])}
-                  onChange={this.handleInput.bind(this, "password_confirmation")}
-                  {...this.props.inputProps.passwordConfirmation} />
-          </Modal.Body>
-
-          <Modal.Footer>
-            <Button
-              className="password-reset-success-modal-close"
-              onClick={this.close.bind(this)}
-              {...this.props.inputProps.cancel}>
-              Cancel
-            </Button>
-
-            <ButtonLoader {...this.props}
-                          loading={loading}
-                          type="submit"
-                          className="password-reset-success-modal-submit"
-                          icon={<Glyphicon glyph="lock" />}
-                          onClick={this.handleSubmit.bind(this)}
-                          {...this.props.inputProps.submit} />
-          </Modal.Footer>
+          <Input type="password"
+                label="Password Confirmation"
+                placeholder="Password Confirmation"
+                disabled={loading}
+                className="password-reset-success-modal-password-confirmation"
+                value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"])}
+                errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"])}
+                onChange={this.handleInput.bind(this, "password_confirmation")}
+                {...this.props.inputProps.passwordConfirmation} />
         </form>
-      </Modal>
+      </Dialog>
     );
   }
 }

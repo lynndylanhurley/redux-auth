@@ -20,10 +20,19 @@ class OAuthSignInButton extends React.Component {
     icon: <Glyphicon glyph="log-in" />
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleClick () {
     this.props.dispatch(oAuthSignIn({
       provider: this.props.provider,
-      params: this.props.signInParams
+      params: this.props.signInParams,
+      endpointKey: this.getEndpoint()
     }));
   }
 
@@ -31,7 +40,7 @@ class OAuthSignInButton extends React.Component {
     let disabled = this.props.auth.getIn(["user", "isSignedIn"]);
     let loading = (
       (this.props.auth.getIn(["ui", "oAuthSignInLoadingProvider"]) === this.props.provider) &&
-      this.props.auth.getIn(["oAuthSignIn", "loading"])
+      this.props.auth.getIn(["oAuthSignIn", this.getEndpoint(), "loading"])
     );
 
     return (

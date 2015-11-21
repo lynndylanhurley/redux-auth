@@ -18,6 +18,14 @@ class UpdatePasswordErrorModal extends React.Component {
     this.props.dispatch(hideUpdatePasswordErrorModal());
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
       <Modal
@@ -29,7 +37,7 @@ class UpdatePasswordErrorModal extends React.Component {
         </Modal.Header>
 
         <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["updatePassword", "errors", "full_messages"])} />
+          <ErrorList errors={this.props.auth.getIn(["updatePassword", this.getEndpoint(), "errors", "full_messages"])} />
         </Modal.Body>
 
         <Modal.Footer>

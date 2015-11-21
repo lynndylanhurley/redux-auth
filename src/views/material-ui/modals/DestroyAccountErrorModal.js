@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { connect } from "react-redux";
 import { hideDestroyAccountErrorModal } from "../../../actions/ui";
 import ErrorList from "../ErrorList";
@@ -18,28 +18,31 @@ class DestroyAccountErrorModal extends React.Component {
     this.props.dispatch(hideDestroyAccountErrorModal());
   }
 
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
-      <Modal
-        className="destroy-account-error-modal"
-        show={this.props.show}
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["destroyAccount", "errors"])} />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        contentClassName="redux-auth-modal destroy-account-error-modal"
+        open={this.props.show}
+        actions={[
+          <FlatButton
+            key="close"
             className="destroy-account-error-modal-close"
             onClick={this.close.bind(this)}>
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}
+        title="Error">
+        <ErrorList errors={this.props.auth.getIn(["destroyAccount", this.getEndpoint(), "errors"])} />
+      </Dialog>
     );
   }
 }

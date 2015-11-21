@@ -7,6 +7,7 @@ import { Glyphicon } from "react-bootstrap";
 @connect(({auth}) => ({auth}))
 class DestroyAccountButton extends React.Component {
   static propTypes = {
+    endpoint: PropTypes.string,
     children: PropTypes.node,
     icon: PropTypes.node
   }
@@ -16,15 +17,23 @@ class DestroyAccountButton extends React.Component {
     icon: <Glyphicon glyph="remove" />
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleClick () {
-    this.props.dispatch(destroyAccount(this.props.endpoint));
+    this.props.dispatch(destroyAccount(this.getEndpoint()));
   }
 
   render () {
     let disabled = !this.props.auth.getIn(["user", "isSignedIn"]);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(["destroyAccount", "loading"])}
+        loading={this.props.auth.getIn(["destroyAccount", this.getEndpoint(), "loading"])}
         icon={this.props.icon}
         disabled={disabled}
         className="destroy-account-submit"

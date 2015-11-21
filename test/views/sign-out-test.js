@@ -3,6 +3,7 @@ import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
 import {resetConfig, persistData, retrieveData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -28,7 +29,9 @@ describe("SignOutButton", () => {
       };
 
   [
-    "bootstrap"
+    "bootstrap",
+    "material-ui",
+    "default"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/SignOutButton`;
 
@@ -40,6 +43,7 @@ describe("SignOutButton", () => {
         warnOnUnregistered: false,
         useCleanCache: true
       });
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
     });
 
     afterEach(() => {
@@ -54,13 +58,12 @@ describe("SignOutButton", () => {
         findClass = TestUtils.findRenderedDOMComponentWithClass;
         ({renderConnectedComponent} = require("../helper"));
 
-        let inputProps = {style: {color: "red"}, className: "sign-out-class-override"};
+        let inputProps = {className: "sign-out-class-override"};
 
         renderConnectedComponent(
           <SignOutButton {...inputProps} />
         ).then(({instance}) => {
-          let signOutEl = findClass(instance, "sign-out-class-override")
-          expect(signOutEl.getAttribute("style")).to.match(/color:red/)
+          findClass(instance, "sign-out-class-override");
           done();
         }).catch(e => console.log("error:", e));
       });
@@ -85,8 +88,9 @@ describe("SignOutButton", () => {
 
         renderConnectedComponent((
           <SignOutButton  />
-        ), endpointConfig, {user: {isSignedIn: true}}).then(({instance}) => {
+        ), endpointConfig, {user: {isSignedIn: true}}).then(({instance, store}) => {
           // establish that we're using the "alt" endpoint config
+          store.dispatch(storeCurrentEndpointKey("alt"));
           persistData(C.SAVED_CONFIG_KEY, "alt");
 
           let submitEl = findClass(instance, "sign-out-submit");
@@ -165,12 +169,16 @@ describe("SignOutButton", () => {
         renderConnectedComponent(
           <SignOutButton />, {apiUrl}, {user: {isSignedIn: true}}
         ).then(({instance, store}) => {
+          // establish that we're using the "default" endpoint config
+          store.dispatch(storeCurrentEndpointKey("default"));
+          persistData(C.SAVED_CONFIG_KEY, "default");
+
           // submit the form
           let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "sign-out-submit");
           TestUtils.Simulate.click(submitEl);
 
           setTimeout(() => {
-            let errors = store.getState().auth.getIn(["signOut", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["signOut", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp["errors"]);
 
             // ensure modal is to be shown

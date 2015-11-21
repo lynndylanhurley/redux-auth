@@ -21,7 +21,7 @@ class CodeSnippet extends React.Component {
     this.highlight($target, this.props.children);
   }
 
-  componentWillReceiveProps () {
+  componentDidUpdate () {
     let $target = $(this.refs.target);
     $target.html("");
     this.highlight($target, this.props.children);

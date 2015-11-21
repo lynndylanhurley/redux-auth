@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { connect } from "react-redux";
 import { hideUpdatePasswordSuccessModal } from "../../../actions/ui";
 
@@ -19,28 +19,20 @@ class UpdatePasswordSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        className="update-password-success-modal"
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Success</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>
-            Your password has been successfully changed.
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal update-password-success-modal"
+        title="Success"
+        actions={[
+          <FlatButton
+            key="close"
             onClick={this.close.bind(this)}
             className="update-password-success-modal-close">
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <p>Your password has been successfully changed.</p>
+      </Dialog>
     );
   }
 }

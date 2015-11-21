@@ -4,6 +4,7 @@ import jsdom from "mocha-jsdom";
 import {expect} from "chai";
 import * as C from "../../src/utils/constants";
 import {resetConfig, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
 
@@ -15,6 +16,7 @@ describe("RequestPasswordResetForm", () => {
   var RequestPasswordResetForm,
       TestUtils,
       findClass,
+      findTag,
       requirePath,
       renderConnectedComponent,
       successRespSpy,
@@ -29,7 +31,9 @@ describe("RequestPasswordResetForm", () => {
       };
 
   [
-    "bootstrap"
+    "bootstrap",
+    "material-ui",
+    "default"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/RequestPasswordResetForm`;
 
@@ -41,6 +45,7 @@ describe("RequestPasswordResetForm", () => {
         warnOnUnregistered: false,
         useCleanCache: true
       });
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
     });
 
     afterEach(() => {
@@ -57,16 +62,15 @@ describe("RequestPasswordResetForm", () => {
 
         let inputProps = {
           email: {style: {color: "red"}, className: "email-class-override"},
-          submit: {style: {color: "orange"}, className: "submit-class-override"}
+          submit: {className: "submit-class-override"}
         };
 
         renderConnectedComponent(
           <RequestPasswordResetForm inputProps={inputProps} />
         ).then(({instance}) => {
-          let emailEl    = findClass(instance, "email-class-override")
-          let submitEl   = findClass(instance, "submit-class-override")
+          let emailEl = findClass(instance, "email-class-override")
+          findClass(instance, "submit-class-override")
           expect(emailEl.getAttribute("style")).to.equal("color:red;")
-          expect(submitEl.getAttribute("style")).to.equal("color:orange;")
           done();
         }).catch(e => console.log("error:", e));
       });
@@ -82,6 +86,7 @@ describe("RequestPasswordResetForm", () => {
         RequestPasswordResetForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         findClass = TestUtils.findRenderedDOMComponentWithClass;
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
 
         let endpointConfig = [
@@ -91,12 +96,13 @@ describe("RequestPasswordResetForm", () => {
 
         renderConnectedComponent((
           <RequestPasswordResetForm />
-        ), endpointConfig).then(({instance}) => {
+        ), endpointConfig).then(({instance, store}) => {
           // establish that we're using the "alt" endpoint config
+          store.dispatch(storeCurrentEndpointKey("alt"));
           persistData(C.SAVED_CONFIG_KEY, "alt");
 
           // change input values
-          let emailEl = findClass(instance, "request-password-reset-email")
+          let emailEl = findTag(instance, "input")[0];
           emailEl.value = "bogus";
           TestUtils.Simulate.change(emailEl);
 
@@ -126,6 +132,7 @@ describe("RequestPasswordResetForm", () => {
         RequestPasswordResetForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         findClass = TestUtils.findRenderedDOMComponentWithClass;
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
       });
 
@@ -136,7 +143,7 @@ describe("RequestPasswordResetForm", () => {
         renderConnectedComponent((
           <RequestPasswordResetForm />
         ), {apiUrl}).then(({instance, store}) => {
-          let emailEl = findClass(instance, "request-password-reset-email")
+          let emailEl = findTag(instance, "input")[0];
 
           // change input values
           emailEl.value = testEmail;
@@ -145,7 +152,7 @@ describe("RequestPasswordResetForm", () => {
           TestUtils.Simulate.change(emailEl);
 
           // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["requestPasswordReset", "form", "email"])).to.equal(testEmail);
+          expect(store.getState().auth.getIn(["requestPasswordReset", "default", "form", "email"])).to.equal(testEmail);
 
           // submit the form
           let submitEl = findClass(instance, "request-password-reset-submit");
@@ -180,6 +187,7 @@ describe("RequestPasswordResetForm", () => {
         registerMock("isomorphic-fetch", errorRespSpy);
         RequestPasswordResetForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
       });
 
@@ -190,7 +198,8 @@ describe("RequestPasswordResetForm", () => {
           <RequestPasswordResetForm />, {apiUrl}
         ).then(({instance, store}) => {
           // change input values
-          let emailEl = TestUtils.findRenderedDOMComponentWithClass(instance, "request-password-reset-email");
+          let emailEl = findTag(instance, "input")[0];
+
           emailEl.value = testUid;
           TestUtils.Simulate.change(emailEl);
 
@@ -199,7 +208,7 @@ describe("RequestPasswordResetForm", () => {
           TestUtils.Simulate.click(submitEl);
 
           setTimeout(() => {
-            let errors = store.getState().auth.getIn(["requestPasswordReset", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["requestPasswordReset", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp["errors"]);
 
             // ensure modal is to be shown

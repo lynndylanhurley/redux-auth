@@ -1,4 +1,5 @@
 import extend from "extend";
+import * as C from "../utils/constants";
 import {
   authenticateStart,
   authenticateComplete,
@@ -17,6 +18,15 @@ import verifyAuth from "../utils/verify-auth";
 import getRedirectInfo from "../utils/parse-url";
 import {pushState} from "redux-router";
 
+export const SET_ENDPOINT_KEYS = "SET_ENDPOINT_KEYS";
+export const STORE_CURRENT_ENDPOINT_KEY = "STORE_CURRENT_ENDPOINT_KEY";
+export function setEndpointKeys(endpoints, currentEndpointKey, defaultEndpointKey) {
+  return { type: SET_ENDPOINT_KEYS, endpoints, currentEndpointKey, defaultEndpointKey };
+};
+export function storeCurrentEndpointKey(currentEndpointKey) {
+  return { type: STORE_CURRENT_ENDPOINT_KEY, currentEndpointKey };
+};
+
 export function configure(endpoint={}, settings={}) {
   return dispatch => {
     // don't render anything for OAuth redirects
@@ -33,13 +43,35 @@ export function configure(endpoint={}, settings={}) {
         headers;
 
     if (settings.isServer) {
-      // this is a server side validation. don't actually run Auth.configure
       promise = verifyAuth(endpoint, settings)
-        .then(({user, newHeaders, firstTimeLogin, mustResetPassword}) => {
-          dispatch(ssAuthTokenUpdate({headers: newHeaders, firstTimeLogin, mustResetPassword}));
+        .then(({
+          user,
+          headers,
+          firstTimeLogin,
+          mustResetPassword,
+          currentEndpoint,
+          currentEndpointKey,
+          defaultEndpointKey
+        }) => {
+          dispatch(ssAuthTokenUpdate({
+            headers,
+            user,
+            firstTimeLogin,
+            mustResetPassword
+          }));
+
+          dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+
           return user;
-        }).catch(({reason, firstTimeLogin, mustResetPassword}) => {
+        }).catch(({
+          reason,
+          firstTimeLogin,
+          mustResetPassword,
+          currentEndpoint,
+          defaultEndpointKey
+        }) => {
           dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
+          dispatch(setEndpointKeys(Object.keys(currentEndpoint || {}), null, defaultEndpointKey));
           return Promise.reject({reason});
         });
     } else {
@@ -57,13 +89,14 @@ export function configure(endpoint={}, settings={}) {
           if (user) {
             dispatch(authenticateComplete(user));
 
-            // instruct j-token to NOT send initial validation request, but to
+            // do NOT send initial validation request.
             // instead use the credentials that were sent back by the server.
-           settings.initialCredentials = serverCreds;
+            settings.initialCredentials = serverCreds;
           }
 
           // sync client dom to prevent React "out of sync" error
           dispatch(ssAuthTokenUpdate({
+            user,
             headers,
             mustResetPassword,
             firstTimeLogin
@@ -87,7 +120,7 @@ export function configure(endpoint={}, settings={}) {
         destroySession();
       }
 
-      promise = Promise.resolve(applyConfig({endpoint, settings}));
+      promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
     }
 
     return promise
@@ -104,7 +137,7 @@ export function configure(endpoint={}, settings={}) {
 
         return user;
       })
-      .catch(({reason}) => {
+      .catch(({reason} = {}) => {
         dispatch(authenticateError([reason]));
 
         if (firstTimeLogin) {

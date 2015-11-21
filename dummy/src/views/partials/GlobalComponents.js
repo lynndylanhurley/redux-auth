@@ -1,20 +1,37 @@
-import React from "react";
-import { AuthModals, TokenBridge } from "../../../../src";
-import RequestTestSuccessModal from "./RequestTestSuccessModal";
-import RequestTestErrorModal from "./RequestTestErrorModal";
-
-class GlobalComponents extends React.Component {
-  render () {
-    return (
-      <div>
-        {console.log("bang 10")}
-        <AuthGlobals />
-        <RequestTestSuccessModal />
-        <RequestTestErrorModal />
-        {console.log("bang 11")}
-      </div>
-    );
-  }
-}
-
-export default GlobalComponents;
+import React from "react";
+import RequestTestSuccessModal from "./RequestTestSuccessModal";
+import RequestTestErrorModal from "./RequestTestErrorModal";
+import * as BSTheme from "../../../../src/views/bootstrap";
+import * as DefaultTheme from "../../../../src/views/default";
+import * as MUITheme from "../../../../src/views/material-ui";
+import { connect } from "react-redux";
+
+@connect(({demoUi}) => {
+  return ({
+    theme: demoUi.get("theme"),
+  })
+})
+class GlobalComponents extends React.Component {
+  render () {
+    let Theme = MUITheme;
+
+    switch(this.props.theme) {
+      case "default":
+        Theme = DefaultTheme;
+        break;
+      case "bootstrap":
+        Theme = BSTheme;
+        break;
+    }
+
+    return (
+      <div>
+        <Theme.AuthGlobals />
+        <RequestTestSuccessModal />
+        <RequestTestErrorModal />
+      </div>
+    );
+  }
+}
+
+export default GlobalComponents;

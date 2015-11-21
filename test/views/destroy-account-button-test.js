@@ -3,6 +3,8 @@ import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
 import {resetConfig, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
+import {getCurrentEndpointKey} from "../../src/utils/session-storage";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -29,6 +31,8 @@ describe("DestroyAccountButton", () => {
     };
 
     [
+      "material-ui",
+      "default",
       "bootstrap"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/DestroyAccountButton`;
@@ -41,6 +45,8 @@ describe("DestroyAccountButton", () => {
           warnOnUnregistered: false,
           useCleanCache: true
         });
+
+        global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
       });
 
       afterEach(() => {
@@ -55,13 +61,12 @@ describe("DestroyAccountButton", () => {
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           ({renderConnectedComponent} = require("../helper"));
 
-          let inputProps = {style: {color: "red"}, className: "destroy-account-class-override"};
+          let inputProps = {className: "destroy-account-class-override"};
 
           renderConnectedComponent(
             <DestroyAccountButton {...inputProps} />
           ).then(({instance}) => {
-            let destroyAccountEl    = findClass(instance, "destroy-account-class-override")
-            expect(destroyAccountEl.getAttribute("style")).to.equal("color:red;")
+            findClass(instance, "destroy-account-class-override");
             done();
           }).catch(e => console.log("error:", e));
         });
@@ -86,9 +91,10 @@ describe("DestroyAccountButton", () => {
 
           renderConnectedComponent((
             <DestroyAccountButton  />
-          ), endpointConfig, {user: {isSignedIn: true}}).then(({instance}) => {
+          ), endpointConfig, {user: {isSignedIn: true}}).then(({instance, store}) => {
             // establish that we're using the "alt" endpoint config
             persistData(C.SAVED_CONFIG_KEY, "alt");
+            store.dispatch(storeCurrentEndpointKey("alt"));
 
             let submitEl = findClass(instance, "destroy-account-submit");
             TestUtils.Simulate.click(submitEl);
@@ -97,6 +103,10 @@ describe("DestroyAccountButton", () => {
               // expect response to have been made to alt endpoint url
               let [[url, ]] = successRespSpy.args;
               expect(url).to.equal(`${testUrl}/auth`);
+
+              // ensure current endpoint was restored to default
+              expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
+              expect(getCurrentEndpointKey()).to.equal("default");
 
               done();
             }, 0);
@@ -134,6 +144,9 @@ describe("DestroyAccountButton", () => {
               let modalVisible = store.getState().auth.getIn(["ui", "destroyAccountSuccessModalVisible"]);
               expect(modalVisible).to.equal(true);
 
+              // ensure user is signed out
+              expect(store.getState().auth.getIn(["user", "isSignedIn"])).to.equal(false);
+
               // ensure default url was used
               let [[url, ]] = successRespSpy.args;
               expect(url).to.equal(`${apiUrl}/auth`);
@@ -168,7 +181,7 @@ describe("DestroyAccountButton", () => {
             TestUtils.Simulate.click(submitEl);
 
             setTimeout(() => {
-              let errors = store.getState().auth.getIn(["destroyAccount", "errors"]).toJS();
+              let errors = store.getState().auth.getIn(["destroyAccount", "default", "errors"]).toJS();
               expect(errors).to.deep.equal(errorResp["errors"]);
 
               // ensure modal is to be shown

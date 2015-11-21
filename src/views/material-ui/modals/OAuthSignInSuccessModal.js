@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hideOAuthSignInSuccessModal } from "../../../actions/ui";
 
 @connect(({auth}) => ({auth}))
@@ -19,25 +19,20 @@ class OAuthSignInSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal show={this.props.show}
-             className="oauth-sign-in-success-modal"
-             onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Welcome</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>You are now signed in via {this.props.auth.getIn(["user", "attributes", "provider"])}.</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal oauth-sign-in-success-modal"
+        title="Welcome"
+        actions={[
+          <FlatButton
+            key="close"
             onClick={this.close.bind(this)}
             className="oauth-sign-in-success-modal-close">
             Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <p>You are now signed in via {this.props.auth.getIn(["user", "attributes", "provider"])}.</p>
+      </Dialog>
     );
   }
 }

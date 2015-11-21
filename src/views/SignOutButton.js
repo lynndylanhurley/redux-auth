@@ -16,15 +16,23 @@ class SignOutButton extends React.Component {
     icon: <Glyphicon glyph="log-out" />
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleClick () {
-    this.props.dispatch(signOut());
+    this.props.dispatch(signOut(this.getEndpoint()));
   }
 
   render () {
     let disabled = !this.props.auth.getIn(["user", "isSignedIn"]);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(["signOut", "loading"])}
+        loading={this.props.auth.getIn(["signOut", this.getEndpoint(), "loading"])}
         icon={this.props.icon}
         disabled={disabled}
         className="sign-out-submit"

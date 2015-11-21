@@ -11,12 +11,13 @@ var AuthGlobals;
  * Batch test the functionality shared by the 18 or so modals.
  */
 
-describe("Modals", () => {
+describe.only("Modals", () => {
 
   jsdom();
 
   [
-    "bootstrap"
+    //"bootstrap",
+    "material-ui"
   ].forEach((theme) => {
     beforeEach(() => {
       resetConfig();
@@ -41,13 +42,20 @@ describe("Modals", () => {
       ["UpdatePasswordSuccessModal",       "updatePasswordSuccessModalVisible",       "update-password-success-modal"]
     ].forEach(([componentName, vizProp, modalClass]) => {
 
+      let modalContainerClass = "redux-auth-modal";
+      if (theme === "bootstrap") {
+        modalContainerClass = "modal";
+      }
+
       describe(`${theme} ${componentName}`, () => {
         beforeEach(() => {
+          let Modal = require("react-modal");
+          Modal.setAppElement(document.body);
           AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`);
         })
 
         afterEach(() => {
-          let modals = document.getElementsByClassName("modal");
+          let modals = document.getElementsByClassName(modalContainerClass);
           for (var m in modals) {
             modals[m].parentNode.removeChild(modals[m]);
           }
@@ -63,6 +71,7 @@ describe("Modals", () => {
           renderConnectedComponent(<AuthGlobals />, undefined, initialState).then(({store}) => {
             // ensure modal is visible
             expect(document.getElementsByClassName(modalClass)).to.be.ok;
+            expect(document.getElementsByClassName(modalContainerClass)).to.be.ok;
 
             // ensure close button is present
             let closeBtnEl = document.getElementsByClassName(`${modalClass}-close`);
@@ -73,7 +82,7 @@ describe("Modals", () => {
             expect(store.getState().auth.getIn(["ui", vizProp])).to.equal(false);
 
             done();
-          }).catch(e => console.log("error:", e));
+          }).catch(e => console.log("error:", e.stack));
         });
       });
     });

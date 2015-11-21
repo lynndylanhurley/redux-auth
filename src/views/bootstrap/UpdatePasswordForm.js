@@ -1,7 +1,6 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
-import { Glyphicon } from "react-bootstrap";
 import { updatePassword, updatePasswordFormUpdate } from "../../actions/update-password";
 import { connect } from "react-redux";
 
@@ -24,17 +23,25 @@ class UpdatePasswordForm extends React.Component {
     }
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleInput (key, val) {
-    this.props.dispatch(updatePasswordFormUpdate(key, val));
+    this.props.dispatch(updatePasswordFormUpdate(this.getEndpoint(), key, val));
   }
 
   handleSubmit () {
-    let formData = this.props.auth.getIn(["updatePassword", "form"]).toJS();
-    this.props.dispatch(updatePassword(formData, this.props.endpoint));
+    let formData = this.props.auth.getIn(["updatePassword", this.getEndpoint(), "form"]).toJS();
+    this.props.dispatch(updatePassword(formData, this.getEndpoint()));
   }
 
   render () {
-    let loading = this.props.auth.getIn(["updatePassword", "loading"]);
+    let loading = this.props.auth.getIn(["updatePassword", this.getEndpoint(), "loading"]);
     let disabled = (
       !this.props.auth.getIn(["user", "isSignedIn"]) || loading ||
       (this.props.auth.getIn(["user", "attributes", "provider"]) !== "email")
@@ -50,8 +57,8 @@ class UpdatePasswordForm extends React.Component {
           placeholder="Password"
           disabled={disabled}
           className="update-password-password"
-          value={this.props.auth.getIn(["updatePassword", "form", "password"])}
-          errors={this.props.auth.getIn(["updatePassword", "errors", "password"])}
+          value={this.props.auth.getIn(["updatePassword", this.getEndpoint(), "form", "password"])}
+          errors={this.props.auth.getIn(["updatePassword", this.getEndpoint(), "errors", "password"])}
           onChange={this.handleInput.bind(this, "password")}
           {...this.props.inputProps.password} />
 
@@ -61,8 +68,8 @@ class UpdatePasswordForm extends React.Component {
           placeholder="Password Confirmation"
           className="update-password-password-confirmation"
           disabled={disabled}
-          value={this.props.auth.getIn(["updatePassword", "form", "password_confirmation"])}
-          errors={this.props.auth.getIn(["updatePassword", "errors", "password_confirmation"])}
+          value={this.props.auth.getIn(["updatePassword", this.getEndpoint(), "form", "password_confirmation"])}
+          errors={this.props.auth.getIn(["updatePassword", this.getEndpoint(), "errors", "password_confirmation"])}
           onChange={this.handleInput.bind(this, "password_confirmation")}
           {...this.props.inputProps.passwordConfirmation} />
 

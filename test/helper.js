@@ -20,9 +20,11 @@ import GlobalComponents from "../dummy/src/views/partials/GlobalComponents";
 
 class App extends React.Component {
   render() {
+    console.log("@-->rendering app");
     return (
       <Container>
         <GlobalComponents />
+        {console.log("rendering children")}
         {this.props.children}
       </Container>
     );
@@ -30,7 +32,10 @@ class App extends React.Component {
 }
 
 
-export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) {
+export function initialize(
+  endpoint = {apiUrl: "http://api.site.com"},
+  {cookies, isServer, currentLocation} = {}
+) {
   var reducer = combineReducers({
     auth:   authStateReducer,
     router: routerStateReducer,
@@ -78,12 +83,19 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
     })
   )(createStore)(reducer);
 
+  // this is necessary for material ui to render
+  global.navigator = {
+    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+  };
+
+  if (typeof(window) !== "undefined") {
+    window.navigator = global.navigator;
+  }
+
   /**
    * The React Router 1.0 routes for both the server and the client.
    */
-  return store.dispatch(configure({
-    apiUrl: "http://api.site.com"
-  }, {
+  return store.dispatch(configure(endpoint, {
     cookies,
     isServer,
     currentLocation
@@ -97,7 +109,8 @@ export function initialize(endpoint, {cookies, isServer, currentLocation} = {}) 
         </Provider>
       )
     };
-  });
+  })
+  .catch(err => console.log("@-->init err", err));
 }
 
 
@@ -116,6 +129,16 @@ export function renderConnectedComponent(markup, endpointConfig, initialState={}
   // must re-require TestUtils because of mockery
   var TestUtils = require("react-addons-test-utils");
   var store = genStore(initialState);
+
+  // this is necessary for material ui to render
+  global.navigator = {
+    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
+  };
+
+  if (typeof(window) !== "undefined") {
+    window.navigator = global.navigator;
+  }
+
   return store.dispatch(configure(endpointConfig)).then(() => {
     return {
       store,
@@ -125,7 +148,7 @@ export function renderConnectedComponent(markup, endpointConfig, initialState={}
         </Provider>
       )
     };
-  });
+  }).catch(e => console.log("@-->render error", e.stack));
 }
 
 export function mockFetchResponse(url, status=200, body={}, headers={}) {

@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hidePasswordResetRequestSuccessModal } from "../../../actions/ui";
 
 @connect(({auth}) => ({auth}))
@@ -19,28 +19,20 @@ class RequestPasswordResetSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        className="request-password-reset-success-modal"
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Password Reset Request Success</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>
-            {this.props.auth.getIn(["ui", "requestPasswordResetSuccessMessage"])}
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal request-password-reset-success-modal"
+        title="Password Reset Request Success"
+        actions={[
+          <FlatButton
+            key="close"
             onClick={this.close.bind(this)}
             className="request-password-reset-success-modal-close">
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <p>{this.props.auth.getIn(["ui", "requestPasswordResetSuccessMessage"])}</p>
+      </Dialog>
     );
   }
 }

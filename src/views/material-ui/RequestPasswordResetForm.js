@@ -1,8 +1,8 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
-import { Glyphicon } from "react-bootstrap";
 import { connect } from "react-redux";
+import {ContentSend} from "material-ui/lib/svg-icons";
 import {
   requestPasswordResetFormUpdate,
   requestPasswordReset
@@ -25,41 +25,52 @@ class RequestPasswordResetForm extends React.Component {
     }
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleInput (key, val) {
-    this.props.dispatch(requestPasswordResetFormUpdate(key, val));
+    this.props.dispatch(requestPasswordResetFormUpdate(this.getEndpoint(), key, val));
   }
 
   handleSubmit () {
-    let formData = this.props.auth.getIn(["requestPasswordReset", "form"]).toJS();
-    this.props.dispatch(requestPasswordReset(formData, this.props.endpoint));
+    let formData = this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "form"]).toJS();
+    this.props.dispatch(requestPasswordReset(formData, this.getEndpoint()));
   }
 
   render () {
-    let loading = this.props.auth.getIn(["requestPasswordReset", "loading"]);
-    let inputDisabled = this.props.auth.getIn(["user", "isSignedIn"]);
-    let submitDisabled = !this.props.auth.getIn(["requestPasswordReset", "form", "email"]);
+    let endpoint       = this.getEndpoint();
+    let loading        = this.props.auth.getIn(["requestPasswordReset", endpoint, "loading"]);
+    let inputDisabled  = this.props.auth.getIn(["user", "isSignedIn"]);
+    let submitDisabled = !this.props.auth.getIn(["requestPasswordReset", endpoint, "form", "email"]);
 
     return (
       <form
         className='redux-auth request-password-reset-form clearfix'
+        style={{clear: "both", overflow: "hidden"}}
         onSubmit={this.handleSubmit.bind(this)}>
 
         <Input
           type="text"
-          label="Email Address"
+          floatingLabelText="Email Address"
           className="request-password-reset-email"
-          placeholder="Email Address"
           disabled={loading || inputDisabled}
-          value={this.props.auth.getIn(["requestPasswordReset", "form", "email"])}
-          errors={this.props.auth.getIn(["requestPasswordReset", "errors", "email"])}
+          value={this.props.auth.getIn(["requestPasswordReset", endpoint, "form", "email"])}
+          errors={this.props.auth.getIn(["requestPasswordReset", endpoint, "errors", "email"])}
           onChange={this.handleInput.bind(this, "email")}
           {...this.props.inputProps.email} />
 
         <ButtonLoader
           loading={loading}
           type="submit"
-          icon={<Glyphicon glyph="lock" />}
-          className="pull-right request-password-reset-submit"
+          primary={true}
+          icon={ContentSend}
+          style={{float: "right"}}
+          className="request-password-reset-submit"
           disabled={inputDisabled || submitDisabled}
           onClick={this.handleSubmit.bind(this)}
           {...this.props.inputProps.submit}>

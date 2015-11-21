@@ -14,6 +14,7 @@ describe("EmailSignUpForm", () => {
   var EmailSignUpForm,
       TestUtils,
       findClass,
+      findTag,
       requirePath,
       renderConnectedComponent,
       successRespSpy,
@@ -43,13 +44,17 @@ describe("EmailSignUpForm", () => {
       };
 
   [
+    "material-ui",
+    "default",
     "bootstrap"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/EmailSignUpForm`;
 
     beforeEach(() => {
       resetConfig();
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
     });
+
 
     describe(`${theme} params`, () => {
       beforeEach(() => {
@@ -75,20 +80,19 @@ describe("EmailSignUpForm", () => {
           email: {style: {color: "red"}, className: "email-class-override"},
           password: {style: {color: "green"}, className: "password-class-override"},
           passwordConfirmation: {style: {color: "purple"}, className: "password-confirmation-class-override"},
-          submit: {style: {color: "orange"}, className: "submit-class-override"}
+          submit: {className: "submit-class-override"}
         };
 
         renderConnectedComponent(
           <EmailSignUpForm inputProps={inputProps} />
         ).then(({instance}) => {
-          let emailEl    = findClass(instance, "email-class-override")
-          let passwordEl = findClass(instance, "password-class-override")
-          let passwordConfirmationEl = findClass(instance, "password-confirmation-class-override")
-          let submitEl   = findClass(instance, "submit-class-override")
-          expect(emailEl.getAttribute("style")).to.equal("color:red;")
-          expect(passwordEl.getAttribute("style")).to.equal("color:green;")
-          expect(passwordConfirmationEl.getAttribute("style")).to.equal("color:purple;")
-          expect(submitEl.getAttribute("style")).to.equal("color:orange;")
+          let emailEl                = findClass(instance, "email-class-override");
+          let passwordEl             = findClass(instance, "password-class-override");
+          let passwordConfirmationEl = findClass(instance, "password-confirmation-class-override");
+          findClass(instance, "submit-class-override");
+          expect(emailEl.getAttribute("style")).to.match(/color:red/);
+          expect(passwordEl.getAttribute("style")).to.match(/color:green/);
+          expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:purple/);
           done();
         }).catch(e => console.log("error:", e));
       });
@@ -120,7 +124,7 @@ describe("EmailSignUpForm", () => {
           setTimeout(() => {
             // expect response to have been made to alt endpoint url
             let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${testUrl}/auth`);
+            expect(url).to.equal(`${testUrl}/auth?config_name=alt`);
 
             done();
           }, 0);
@@ -146,6 +150,7 @@ describe("EmailSignUpForm", () => {
         EmailSignUpForm = require(requirePath);
         TestUtils = require("react-addons-test-utils");
         findClass = TestUtils.findRenderedDOMComponentWithClass;
+        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
         ({renderConnectedComponent} = require("../helper"));
       });
 
@@ -161,9 +166,9 @@ describe("EmailSignUpForm", () => {
         renderConnectedComponent((
           <EmailSignUpForm />
         ), {apiUrl}).then(({instance, store}) => {
-          let emailEl = findClass(instance, "email-sign-up-email")
-          let passwordEl = findClass(instance, "email-sign-up-password")
-          let passwordConfirmEl = findClass(instance, "email-sign-up-password-confirmation")
+          let emailEl = findTag(instance, "input")[0];
+          let passwordEl = findTag(instance, "input")[1];
+          let passwordConfirmEl = findTag(instance, "input")[2];
 
           // change input values
           emailEl.value = testEmail;
@@ -176,9 +181,9 @@ describe("EmailSignUpForm", () => {
           TestUtils.Simulate.change(passwordConfirmEl);
 
           // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["emailSignUp", "form", "email"])).to.equal(testEmail);
-          expect(store.getState().auth.getIn(["emailSignUp", "form", "password"])).to.equal(testPassword);
-          expect(store.getState().auth.getIn(["emailSignUp", "form", "password_confirmation"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["emailSignUp", "default", "form", "email"])).to.equal(testEmail);
+          expect(store.getState().auth.getIn(["emailSignUp", "default", "form", "password"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["emailSignUp", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
           // submit the form
           let submitEl = findClass(instance, "email-sign-up-submit");
@@ -195,7 +200,7 @@ describe("EmailSignUpForm", () => {
 
             // ensure default url was used
             let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${apiUrl}/auth`);
+            expect(url).to.equal(`${apiUrl}/auth?config_name=default`);
 
             done();
           }, 0);
@@ -242,7 +247,7 @@ describe("EmailSignUpForm", () => {
             let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
             expect(authHeaders).to.equal(undefined);
 
-            let errors = store.getState().auth.getIn(["emailSignUp", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["emailSignUp", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp["errors"]);
 
             // ensure user was not set

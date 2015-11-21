@@ -24,19 +24,27 @@ class EmailSignUpForm extends React.Component {
     }
   }
 
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   handleInput (key, val) {
-    this.props.dispatch(emailSignUpFormUpdate(key, val));
+    this.props.dispatch(emailSignUpFormUpdate(this.getEndpoint(), key, val));
   }
 
   handleSubmit () {
-    let formData = this.props.auth.getIn(["emailSignUp", "form"]).toJS();
-    this.props.dispatch(emailSignUp(formData, this.props.endpoint));
+    let formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
+    this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
   }
 
   render () {
     let disabled = (
       this.props.auth.getIn(["user", "isSignedIn"]) ||
-      this.props.auth.getIn(["emailSignUp", "loading"])
+      this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])
     );
 
     return (
@@ -47,8 +55,8 @@ class EmailSignUpForm extends React.Component {
                placeholder="Email"
                className="email-sign-up-email"
                disabled={disabled}
-               value={this.props.auth.getIn(["emailSignUp", "form", "email"])}
-               errors={this.props.auth.getIn(["emailSignUp", "errors", "email"])}
+               value={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "email"])}
+               errors={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "errors", "email"])}
                onChange={this.handleInput.bind(this, "email")}
                {...this.props.inputProps.email} />
 
@@ -57,8 +65,8 @@ class EmailSignUpForm extends React.Component {
                placeholder="Password"
                className="email-sign-up-password"
                disabled={disabled}
-               value={this.props.auth.getIn(["emailSignUp", "form", "password"])}
-               errors={this.props.auth.getIn(["emailSignUp", "errors", "password"])}
+               value={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "password"])}
+               errors={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "errors", "password"])}
                onChange={this.handleInput.bind(this, "password")}
                {...this.props.inputProps.password} />
 
@@ -67,13 +75,13 @@ class EmailSignUpForm extends React.Component {
                placeholder="Password Confirmation"
                className="email-sign-up-password-confirmation"
                disabled={disabled}
-               value={this.props.auth.getIn(["emailSignUp", "form", "password_confirmation"])}
-               errors={this.props.auth.getIn(["emailSignUp", "errors", "password_confirmation"])}
+               value={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "password_confirmation"])}
+               errors={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "errors", "password_confirmation"])}
                onChange={this.handleInput.bind(this, "password_confirmation")}
                {...this.props.inputProps.passwordConfirmation} />
 
 
-        <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", "loading"])}
+        <ButtonLoader loading={this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"])}
                       type="submit"
                       className="email-sign-up-submit pull-right"
                       icon={<Glyphicon glyph="send" />}

@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { connect } from "react-redux";
 import { hideEmailSignInSuccessModal } from "../../../actions/ui";
 
@@ -19,26 +19,20 @@ class EmailSignInSuccessModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        onHide={this.close.bind(this)}
-        className="email-sign-in-success-modal">
-        <Modal.Header closeButton>
-          <Modal.Title>Welcome Back</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>You are now signed in as {this.props.auth.getIn(["user", "attributes", "email"])}.</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        title="Welcome Back"
+        actions={[
+          <FlatButton
             onClick={this.close.bind(this)}
+            key="close"
             className="email-sign-in-success-modal-close">
             Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}
+        contentClassName="redux-auth-modal email-sign-in-success-modal">
+        <p>You are now signed in as {this.props.auth.getIn(["user", "attributes", "email"])}.</p>
+      </Dialog>
     );
   }
 }

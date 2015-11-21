@@ -8,34 +8,34 @@ export const REQUEST_PASSWORD_RESET_COMPLETE    = "REQUEST_PASSWORD_RESET_COMPLE
 export const REQUEST_PASSWORD_RESET_ERROR       = "REQUEST_PASSWORD_RESET_ERROR";
 export const REQUEST_PASSWORD_RESET_FORM_UPDATE = "REQUEST_PASSWORD_RESET_FORM_UPDATE";
 
-export function requestPasswordResetFormUpdate(key, value) {
-  return { type: REQUEST_PASSWORD_RESET_FORM_UPDATE, key, value };
+export function requestPasswordResetFormUpdate(endpoint, key, value) {
+  return { type: REQUEST_PASSWORD_RESET_FORM_UPDATE, endpoint, key, value };
 }
-export function requestPasswordResetStart() {
-  return { type: REQUEST_PASSWORD_RESET_START };
+export function requestPasswordResetStart(endpoint) {
+  return { type: REQUEST_PASSWORD_RESET_START, endpoint };
 }
-export function requestPasswordResetComplete(message) {
-  return { type: REQUEST_PASSWORD_RESET_COMPLETE, message };
+export function requestPasswordResetComplete(endpoint, message) {
+  return { type: REQUEST_PASSWORD_RESET_COMPLETE, endpoint, message };
 }
-export function requestPasswordResetError(errors) {
-  return { type: REQUEST_PASSWORD_RESET_ERROR, errors };
+export function requestPasswordResetError(endpoint, errors) {
+  return { type: REQUEST_PASSWORD_RESET_ERROR, endpoint, errors };
 }
-export function requestPasswordReset(body, endpointKey) {
+export function requestPasswordReset(body, endpoint) {
   return dispatch => {
-    dispatch(requestPasswordResetStart());
+    dispatch(requestPasswordResetStart(endpoint));
 
-    return fetch(getPasswordResetRequestUrl(endpointKey), {
+    return fetch(getPasswordResetRequestUrl(endpoint), {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
       },
       method: "post",
       body: JSON.stringify(extend(body, {
-        redirect_url: getPasswordResetRedirectUrl()
+        redirect_url: getPasswordResetRedirectUrl(endpoint)
       }))
     })
       .then(parseResponse)
-      .then(({message}) => dispatch(requestPasswordResetComplete(message)))
-      .catch(({errors}) => dispatch(requestPasswordResetError(errors)));
+      .then(({message}) => dispatch(requestPasswordResetComplete(endpoint, message)))
+      .catch(({errors}) => dispatch(requestPasswordResetError(endpoint, errors)));
   };
 }

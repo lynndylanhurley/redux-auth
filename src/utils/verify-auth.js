@@ -1,7 +1,8 @@
-import Auth from "j-toker";
 import fetch from "node-fetch";
 import cookie from "cookie";
 import getRedirectInfo from "../utils/parse-url";
+import * as C from "../utils/constants";
+import parseEndpointConfig from "./parse-endpoint-config";
 import url from "url";
 
 function parseHeaders (headers) {
@@ -34,72 +35,99 @@ function parseHeaders (headers) {
 }
 
 
-export function fetchToken({cookies, apiUrl, currentLocation}) {
+export function fetchToken({rawEndpoints, cookies, currentLocation}) {
   let {authRedirectHeaders} = getRedirectInfo(url.parse(currentLocation));
 
-  let serverAuthPromise = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     if (cookies || authRedirectHeaders) {
-      let rawCookies = cookie.parse(cookies);
+      let rawCookies = cookie.parse(cookies || "{}");
       let parsedCookies = JSON.parse(rawCookies.authHeaders || "false");
       let firstTimeLogin,
           mustResetPassword,
+          currentEndpointKey,
           headers;
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
-        headers           = parseHeaders(authRedirectHeaders);
-        mustResetPassword = JSON.parse(authRedirectHeaders.reset_password || "false");
-        firstTimeLogin    = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
-      } else {
-        headers           = parsedCookies;
-        mustResetPassword = JSON.parse(parsedCookies.mustResetPassword || "false");
-        firstTimeLogin    = JSON.parse(parsedCookies.firstTimeLogin || "false");
+        headers            = parseHeaders(authRedirectHeaders);
+        currentEndpointKey = JSON.parse(authRedirectHeaders.config || "null");
+        mustResetPassword  = JSON.parse(authRedirectHeaders.reset_password || "false");
+        firstTimeLogin     = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
+      } else if (rawCookies && parsedCookies) {
+        headers            = parsedCookies;
+        currentEndpointKey = JSON.parse(rawCookies[C.SAVED_CONFIG_KEY] || "null");
+        mustResetPassword  = JSON.parse(parsedCookies.mustResetPassword || "false");
+        firstTimeLogin     = JSON.parse(parsedCookies.firstTimeLogin || "false");
       }
 
       if (!headers) {
-        return reject({reason: "No creds"});
+        return reject({
+          reason: "No creds",
+          currentEndpoint,
+          defaultEndpointKey
+        });
       }
 
-      var newHeaders;
+      var newHeaders,
+          {currentEndpoint, defaultEndpointKey} = parseEndpointConfig(rawEndpoints),
+          {apiUrl, tokenValidationPath} = currentEndpoint[currentEndpointKey || defaultEndpointKey],
+          validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
 
-      return fetch(`${apiUrl}/auth/validate_token?unbatch=true`, {
+      return fetch(validationUrl, {
         headers
       }).then((resp) => {
-        newHeaders = parseHeaders(resp.headers._headers);
+        newHeaders = parseHeaders(resp.headers.raw());
         return resp.json();
       })
       .then((json) => {
         if (json.success) {
-          return resolve({newHeaders, user: json.data, mustResetPassword, firstTimeLogin});
+          return resolve({
+            headers: newHeaders,
+            user: json.data,
+            mustResetPassword,
+            firstTimeLogin,
+            currentEndpoint,
+            currentEndpointKey,
+            defaultEndpointKey
+          });
         } else {
           return reject({
             reason: json.errors,
             mustResetPassword,
-            firstTimeLogin
+            firstTimeLogin,
+            currentEndpoint,
+            defaultEndpointKey
           });
         }
       }).catch(reason => {
-        return reject({reason, firstTimeLogin, mustResetPassword});
+        return reject({
+          reason,
+          firstTimeLogin,
+          mustResetPassword,
+          currentEndpoint,
+          defaultEndpointKey
+        });
       });
     } else {
-      reject({reason: "No creds"});
+      let {currentEndpoint, defaultEndpointKey} = parseEndpointConfig(rawEndpoints);
+      reject({
+        reason: "No creds",
+        currentEndpoint,
+        defaultEndpointKey
+      });
     }
   });
-
-  return serverAuthPromise;
 }
 
-function verifyAuth({apiUrl}, {isServer, cookies, currentLocation}) {
+function verifyAuth(rawEndpoints, {isServer, cookies, currentLocation}) {
   return new Promise((resolve, reject) => {
     if (isServer) {
-      return fetchToken({cookies, apiUrl, currentLocation})
-        .then(({user, newHeaders, mustResetPassword, firstTimeLogin}) => {
-          return resolve({user, newHeaders, mustResetPassword, firstTimeLogin});
-        })
-        .catch(({reason, firstTimeLogin, mustResetPassword}) => {
-          return reject({reason, firstTimeLogin, mustResetPassword});
-        });
+      return fetchToken({rawEndpoints, cookies, currentLocation})
+        .then(res => resolve(res))
+        .catch(res => reject(res));
     } else {
-      Auth.validateToken().then((user) => resolve(user.data), (err) => reject({reason: err}));
+      // TODO: deal with localStorage
+      //Auth.validateToken(getCurrentEndpointKey())
+        //.then((user) => resolve(user.data), (err) => reject({reason: err}));
     }
   });
 }

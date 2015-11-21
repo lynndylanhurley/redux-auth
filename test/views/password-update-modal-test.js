@@ -3,6 +3,7 @@ import sinon from "sinon";
 import jsdom from "mocha-jsdom";
 import {expect} from "chai";
 import {resetConfig, retrieveData, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
 import * as C from "../../src/utils/constants";
 import mockery, {registerMock} from "mockery";
 import {mockFetchResponse} from "../helper";
@@ -15,6 +16,7 @@ describe("PasswordResetSuccessModal", () => {
   var PasswordResetSuccessModal,
       TestUtils,
       findClass = (className) => document.getElementsByClassName(className)[0],
+      findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
       requirePath,
       renderConnectedComponent,
       successRespSpy,
@@ -60,17 +62,15 @@ describe("PasswordResetSuccessModal", () => {
     requirePath = `../../src/views/${theme}/modals/PasswordResetSuccessModal`;
 
     beforeEach(() => {
-      try {
-        resetConfig();
+      resetConfig();
 
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-      } catch (e) {
-        console.log("@-->caught error", e);
-      }
+      mockery.enable({
+        warnOnReplace: false,
+        warnOnUnregistered: false,
+        useCleanCache: true
+      });
+
+      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
     });
 
     afterEach(() => {
@@ -98,13 +98,12 @@ describe("PasswordResetSuccessModal", () => {
         renderConnectedComponent(
           <PasswordResetSuccessModal inputProps={inputProps} show={true} />, undefined, initialState
         ).then(() => {
-          let passwordEl             = findClass("password-class-override");
-          let passwordConfirmationEl = findClass("password-confirmation-class-override");
-          let submitEl               = findClass("submit-class-override");
+          let passwordEl             = findTag("input", 0);
+          let passwordConfirmationEl = findTag("input", 1);
+          findClass("submit-class-override");
 
           expect(passwordEl.getAttribute("style")).to.equal("color:red;");
           expect(passwordConfirmationEl.getAttribute("style")).to.equal("color:pink;");
-          expect(submitEl.getAttribute("style")).to.equal("color:orange;");
 
           done();
         }).catch(e => console.log("error:", e));
@@ -129,13 +128,14 @@ describe("PasswordResetSuccessModal", () => {
 
         renderConnectedComponent(
           <PasswordResetSuccessModal show={true} />, endpointConfig, initialState
-        ).then(() => {
+        ).then(({store}) => {
           // establish that we're using the "alt" endpoint config
+          store.dispatch(storeCurrentEndpointKey("alt"));
           persistData(C.SAVED_CONFIG_KEY, "alt");
 
           // change input values
-          let passwordEl = findClass("password-reset-success-modal-password")
-          let passwordConfirmationEl = findClass("password-reset-success-modal-password-confirmation")
+          let passwordEl = findTag("input", 0);
+          let passwordConfirmationEl = findTag("input", 1);
 
           passwordEl.value = "whatever";
           passwordConfirmationEl.value = "whatever";
@@ -179,8 +179,8 @@ describe("PasswordResetSuccessModal", () => {
         renderConnectedComponent((
           <PasswordResetSuccessModal show={true} />
         ), {apiUrl}, initialState).then(({store}) => {
-          let passwordEl = findClass("password-reset-success-modal-password")
-          let passwordConfirmationEl = findClass("password-reset-success-modal-password-confirmation")
+          let passwordEl = findTag("input", 0);
+          let passwordConfirmationEl = findTag("input", 1);
 
           // change input values
           passwordEl.value = testPassword;
@@ -191,8 +191,8 @@ describe("PasswordResetSuccessModal", () => {
           TestUtils.Simulate.change(passwordConfirmationEl);
 
           // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["updatePasswordModal", "form", "password"])).to.equal(testPassword);
-          expect(store.getState().auth.getIn(["updatePasswordModal", "form", "password_confirmation"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password"])).to.equal(testPassword);
+          expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
           // submit the form
           let submitEl = findClass("password-reset-success-modal-submit");
@@ -237,7 +237,7 @@ describe("PasswordResetSuccessModal", () => {
           <PasswordResetSuccessModal show={true} />, {apiUrl}, initialState
         ).then(({store}) => {
           // change input values
-          let passwordEl = findClass("password-reset-success-modal-password");
+          let passwordEl = findTag("input", 0);
           passwordEl.value = testUid;
           TestUtils.Simulate.change(passwordEl);
 
@@ -246,7 +246,7 @@ describe("PasswordResetSuccessModal", () => {
           TestUtils.Simulate.click(submitEl);
 
           setTimeout(() => {
-            let errors = store.getState().auth.getIn(["updatePasswordModal", "errors"]).toJS();
+            let errors = store.getState().auth.getIn(["updatePasswordModal", "default", "errors"]).toJS();
             expect(errors).to.deep.equal(errorResp["errors"]);
 
             // ensure modal is to be shown

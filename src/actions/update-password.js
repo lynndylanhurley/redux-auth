@@ -7,23 +7,23 @@ export const UPDATE_PASSWORD_COMPLETE    = "UPDATE_PASSWORD_COMPLETE";
 export const UPDATE_PASSWORD_ERROR       = "UPDATE_PASSWORD_ERROR";
 export const UPDATE_PASSWORD_FORM_UPDATE = "UPDATE_PASSWORD_FORM_UPDATE";
 
-export function updatePasswordFormUpdate(key, value) {
-  return { type: UPDATE_PASSWORD_FORM_UPDATE, key, value };
+export function updatePasswordFormUpdate(endpoint, key, value) {
+  return { type: UPDATE_PASSWORD_FORM_UPDATE, endpoint, key, value };
 }
-export function updatePasswordStart() {
-  return { type: UPDATE_PASSWORD_START };
+export function updatePasswordStart(endpoint) {
+  return { type: UPDATE_PASSWORD_START, endpoint };
 }
-export function updatePasswordComplete(user) {
-  return { type: UPDATE_PASSWORD_COMPLETE, user };
+export function updatePasswordComplete(endpoint, user) {
+  return { type: UPDATE_PASSWORD_COMPLETE, endpoint, user };
 }
-export function updatePasswordError(errors) {
-  return { type: UPDATE_PASSWORD_ERROR, errors };
+export function updatePasswordError(endpoint, errors) {
+  return { type: UPDATE_PASSWORD_ERROR, endpoint, errors };
 }
-export function updatePassword(body, endpointKey) {
+export function updatePassword(body, endpoint) {
   return dispatch => {
-    dispatch(updatePasswordStart());
+    dispatch(updatePasswordStart(endpoint));
 
-    return fetch(getPasswordUpdateUrl(endpointKey), {
+    return fetch(getPasswordUpdateUrl(endpoint), {
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
@@ -32,7 +32,7 @@ export function updatePassword(body, endpointKey) {
       body: JSON.stringify(body)
     })
       .then(parseResponse)
-      .then(({user}) => dispatch(updatePasswordComplete(user)))
-      .catch(({errors}) => dispatch(updatePasswordError(errors)));
+      .then(({user}) => dispatch(updatePasswordComplete(endpoint, user)))
+      .catch(({errors}) => dispatch(updatePasswordError(endpoint, errors)));
   };
 }

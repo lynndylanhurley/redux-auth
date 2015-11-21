@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
-import { Button, Modal } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hidePasswordResetRequestErrorModal } from "../../../actions/ui";
 import ErrorList from "../ErrorList";
 
@@ -18,31 +18,33 @@ class RequestPasswordResetErrorModal extends React.Component {
     this.props.dispatch(hidePasswordResetRequestErrorModal());
   }
 
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        className="request-password-reset-error-modal"
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["requestPasswordReset", "errors"])} />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal request-password-reset-error-modal"
+        title="Error"
+        actions={[
+          <FlatButton
+            key="close"
             onClick={this.close.bind(this)}
             className="request-password-reset-error-modal-close">
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <ErrorList errors={this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "errors"])} />
+      </Dialog>
     );
   }
 }
 
 export default RequestPasswordResetErrorModal;
-

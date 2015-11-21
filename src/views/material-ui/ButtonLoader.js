@@ -1,21 +1,24 @@
 import React, { PropTypes } from "react";
-import { Button, Glyphicon } from "react-bootstrap";
+import { RaisedButton } from "material-ui"
+import {ActionFavorite} from "material-ui/lib/svg-icons";
+import Colors from "material-ui/lib/styles/colors";
 import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
   static propTypes = {
-    icon: PropTypes.node,
+    icon: PropTypes.func,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     spinColorDark: PropTypes.string,
     spinColorLight: PropTypes.string,
+    spinColorDisabled: PropTypes.string,
     children: PropTypes.node,
     onClick: PropTypes.func.isRequired,
     style: PropTypes.object
   }
 
   static defaultProps = {
-    icon: <Glyphicon glyph="heart" />,
+    icon: ActionFavorite,
     loading: false,
     spinConfig: {
       lines: 10,
@@ -23,51 +26,64 @@ class ButtonLoader extends React.Component {
       width: 2,
       radius: 3
     },
-    spinColorDark: "#444",
-    spinColorLight: "#fff",
+    spinColorDark: Colors.darkBlack,
+    spinColorLight: Colors.darkWhite,
+    spinColorDisabled: Colors.minBlack,
     children: <span>Submit</span>,
     style: {}
   }
 
+  handleClick (ev) {
+    ev.preventDefault();
+    this.props.onClick();
+  }
+
+  getColor () {
+    if (this.props.disabled) {
+      return this.props.spinColorDisabled;
+    } else if (this.props.primary || this.props.secondary) {
+      return this.props.spinColorLight;
+    } else {
+      return this.props.spinColorDark;
+    }
+  }
+
   renderIcon () {
-    let icon;
+    let icon,
+        color = this.getColor();
 
     if (this.props.loading) {
-      let spinColor = (!this.props.bsStyle || this.props.bsStyle === "default")
-        ? this.props.spinColorDark
-        : this.props.spinColorLight;
-
-      icon = <Spinner ref="spinner" {...this.props.spinConfig} color={spinColor} loaded={false} />;
+      icon = <Spinner ref="spinner" {...this.props.spinConfig} color={color} loaded={false} />;
     } else {
-      icon = this.props.icon;
+      icon = <this.props.icon color={color} style={{width: 15, height: 15}} />;
     }
 
     return (
-      <div style={{
-        position: "relative",
-        display: "inline-block",
-        marginRight: "6px",
-        width: "10px",
-        height: "10px",
-        top: "1px"
+      <span style={{
+        width: 15,
+        height: 15,
+        position: "absolute",
+        left: 10,
+        top: 10
       }}>
         {icon}
-      </div>
+      </span>
     );
   }
 
   render () {
+    let color = this.getColor();
+
     return (
-      <Button
-        onClick={this.props.onClick}
-        disabled={this.props.disabled || this.props.loading}
-        bsStyle={this.props.bsStyle}
-        className={this.props.className}
-        type={this.props.type}
-        style={this.props.style}
-        bsSize={this.props.bsSize}>
-        {this.renderIcon()} {this.props.children}
-      </Button>
+      <RaisedButton
+        onClick={this.handleClick.bind(this)}
+        label={<span style={{paddingLeft: 15, color}}>{this.props.children}</span>}
+        labelPosition="after"
+        labelColor={color}
+        {...this.props}
+        disabled={this.props.disabled || this.props.loading}>
+        {this.renderIcon()}
+      </RaisedButton>
     );
   }
 }

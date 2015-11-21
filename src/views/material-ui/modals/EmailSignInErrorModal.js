@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
+import { Dialog, FlatButton } from "material-ui";
 import { connect } from "react-redux";
 import { hideEmailSignInErrorModal } from "../../../actions/ui";
-import { Modal, Button } from "react-bootstrap";
 import ErrorList from "../ErrorList";
 
 @connect(({auth}) => ({auth}))
@@ -18,25 +18,31 @@ class EmailSignInErrorModal extends React.Component {
     this.props.dispatch(hideEmailSignInErrorModal());
   }
 
+
+  getEndpoint () {
+    return (
+      this.props.endpoint ||
+      this.props.auth.getIn(["configure", "currentEndpointKey"]) ||
+      this.props.auth.getIn(["configure", "defaultEndpointKey"])
+    );
+  }
+
   render () {
     return (
-      <Modal show={this.props.show}
-             className="email-sign-in-error-modal"
-             onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Sign In Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <ErrorList errors={this.props.auth.getIn(["emailSignIn", "errors"])} />
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button onClick={this.close.bind(this)} className="email-sign-in-error-modal-close">
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal email-sign-in-error-modal"
+        title="Sign In Error"
+        actions={[
+          <FlatButton
+            onClick={this.close.bind(this)}
+            key="close"
+            className="email-sign-in-error-modal-close">
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <ErrorList errors={this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "errors"])} />
+      </Dialog>
     );
   }
 }

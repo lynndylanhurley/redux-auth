@@ -1,9 +1,14 @@
 $icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
 @import "~bootstrap-sass/assets/stylesheets/bootstrap";
 @import "~highlight.js/styles/zenburn.css";
+@import "~react-select/dist/react-select.css";
 
 body {
   .code-snippet {
     margin-top: 10px;
+  }
+
+  .Select {
+    margin-bottom: 10px;
   }
 }

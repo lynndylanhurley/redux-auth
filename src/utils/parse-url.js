@@ -16,6 +16,10 @@ export function normalizeTokenKeys (params) {
     params.client = params.client_id;
     delete params.client_id;
   }
+  if (params.config) {
+    params.endpointKey = params.config;
+    delete params.config;
+  }
 
   return params;
 };

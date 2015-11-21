@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Modal, Button } from "react-bootstrap";
+import { Dialog, FlatButton } from "material-ui";
 import { hideSignOutErrorModal } from "../../../actions/ui";
 import { connect } from "react-redux";
 
@@ -19,30 +19,24 @@ class SignOutErrorModal extends React.Component {
 
   render () {
     return (
-      <Modal
-        show={this.props.show}
-        className="sign-out-error-modal"
-        onHide={this.close.bind(this)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Sign Out Error</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-          <p>
-            The server encountered an error while trying to sign you out. Your
-            account information has been wiped from this browser, but you may
-            want to sign in and then sign back out again to resolve any issues.
-          </p>
-        </Modal.Body>
-
-        <Modal.Footer>
-          <Button
+      <Dialog
+        open={this.props.show}
+        contentClassName="redux-auth-modal sign-out-error-modal"
+        title="Sign Out Error"
+        actions={[
+          <FlatButton
+            key="close"
             className="sign-out-error-modal-close"
             onClick={this.close.bind(this)}>
             Ok
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </FlatButton>
+        ]}>
+        <p>
+          The server encountered an error while trying to sign you out. Your
+          account information has been wiped from this browser, but you may
+          want to sign in and then sign back out again to resolve any issues.
+        </p>
+      </Dialog>
     );
   }
 }

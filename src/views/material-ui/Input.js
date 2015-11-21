@@ -1,5 +1,7 @@
-import React, { PropTypes } from "react";
-import { Input, Glyphicon } from "react-bootstrap";
+import React, {PropTypes} from "react";
+import Colors from "material-ui/lib/styles/colors";
+import {TextField} from "material-ui";
+import {AlertError} from "material-ui/lib/svg-icons";
 import Immutable from "immutable";
 
 class AuthInput extends React.Component {
@@ -16,44 +18,44 @@ class AuthInput extends React.Component {
   }
 
   handleInput (ev) {
+    ev.preventDefault();
     this.props.onChange(ev.target.value);
   }
 
   renderErrorList () {
     if (this.props.errors.size) {
       return (
-        <div className='auth-error-message has-error'>
+        <div className='auth-error-message'>
           {this.props.errors.map((err, i) => {
             return (
-              <p className="control-label inline-error-item"
+              <p className="inline-error-item"
                  style={{paddingLeft: "20px", position: "relative", marginBottom: "28px"}}
                  key={i}>
-
-                <Glyphicon glyph="exclamation-sign"
-                           style={{
-                             position: "absolute",
-                             left: 0,
-                             top: 2
-                           }}
-                /> {this.props.label} {err}
+                <AlertError
+                  viewBox="0 0 50 50"
+                  color={Colors.red500}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0}} />
+                {this.props.floatingLabelText} {err}
               </p>
             );
           })}
         </div>
       );
     } else {
-      return <span />;
+      return null;
     }
   }
 
   render () {
     return (
-      <div>
-        <Input {...this.props}
-               bsStyle={(this.props.errors.size) ? "error" : null}
-               onChange={this.handleInput.bind(this)} />
-        {this.renderErrorList()}
-      </div>
+      <TextField
+        fullWidth={true}
+        {...this.props}
+        errorText={this.renderErrorList()}
+        onChange={this.handleInput.bind(this)} />
     );
   }
 }

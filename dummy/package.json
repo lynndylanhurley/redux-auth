@@ -96,6 +96,7 @@
     "mocha": "^2.3.3",
     "phantomjs-polyfill": "0.0.1",
     "react-hot-loader": "1.3.0",
+    "redux-devtools": "^2.1.5",
     "sass-loader": "^3.0.0",
     "sinon": "git://github.com/sinonjs/sinon.git",
     "sinon-chai": "^2.8.0",

@@ -1,37 +1,21 @@
 import C from "./constants";
 import extend from "extend";
 import fetch from "./fetch";
+import parseEndpointConfig from "./parse-endpoint-config";
+import {setEndpointKeys} from "../actions/configure";
 import {
   getCurrentSettings,
   setCurrentSettings,
   getInitialEndpointKey,
   setDefaultEndpointKey,
   setCurrentEndpoint,
+  setCurrentEndpointKey,
   retrieveData,
   persistData
 } from "./session-storage";
 
 // can't use "window" with node app
 var root = Function("return this")() || (42, eval)("this");
-
-// base endpoint that other endpoints extend from
-const defaultEndpoint = {
-  apiUrl:                "/api",
-  signOutPath:           "/auth/sign_out",
-  emailSignInPath:       "/auth/sign_in",
-  emailRegistrationPath: "/auth",
-  accountUpdatePath:     "/auth",
-  accountDeletePath:     "/auth",
-  passwordResetPath:     "/auth/password",
-  passwordUpdatePath:    "/auth/password",
-  tokenValidationPath:   "/auth/validate_token",
-
-  authProviderPaths: {
-    github:    "/auth/github",
-    facebook:  "/auth/facebook",
-    google:    "/auth/google_oauth2"
-  }
-};
 
 const defaultSettings = {
   proxyIf:            function() { return false; },
@@ -76,66 +60,40 @@ const defaultSettings = {
   }
 };
 
-
-
-function getFirstObjectKey (obj) {
-  for (var key in obj) {
-    return key;
-  }
-};
-
-
 // save session configuration
-export function applyConfig({endpoint={}, settings={}, reset=false}={}) {
+export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}) {
+  let currentEndpointKey;
+
   if (reset) {
     resetConfig();
   }
 
-  setCurrentSettings(extend({}, defaultSettings, settings));
-
-  // try to retrieve previous config from session storage
-  let defaultEndpointKey = getInitialEndpointKey();
-
-  // normalize so opts is always an array of objects
-  if (endpoint.constructor !== Array) {
-    // single config will always be called 'default' unless set
-    // by previous session
-    defaultEndpointKey = C.INITIAL_CONFIG_KEY;
-
-    // config should look like {default: {...}}
-    var defaultConfig = {};
-    defaultConfig[defaultEndpointKey] = endpoint;
-
-    // endpoint should look like [{default: {...}}]
-    endpoint = [defaultConfig];
+  if (settings.initialCredentials) {
+    currentEndpointKey = settings.initialCredentials.currentEndpointKey;
   }
 
-  let currentEndpoint = {};
+  setCurrentSettings(extend({}, defaultSettings, settings));
 
-  // iterate over config items, extend each from defaults
-  for (var i = 0; i < endpoint.length; i++) {
-    var configName = getFirstObjectKey(endpoint[i]);
+  let {defaultEndpointKey, currentEndpoint} = parseEndpointConfig(
+    endpoint, getInitialEndpointKey()
+  );
 
-    // set first as default config
-    if (!defaultEndpointKey) {
-      defaultEndpointKey = configName;
-    }
-
-    // save config to `configs` hash
-    currentEndpoint[configName] = extend(
-      {}, defaultEndpoint, endpoint[i][configName]
-    );
+  if (!currentEndpointKey) {
+    currentEndpointKey = defaultEndpointKey;
   }
 
   // persist default config key with session storage
   setDefaultEndpointKey(defaultEndpointKey);
   setCurrentEndpoint(currentEndpoint);
 
+  dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
+  setCurrentEndpointKey(currentEndpointKey);
+
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
 
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
-    let {user, headers} = getCurrentSettings().initialCredentials;
+    let {user, headers, config} = getCurrentSettings().initialCredentials;
     persistData(C.SAVED_CREDS_KEY, headers);
     return Promise.resolve(user);
   } else if (savedCreds) {
