@@ -1,38 +1,19 @@
-import React, { PropTypes } from "react";
-import { Dialog, FlatButton } from "material-ui";
+import React from "react";
+import Modal from "./Modal";
 import { connect } from "react-redux";
 import { hideDestroyAccountSuccessModal } from "../../../actions/ui";
 
 @connect(({auth}) => ({auth}))
 class DestroyAccountSuccessModal extends React.Component {
-  static propTypes = {
-    show: PropTypes.bool
-  }
-
-  static defaultProps = {
-    show: false
-  }
-
-  close () {
-    this.props.dispatch(hideDestroyAccountSuccessModal());
-  }
-
   render () {
     return (
-      <Dialog
-        open={this.props.show}
+      <Modal
+        {...this.props}
         title="Destroy Account Success"
-        contentClassName="redux-auth-modal destroy-account-success-modal"
-        actions={[
-          <FlatButton
-            key="close"
-            className="destroy-account-success-modal-close"
-            onClick={this.close.bind(this)}>
-            Ok
-          </FlatButton>
-        ]}>
+        containerClass="destroy-account-success-modal"
+        closeAction={hideDestroyAccountSuccessModal}>
         <p>{this.props.auth.getIn(["ui", "destroyAccountMessage"])}</p>
-      </Dialog>
+      </Modal>
     );
   }
 }

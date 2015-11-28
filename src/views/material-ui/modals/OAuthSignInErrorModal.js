@@ -1,39 +1,16 @@
-import React, { PropTypes } from "react";
-import { connect } from "react-redux";
+import React from "react";
 import Colors from "material-ui/lib/styles/colors";
-import { Dialog, FlatButton } from "material-ui";
 import { hideOAuthSignInErrorModal } from "../../../actions/ui";
 import {AlertError} from "material-ui/lib/svg-icons";
+import Modal from "./Modal";
 
-
-@connect(({auth}) => ({auth}))
 class OAuthSignInErrorModal extends React.Component {
-  static propTypes = {
-    show: PropTypes.bool
-  }
-
-  static defaultProps = {
-    show: false
-  }
-
-  close () {
-    this.props.dispatch(hideOAuthSignInErrorModal());
-  }
-
   render () {
     return (
-      <Dialog
-        open={this.props.show}
-        contentClassName="redux-auth-modal oauth-sign-in-error-modal"
-        onHide={this.close.bind(this)}
-        actions={[
-          <FlatButton
-            key="close"
-            onClick={this.close.bind(this)}
-            className="oauth-sign-in-error-modal-close">
-            Ok
-          </FlatButton>
-        ]}
+      <Modal
+        {...this.props}
+        containerClass="oauth-sign-in-error-modal"
+        closeAction={hideOAuthSignInErrorModal}
         title="OAuth Sign In Error">
         <p
           className="inline-error-item"
@@ -47,7 +24,7 @@ class OAuthSignInErrorModal extends React.Component {
               top: 3}} />
           There was an error authenticating your account. Please try again.
         </p>
-      </Dialog>
+      </Modal>
     );
   }
 }

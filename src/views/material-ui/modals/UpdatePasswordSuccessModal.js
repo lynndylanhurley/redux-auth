@@ -1,38 +1,17 @@
-import React, { PropTypes } from "react";
-import { Dialog, FlatButton } from "material-ui";
-import { connect } from "react-redux";
+import React from "react";
 import { hideUpdatePasswordSuccessModal } from "../../../actions/ui";
+import Modal from "./Modal";
 
-@connect()
 class UpdatePasswordSuccessModal extends React.Component {
-  static propTypes = {
-    show: PropTypes.bool
-  }
-
-  static defaultProps = {
-    show: false
-  }
-
-  close () {
-    this.props.dispatch(hideUpdatePasswordSuccessModal());
-  }
-
   render () {
     return (
-      <Dialog
-        open={this.props.show}
-        contentClassName="redux-auth-modal update-password-success-modal"
-        title="Success"
-        actions={[
-          <FlatButton
-            key="close"
-            onClick={this.close.bind(this)}
-            className="update-password-success-modal-close">
-            Ok
-          </FlatButton>
-        ]}>
+      <Modal
+        {...this.props}
+        containerClass="update-password-success-modal"
+        closeAction={hideUpdatePasswordSuccessModal}
+        title="Success">
         <p>Your password has been successfully changed.</p>
-      </Dialog>
+      </Modal>
     );
   }
 }
