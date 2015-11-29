@@ -9,7 +9,6 @@ import {
   updatePasswordModalFormUpdate
 } from "../../../actions/update-password-modal";
 
-@connect(({auth}) => ({auth}))
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -103,5 +102,4 @@ class PasswordResetSuccessModal extends React.Component {
   }
 }
 
-export default PasswordResetSuccessModal;
-
+export default connect(({auth}) => ({auth}))(PasswordResetSuccessModal);

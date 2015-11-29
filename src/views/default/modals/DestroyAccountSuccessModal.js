@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { connect } from "react-redux";
 import { hideDestroyAccountSuccessModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class DestroyAccountSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class DestroyAccountSuccessModal extends React.Component {
   }
 }
 
-export default DestroyAccountSuccessModal;
+export default connect(({auth}) => ({auth}))(DestroyAccountSuccessModal);

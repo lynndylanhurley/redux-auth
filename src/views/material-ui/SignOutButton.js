@@ -4,7 +4,6 @@ import { ActionLock } from "material-ui/lib/svg-icons";
 import { connect } from "react-redux";
 import { signOut } from "../../actions/sign-out";
 
-@connect(({auth}) => ({auth}))
 class SignOutButton extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -44,4 +43,4 @@ class SignOutButton extends React.Component {
   }
 }
 
-export default SignOutButton;
+export default connect(({auth}) => ({auth}))(SignOutButton);

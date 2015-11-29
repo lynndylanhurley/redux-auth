@@ -2,7 +2,6 @@ import React from "react";
 import { PageHeader } from "react-bootstrap";
 import { connect } from "react-redux";
 
-@connect(({routes}) => ({routes}))
 class SignIn extends React.Component {
   render () {
     return (
@@ -13,4 +12,4 @@ class SignIn extends React.Component {
   }
 }
 
-export default SignIn;
+export default connect(({routes}) => ({routes}))(SignIn);

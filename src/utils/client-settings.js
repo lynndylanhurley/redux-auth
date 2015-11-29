@@ -1,4 +1,4 @@
-import C from "./constants";
+import * as C from "./constants";
 import extend from "extend";
 import fetch from "./fetch";
 import parseEndpointConfig from "./parse-endpoint-config";

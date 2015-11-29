@@ -4,7 +4,6 @@ import { Glyphicon } from "react-bootstrap";
 import { connect } from "react-redux";
 import { signOut } from "../actions/sign-out";
 
-@connect(({auth}) => ({auth}))
 class SignOutButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
@@ -42,4 +41,4 @@ class SignOutButton extends React.Component {
   }
 }
 
-export default SignOutButton;
+export default connect(({auth}) => ({auth}))(SignOutButton);

@@ -3,10 +3,6 @@ import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { dismissRequestTestSuccessModal } from "../../actions/request-test-buttons";
 
-@connect(({demoButtons}) => ({
-  show: demoButtons.get("showSuccessModal"),
-  url: demoButtons.get("lastRequestUrl")
-}))
 class RequestTestSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool,
@@ -45,4 +41,7 @@ class RequestTestSuccessModal extends React.Component {
   }
 }
 
-export default RequestTestSuccessModal;
+export default connect(({demoButtons}) => ({
+  show: demoButtons.get("showSuccessModal"),
+  url: demoButtons.get("lastRequestUrl")
+}))(RequestTestSuccessModal);

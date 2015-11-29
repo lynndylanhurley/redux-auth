@@ -21,7 +21,6 @@ import { connect } from "react-redux";
 //import Modal from "react-modal";
 //import ExecutionEnvironment from "react/lib/ExecutionEnvironment";
 
-@connect(({auth}) => ({auth}))
 class AuthGlobals extends React.Component {
   static propTypes = {
     signOutSuccessEnabled: PropTypes.bool,
@@ -181,4 +180,4 @@ class AuthGlobals extends React.Component {
   }
 }
 
-export default AuthGlobals;
+export default connect(({auth}) => ({auth}))(AuthGlobals);

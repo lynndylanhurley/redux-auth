@@ -1,20 +1,38 @@
-import React from "react";
-import TestUtils from "react-addons-test-utils";
-import sinon from "sinon";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
+import jsdomify from "jsdomify";
+
+var React,
+    TestUtils,
+    sinon,
+    expect,
+    resetConfig,
+    ButtonLoader;
 
 describe("ButtonLoader", () => {
+  before(() => {
+    jsdomify.create();
+  });
 
-  jsdom();
-
-  var ButtonLoader;
+  after(() => {
+    jsdomify.destroy();
+  });
 
   [
-    "../../src/views/bootstrap/ButtonLoader"
-  ].forEach((requirePath) => {
+    "bootstrap",
+    "material-ui"
+  ].forEach((theme) => {
+    var requirePath = `../../src/views/${theme}/ButtonLoader`
+
     beforeEach(() => {
-      ButtonLoader = require(requirePath);
+      jsdomify.clear();
+
+      React          = require("react");
+      TestUtils      = require("react-addons-test-utils");
+      sinon          = require("sinon");
+      ({expect}      = require ("chai"));
+      ({resetConfig} = require("../../src/utils/session-storage"));
+      ButtonLoader   = require(requirePath);
+
+      resetConfig();
     });
 
     it("passes props to button", () => {
@@ -25,7 +43,6 @@ describe("ButtonLoader", () => {
         <ButtonLoader
           className="class-override"
           icon={iconOverride}
-          style={{color: "red"}}
           type="submit"
           onClick={clickFn}
           bsSize="large">
@@ -43,8 +60,7 @@ describe("ButtonLoader", () => {
 
       // were class and style overridden?
       if (requirePath.match(/bootstrap/)) {
-        expect(btnEl.getAttribute("class")).to.equal("class-override btn btn-lg btn-default")
-        expect(btnEl.getAttribute("style")).to.equal("color:red;");
+        expect(btnEl.getAttribute("class")).to.match(/class-override/);
       }
 
       // was type overridden?
@@ -89,10 +105,10 @@ describe("ButtonLoader", () => {
           loading={true}
           bsStyle="primary"
           spinColorDark="purple"
-          spinColorLight="pink" />
+          spinColorLight="purple" />
       );
 
-      expect(buttonLoader.refs.spinner.props.color).to.equal("pink");
+      expect(buttonLoader.refs.spinner.props.color).to.match(/purple/);
     });
   });
 });

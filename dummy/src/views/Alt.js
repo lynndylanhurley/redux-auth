@@ -16,11 +16,6 @@ import {
   DestroyAccountButton
 } from "../../../src/views/material-ui";
 
-@connect(({auth}) => ({
-  currentUserUid: auth.getIn(["user", "attributes", "provider"]) || "none",
-  currentUserProvider: auth.getIn(["user", "attributes", "uid"]) || "none",
-  currentUserEndpoint: auth.getIn(["user", "attributes", "endpointKey"]) || "none"
-}))
 class Alt extends React.Component {
 
   render () {
@@ -164,4 +159,8 @@ class Alt extends React.Component {
   }
 }
 
-export default Alt;
+export default connect(({auth}) => ({
+  currentUserUid: auth.getIn(["user", "attributes", "provider"]) || "none",
+  currentUserProvider: auth.getIn(["user", "attributes", "uid"]) || "none",
+  currentUserEndpoint: auth.getIn(["user", "attributes", "endpointKey"]) || "none"
+}))(Alt);

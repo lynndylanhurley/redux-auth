@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { hideSignOutErrorModal } from "../../../actions/ui";
 import { connect } from "react-redux";
 
-@connect()
 class SignOutErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -46,4 +45,4 @@ class SignOutErrorModal extends React.Component {
   }
 }
 
-export default SignOutErrorModal;
+export default connect()(SignOutErrorModal);

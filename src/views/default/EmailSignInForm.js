@@ -4,7 +4,6 @@ import Input from "./Input";
 import { emailSignInFormUpdate, emailSignIn } from "../../actions/email-sign-in";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class EmailSignInForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -37,7 +36,7 @@ class EmailSignInForm extends React.Component {
 
   handleSubmit () {
     let formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
-    this.props.dispatch(emailSignIn(formData, this.props.endpoint));
+    this.props.dispatch(emailSignIn(formData, this.getEndpoint()));
   }
 
   render () {
@@ -84,4 +83,4 @@ class EmailSignInForm extends React.Component {
   }
 }
 
-export default EmailSignInForm;
+export default connect(({auth}) => ({auth}))(EmailSignInForm);

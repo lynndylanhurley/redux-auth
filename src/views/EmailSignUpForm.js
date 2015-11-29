@@ -5,7 +5,6 @@ import { emailSignUpFormUpdate, emailSignUp } from "../actions/email-sign-up";
 import { connect } from "react-redux";
 import { Glyphicon } from "react-bootstrap";
 
-@connect(({auth}) => ({auth}))
 class EmailSignUpForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -95,4 +94,4 @@ class EmailSignUpForm extends React.Component {
   }
 }
 
-export default EmailSignUpForm;
+export default connect(({auth}) => ({auth}))(EmailSignUpForm);

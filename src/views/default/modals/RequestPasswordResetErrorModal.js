@@ -4,7 +4,6 @@ import Modal from "react-modal";
 import { hidePasswordResetRequestErrorModal } from "../../../actions/ui";
 import ErrorList from "../ErrorList";
 
-@connect(({auth}) => ({auth}))
 class RequestPasswordResetErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -54,4 +53,4 @@ class RequestPasswordResetErrorModal extends React.Component {
   }
 }
 
-export default RequestPasswordResetErrorModal;
+export default connect(({auth}) => ({auth}))(RequestPasswordResetErrorModal);

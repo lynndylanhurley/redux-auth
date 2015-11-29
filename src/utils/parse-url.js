@@ -1,6 +1,5 @@
 import querystring from "querystring";
 import extend from "extend";
-import Auth from "j-toker";
 
 export function normalizeTokenKeys (params) {
   // normalize keys
@@ -48,6 +47,13 @@ const getAnchorQs = function(location) {
   return anchorQsObj;
 };
 
+const stripKeys = function(obj, keys) {
+  for (var q in keys) {
+    delete obj[keys[q]];
+  }
+
+  return obj;
+};
 
 export function getAllParams (location) {
   return extend({}, getAnchorQs(location), getSearchQs(location));
@@ -74,8 +80,8 @@ const buildCredentials = function(location, keys) {
 // 4. url protocol, host, and path are preserved
 const getLocationWithoutParams = function(currentLocation, keys) {
   // strip all values from both actual and anchor search params
-  var newSearch   = querystring.stringify(Auth.stripKeys(getSearchQs(currentLocation), keys)),
-      newAnchorQs = querystring.stringify(Auth.stripKeys(getAnchorQs(currentLocation), keys)),
+  var newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys)),
+      newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys)),
       newAnchor   = (currentLocation.hash || "").split("?")[0];
 
   if (newSearch) {

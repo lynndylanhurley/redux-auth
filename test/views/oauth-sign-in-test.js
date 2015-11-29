@@ -1,19 +1,29 @@
-import React from "react";
-import sinon from "sinon";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
-import {resetConfig, retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
-import * as C from "../../src/utils/constants";
-import mockery, {registerMock} from "mockery";
-import {mockFetchResponse} from "../helper";
-import url from "url";
+import jsdomify from "jsdomify";
+
+var React,
+    TestUtils,
+    sinon,
+    expect,
+    resetConfig,
+    retrieveData,
+    C,
+    mockery,
+    registerMock,
+    getCurrentEndpointKey,
+    url,
+    mockFetchResponse;
+
 
 describe("OAuthSignInButton", () => {
+  before(() => {
+    jsdomify.create();
+  });
 
-  jsdom();
+  after(() => {
+    jsdomify.destroy();
+  });
 
   var OAuthSignInButton,
-      TestUtils,
       findClass,
       renderConnectedComponent,
       testUid = "test@test.com",
@@ -71,21 +81,6 @@ describe("OAuthSignInButton", () => {
     return popup;
   }
 
-  beforeEach(() => {
-    resetConfig();
-    mockery.enable({
-      warnOnReplace: false,
-      warnOnUnregistered: false,
-      useCleanCache: true
-    });
-    global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
-  });
-
-  afterEach(() => {
-    mockery.deregisterAll();
-    mockery.disable();
-  });
-
   [
     "bootstrap",
     "material-ui",
@@ -93,6 +88,35 @@ describe("OAuthSignInButton", () => {
   ].forEach(theme => {
 
     describe(`${theme}`, () => {
+
+      beforeEach(() => {
+        jsdomify.clear();
+
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
+        sinon = require("sinon");
+        ({expect} = require ("chai"));
+        ({retrieveData, resetConfig, getCurrentEndpointKey} = require("../../src/utils/session-storage"));
+        C = require("../../src/utils/constants");
+        mockery = require("mockery");
+        ({registerMock} = mockery);
+        ({mockFetchResponse} = require ("../helper"));
+        url = require("url");
+
+        resetConfig();
+        mockery.enable({
+          warnOnReplace: false,
+          warnOnUnregistered: false,
+          useCleanCache: true
+        });
+        global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
+      });
+
+      afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
+      });
+
       describe("params", () => {
         it("should accept styling params", done => {
           OAuthSignInButton = require(`../../src/views/${theme}/OAuthSignInButton`);

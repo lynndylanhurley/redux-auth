@@ -6,11 +6,6 @@ import * as DefaultTheme from "../../../../src/views/default";
 import * as MUITheme from "../../../../src/views/material-ui";
 import { connect } from "react-redux";
 
-@connect(({demoUi}) => {
-  return ({
-    theme: demoUi.get("theme"),
-  })
-})
 class GlobalComponents extends React.Component {
   render () {
     let Theme = MUITheme;
@@ -34,4 +29,8 @@ class GlobalComponents extends React.Component {
   }
 }
 
-export default GlobalComponents;
+export default connect(({demoUi}) => {
+  return ({
+    theme: demoUi.get("theme"),
+  })
+})(GlobalComponents);

@@ -5,7 +5,6 @@ import { emailSignUpFormUpdate, emailSignUp } from "../../actions/email-sign-up"
 import { connect } from "react-redux";
 import {ContentSend} from "material-ui/lib/svg-icons";
 
-@connect(({auth}) => ({auth}))
 class EmailSignUpForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -37,6 +36,7 @@ class EmailSignUpForm extends React.Component {
   }
 
   handleSubmit () {
+    console.log("@-->handling submit");
     let formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
   }
@@ -94,4 +94,4 @@ class EmailSignUpForm extends React.Component {
   }
 }
 
-export default EmailSignUpForm;
+export default connect(({auth}) => ({auth}))(EmailSignUpForm);

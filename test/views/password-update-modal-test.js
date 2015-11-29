@@ -1,20 +1,28 @@
-import React from "react";
-import sinon from "sinon";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
-import {resetConfig, retrieveData, persistData} from "../../src/utils/session-storage";
-import {storeCurrentEndpointKey} from "../../src/actions/configure";
-import * as C from "../../src/utils/constants";
-import mockery, {registerMock} from "mockery";
-import {mockFetchResponse} from "../helper";
+import jsdomify from "jsdomify";
 
+var React,
+    TestUtils,
+    sinon,
+    expect,
+    resetConfig,
+    persistData,
+    C,
+    mockery,
+    registerMock,
+    retrieveData,
+    storeCurrentEndpointKey,
+    mockFetchResponse;
 
-describe("PasswordResetSuccessModal", () => {
+xdescribe("PasswordResetSuccessModal", () => {
+  before(() => {
+    jsdomify.create();
+  });
 
-  jsdom();
+  after(() => {
+    jsdomify.destroy();
+  });
 
   var PasswordResetSuccessModal,
-      TestUtils,
       findClass = (className) => document.getElementsByClassName(className)[0],
       findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
       requirePath,
@@ -58,208 +66,213 @@ describe("PasswordResetSuccessModal", () => {
 
   [
     "bootstrap"
+    //"default",
+    //"material-ui"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/modals/PasswordResetSuccessModal`;
 
-    beforeEach(() => {
-      resetConfig();
-
-      mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false,
-        useCleanCache: true
-      });
-
-      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
-    });
-
-    afterEach(() => {
-      mockery.deregisterAll();
-      mockery.disable();
-
-      let modals = document.getElementsByClassName("modal");
-      for (var m in modals) {
-        modals[m].parentNode.removeChild(modals[m]);
-      }
-    });
-
-    describe(`${theme} params`, () => {
-      it("should accept styling params", done => {
-        PasswordResetSuccessModal = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        ({renderConnectedComponent} = require("../helper"));
-
-        let inputProps = {
-          password: {style: {color: "red"}, className: "password-class-override"},
-          passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
-          submit: {style: {color: "orange"}, className: "submit-class-override"}
-        };
-
-        renderConnectedComponent(
-          <PasswordResetSuccessModal inputProps={inputProps} show={true} />, undefined, initialState
-        ).then(() => {
-          let passwordEl             = findTag("input", 0);
-          let passwordConfirmationEl = findTag("input", 1);
-          findClass("submit-class-override");
-
-          expect(passwordEl.getAttribute("style")).to.equal("color:red;");
-          expect(passwordConfirmationEl.getAttribute("style")).to.equal("color:pink;");
-
-          done();
-        }).catch(e => console.log("error:", e));
-      });
-
-      it("should allow configuration of endpoint", done => {
-        var testUrl = "http://alt.dev";
-
-        successRespSpy = sinon.spy((url) => {
-          return mockFetchResponse(url, 200, successResp, successRespHeaders);
-        });
-
-        registerMock("isomorphic-fetch", successRespSpy);
-        PasswordResetSuccessModal = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        ({renderConnectedComponent} = require("../helper"));
-
-        let endpointConfig = [
-          {default: {apiUrl: "http://default.dev"}},
-          {alt: {apiUrl: testUrl}}
-        ];
-
-        renderConnectedComponent(
-          <PasswordResetSuccessModal show={true} />, endpointConfig, initialState
-        ).then(({store}) => {
-          // establish that we're using the "alt" endpoint config
-          store.dispatch(storeCurrentEndpointKey("alt"));
-          persistData(C.SAVED_CONFIG_KEY, "alt");
-
-          // change input values
-          let passwordEl = findTag("input", 0);
-          let passwordConfirmationEl = findTag("input", 1);
-
-          passwordEl.value = "whatever";
-          passwordConfirmationEl.value = "whatever";
-
-          TestUtils.Simulate.change(passwordEl);
-          TestUtils.Simulate.change(passwordConfirmationEl);
-
-          // submit changed password
-          let submitEl = findClass("password-reset-success-modal-submit");
-          TestUtils.Simulate.click(submitEl);
-
-          setTimeout(() => {
-            // expect response to have been made to alt endpoint url
-            let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${testUrl}/auth/password`);
-
-            done();
-          }, 0);
-
-        }).catch(e => console.log("errors:", e));
-      });
-    });
-
-    describe(`${theme} success`, () => {
+    describe(`${theme} theme`, () => {
       beforeEach(() => {
-        // mock succes response
-        successRespSpy = sinon.spy((url) => {
-          return mockFetchResponse(url, 200, successResp, successRespHeaders);
+        jsdomify.clear();
+
+        React = require("react");
+        TestUtils = require("react-addons-test-utils");
+        sinon = require("sinon");
+        ({expect} = require ("chai"));
+        ({retrieveData, persistData, resetConfig} = require("../../src/utils/session-storage"));
+        ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
+        C = require("../../src/utils/constants");
+        mockery = require("mockery");
+        ({registerMock} = mockery);
+        ({mockFetchResponse} = require ("../helper"));
+
+        mockery.enable({
+          warnOnReplace: false,
+          warnOnUnregistered: false,
+          useCleanCache: true
         });
 
-        registerMock("isomorphic-fetch", successRespSpy);
-        PasswordResetSuccessModal = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        ({renderConnectedComponent} = require("../helper"));
+        // disable react devtools warnings
+        global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
+
+        resetConfig();
       });
 
-      it("should handle successful password update", done => {
-        var testPassword = "secret123";
-        var apiUrl       = "http://api.dev";
+      afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
+      });
 
-        renderConnectedComponent((
-          <PasswordResetSuccessModal show={true} />
-        ), {apiUrl}, initialState).then(({store}) => {
-          let passwordEl = findTag("input", 0);
-          let passwordConfirmationEl = findTag("input", 1);
+      describe(`params`, () => {
+        it("should accept styling params", done => {
+          PasswordResetSuccessModal = require(requirePath);
+          ({renderConnectedComponent} = require ("../helper"));
 
-          // change input values
-          passwordEl.value = testPassword;
-          passwordConfirmationEl.value = testPassword;
+          let inputProps = {
+            password: {className: "password-class-override"},
+            passwordConfirmation: {className: "password-confirmation-class-override"},
+            submit: {className: "submit-class-override"}
+          };
 
-          // trigger dom change event
-          TestUtils.Simulate.change(passwordEl);
-          TestUtils.Simulate.change(passwordConfirmationEl);
-
-          // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password"])).to.equal(testPassword);
-          expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password_confirmation"])).to.equal(testPassword);
-
-          // submit the form
-          let submitEl = findClass("password-reset-success-modal-submit");
-          TestUtils.Simulate.click(submitEl);
-
-          setTimeout(() => {
-            // ensure auth headers were updated
-            let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
-            expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
-
-            // ensure success modal is present
-            let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
-            expect(modalVisible).to.equal(true);
-
-            // ensure default url was used
-            let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${apiUrl}/auth/password`);
+          renderConnectedComponent(
+            <PasswordResetSuccessModal inputProps={inputProps} show={true} />, undefined, initialState
+          ).then(() => {
+            expect(findClass("password-class-override")).to.be.ok;
+            expect(findClass("password-confirmation-class-override")).to.be.ok;
+            expect(findClass("submit-class-override")).to.be.ok;
 
             done();
-          }, 0);
-        }).catch(e => console.log("errors", e));
-      });
-    });
-
-    describe(`${theme} error`, () => {
-      beforeEach(() => {
-        // mock succes response
-        errorRespSpy = sinon.spy((url) => {
-          return mockFetchResponse(url, 401, errorResp, {});
+          }).catch(e => console.log("error:", e));
         });
 
-        registerMock("isomorphic-fetch", errorRespSpy);
-        PasswordResetSuccessModal = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        ({renderConnectedComponent} = require("../helper"));
+        it("should allow configuration of endpoint", done => {
+          var testUrl = "http://alt.dev";
+
+          successRespSpy = sinon.spy((url) => {
+            return mockFetchResponse(url, 200, successResp, successRespHeaders);
+          });
+
+          registerMock("isomorphic-fetch", successRespSpy);
+          ({renderConnectedComponent} = require ("../helper"));
+          PasswordResetSuccessModal = require(requirePath);
+
+          let endpointConfig = [
+            {default: {apiUrl: "http://default.dev"}},
+            {alt: {apiUrl: testUrl}}
+          ];
+
+          renderConnectedComponent(
+            <PasswordResetSuccessModal show={true} />, endpointConfig, initialState
+          ).then(({store}) => {
+            // establish that we're using the "alt" endpoint config
+            store.dispatch(storeCurrentEndpointKey("alt"));
+            persistData(C.SAVED_CONFIG_KEY, "alt");
+
+            // change input values
+            let passwordEl = findTag("input", 0);
+            let passwordConfirmationEl = findTag("input", 1);
+
+            passwordEl.value = "whatever";
+            passwordConfirmationEl.value = "whatever";
+
+            TestUtils.Simulate.change(passwordEl);
+            TestUtils.Simulate.change(passwordConfirmationEl);
+
+            // submit changed password
+            let submitEl = findClass("password-reset-success-modal-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              // expect response to have been made to alt endpoint url
+              let [[url, ]] = successRespSpy.args;
+              expect(url).to.equal(`${testUrl}/auth/password`);
+
+              done();
+            }, 0);
+          }).catch(e => console.log("errors:", e));
+        });
       });
 
-      it("should handle failed sign in", done => {
-        var apiUrl = "http://api.dev";
+      describe(`success`, () => {
+        beforeEach(() => {
+          // mock succes response
+          successRespSpy = sinon.spy((url) => {
+            return mockFetchResponse(url, 200, successResp, successRespHeaders);
+          });
 
-        renderConnectedComponent(
-          <PasswordResetSuccessModal show={true} />, {apiUrl}, initialState
-        ).then(({store}) => {
-          // change input values
-          let passwordEl = findTag("input", 0);
-          passwordEl.value = testUid;
-          TestUtils.Simulate.change(passwordEl);
+          registerMock("isomorphic-fetch", successRespSpy);
+          ({renderConnectedComponent} = require ("../helper"));
+          PasswordResetSuccessModal = require(requirePath);
+        });
 
-          // submit the form
-          let submitEl = findClass("password-reset-success-modal-submit");
-          TestUtils.Simulate.click(submitEl);
+        it("should handle successful password update", done => {
+          var testPassword = "secret123";
+          var apiUrl       = "http://api.dev";
 
-          setTimeout(() => {
-            let errors = store.getState().auth.getIn(["updatePasswordModal", "default", "errors"]).toJS();
-            expect(errors).to.deep.equal(errorResp["errors"]);
+          renderConnectedComponent((
+            <PasswordResetSuccessModal show={true} />
+          ), {apiUrl}, initialState).then(({store}) => {
+            let passwordEl = findTag("input", 0);
+            let passwordConfirmationEl = findTag("input", 1);
 
-            // ensure modal is to be shown
-            let modalVisible = store.getState().auth.getIn(["ui", "passwordResetSuccessModalVisible"]);
-            expect(modalVisible).to.equal(true);
+            // change input values
+            passwordEl.value = testPassword;
+            passwordConfirmationEl.value = testPassword;
 
-            // ensure errors show up in form
-            let errorItems = document.getElementsByClassName("inline-error-item");
-            expect(errorItems.length).to.equal(2);
+            // trigger dom change event
+            TestUtils.Simulate.change(passwordEl);
+            TestUtils.Simulate.change(passwordConfirmationEl);
 
-            done();
-          }, 0);
-        }).catch(e => console.log("errors", e));
+            // ensure store is updated when inputs are changed
+            expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password"])).to.equal(testPassword);
+            expect(store.getState().auth.getIn(["updatePasswordModal", "default", "form", "password_confirmation"])).to.equal(testPassword);
+
+            // submit the form
+            let submitEl = findClass("password-reset-success-modal-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              // ensure auth headers were updated
+              let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
+              expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
+
+              // ensure success modal is present
+              let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
+              expect(modalVisible).to.equal(true);
+
+              // ensure default url was used
+              let [[url, ]] = successRespSpy.args;
+              expect(url).to.equal(`${apiUrl}/auth/password`);
+
+              done();
+            }, 0);
+          }).catch(e => console.log("errors", e));
+        });
+      });
+
+      describe(`error`, () => {
+        beforeEach(() => {
+          // mock succes response
+          errorRespSpy = sinon.spy((url) => {
+            return mockFetchResponse(url, 401, errorResp, {});
+          });
+
+          registerMock("isomorphic-fetch", errorRespSpy);
+          ({renderConnectedComponent} = require ("../helper"));
+          PasswordResetSuccessModal = require(requirePath);
+        });
+
+        it("should handle failed sign in", done => {
+          var apiUrl = "http://api.dev";
+
+          renderConnectedComponent(
+            <PasswordResetSuccessModal show={true} />, {apiUrl}, initialState
+          ).then(({store}) => {
+            // change input values
+            let passwordEl = findTag("input", 0);
+            passwordEl.value = testUid;
+            TestUtils.Simulate.change(passwordEl);
+
+            // submit the form
+            let submitEl = findClass("password-reset-success-modal-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              let errors = store.getState().auth.getIn(["updatePasswordModal", "default", "errors"]).toJS();
+              expect(errors).to.deep.equal(errorResp["errors"]);
+
+              // ensure modal is to be shown
+              let modalVisible = store.getState().auth.getIn(["ui", "passwordResetSuccessModalVisible"]);
+              expect(modalVisible).to.equal(true);
+
+              // ensure errors show up in form
+              let errorItems = document.getElementsByClassName("inline-error-item");
+              expect(errorItems.length).to.equal(2);
+
+              done();
+            }, 0);
+          }).catch(e => console.log("errors", e));
+        });
       });
     });
   });

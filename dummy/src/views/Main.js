@@ -12,15 +12,6 @@ import * as MUITheme from "../../../src/views/material-ui";
 import Select from "react-select";
 
 
-@connect(({auth, demoUi}) => {
-  return ({
-    currentUserUid: auth.getIn(["user", "attributes", "provider"]) || "none",
-    currentUserProvider: auth.getIn(["user", "attributes", "uid"]) || "none",
-    currentUserEndpoint: auth.getIn(["user", "endpointKey"]) || "none",
-    theme: demoUi.get("theme"),
-    pageEndpoint: demoUi.get("endpoint")
-  })
-})
 class Main extends React.Component {
   updateTheme (theme) {
     this.props.dispatch(updateDemoTheme(theme));
@@ -250,4 +241,12 @@ class Main extends React.Component {
   }
 }
 
-export default Main;
+export default connect(({auth, demoUi}) => {
+  return ({
+    currentUserUid: auth.getIn(["user", "attributes", "provider"]) || "none",
+    currentUserProvider: auth.getIn(["user", "attributes", "uid"]) || "none",
+    currentUserEndpoint: auth.getIn(["user", "endpointKey"]) || "none",
+    theme: demoUi.get("theme"),
+    pageEndpoint: demoUi.get("endpoint")
+  })
+})(Main);

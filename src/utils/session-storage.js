@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import C from "./constants";
+import * as C from "./constants";
 
 
 // even though this code shouldn't be used server-side, node will throw
@@ -38,11 +38,11 @@ export function getCurrentEndpointKey () {
 }
 
 export function setDefaultEndpointKey (k) {
-  root.authState.defaultEndpointKey = k;
+  persistData(C.DEFAULT_CONFIG_KEY, k);
 }
 
 export function getDefaultEndpointKey () {
-  return root.authState.defaultEndpointKey;
+  return retrieveData(C.DEFAULT_CONFIG_KEY);
 }
 
 // reset stateful variables
@@ -50,7 +50,6 @@ export function resetConfig () {
   root.authState = root.authState || {};
   root.authState.currentSettings    = {};
   root.authState.currentEndpoint    = {};
-  root.authState.defaultEndpointKey = null;
   destroySession();
 }
 
@@ -89,7 +88,7 @@ export function getInitialEndpointKey () {
 
 // TODO: make this really work
 export function getSessionEndpointKey (k) {
-  let key = k || retrieveData(C.SAVED_CONFIG_KEY) || root.authState.defaultEndpointKey;
+  let key = k || getCurrentEndpointKey();
   if (!key) {
     throw "You must configure redux-auth before use.";
   } else {
@@ -194,6 +193,11 @@ export function retrieveData (key) {
     default:
       val = Cookies.get(key);
       break;
+  }
+
+  if (typeof(val) !== "string") {
+    console.log("returning key", key, "val", val);
+    return val;
   }
 
   // if value is a simple string, the parser will fail. in that case, simply

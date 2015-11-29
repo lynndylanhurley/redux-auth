@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { hideEmailSignUpErrorModal } from "../../../actions/ui";
 import ErrorList from "../ErrorList";
 
-@connect(({auth}) => ({auth}))
 class EmailSignUpErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -53,4 +52,4 @@ class EmailSignUpErrorModal extends React.Component {
   }
 }
 
-export default EmailSignUpErrorModal;
+export default connect(({auth}) => ({auth}))(EmailSignUpErrorModal);

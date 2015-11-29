@@ -5,13 +5,6 @@ import {connect} from "react-redux";
 import {requestTest} from "../../actions/request-test-buttons";
 import {getApiUrl} from "../../../../src/utils/session-storage";
 
-@connect(({auth, demoButtons}) => {
-  return {
-    signedIn: auth.getIn(["user", "isSignedIn"]),
-    currentEndpointKey: auth.getIn(["configure", "currentEndpointKey"]),
-    demoButtons
-  };
-})
 class RequestTestButton extends React.Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
@@ -57,4 +50,10 @@ class RequestTestButton extends React.Component {
   }
 }
 
-export default RequestTestButton;
+export default connect(({auth, demoButtons}) => {
+  return {
+    signedIn: auth.getIn(["user", "isSignedIn"]),
+    currentEndpointKey: auth.getIn(["configure", "currentEndpointKey"]),
+    demoButtons
+  };
+})(RequestTestButton);

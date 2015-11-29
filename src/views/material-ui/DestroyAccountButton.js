@@ -4,7 +4,6 @@ import { destroyAccount } from "../../actions/destroy-account";
 import {ActionDelete} from "material-ui/lib/svg-icons";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class DestroyAccountButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
@@ -43,4 +42,4 @@ class DestroyAccountButton extends React.Component {
   }
 }
 
-export default DestroyAccountButton;
+export default connect(({auth}) => ({auth}))(DestroyAccountButton);

@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { connect } from "react-redux";
 import { hideEmailSignInSuccessModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class EmailSignInSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class EmailSignInSuccessModal extends React.Component {
   }
 }
 
-export default EmailSignInSuccessModal;
+export default connect(({auth}) => ({auth}))(EmailSignInSuccessModal);

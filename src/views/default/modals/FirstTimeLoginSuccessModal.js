@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { hideFirstTimeLoginSuccessModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class FirstTimeLoginSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class FirstTimeLoginSuccessModal extends React.Component {
   }
 }
 
-export default FirstTimeLoginSuccessModal;
+export default connect(({auth}) => ({auth}))(FirstTimeLoginSuccessModal);

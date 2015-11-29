@@ -8,7 +8,6 @@ import {
   requestPasswordReset
 } from "../actions/request-password-reset";
 
-@connect(({auth}) => ({auth}))
 class RequestPasswordResetForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -78,4 +77,4 @@ class RequestPasswordResetForm extends React.Component {
   }
 }
 
-export default RequestPasswordResetForm;
+export default connect(({auth}) => ({auth}))(RequestPasswordResetForm);

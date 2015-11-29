@@ -1,20 +1,29 @@
-import React from "react";
-import sinon from "sinon";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
-import {resetConfig, retrieveData, persistData} from "../../src/utils/session-storage";
-import {storeCurrentEndpointKey} from "../../src/actions/configure";
-import * as C from "../../src/utils/constants";
-import mockery, {registerMock} from "mockery";
-import {mockFetchResponse} from "../helper";
+import jsdomify from "jsdomify";
+
+var React,
+    TestUtils,
+    sinon,
+    expect,
+    resetConfig,
+    retrieveData,
+    persistData,
+    storeCurrentEndpointKey,
+    C,
+    mockery,
+    registerMock,
+    mockFetchResponse;
 
 
 describe("UpdatePasswordForm", () => {
+  before(() => {
+    jsdomify.create();
+  });
 
-  jsdom();
+  after(() => {
+    jsdomify.destroy();
+  });
 
   var UpdatePasswordForm,
-      TestUtils,
       findClass,
       findTag,
       requirePath,
@@ -60,207 +69,217 @@ describe("UpdatePasswordForm", () => {
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/UpdatePasswordForm`;
 
-    beforeEach(() => {
-      resetConfig();
+    describe(`${theme} theme`, () => {
+      beforeEach(() => {
+        jsdomify.clear();
 
-      mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false,
-        useCleanCache: true
-      });
-      global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
-    });
+        React = require("react");
+        sinon = require("sinon");
+        ({expect} = require ("chai"));
+        ({resetConfig, retrieveData, persistData} = require("../../src/utils/session-storage"));
+        ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
+        C = require("../../src/utils/constants");
+        mockery = require("mockery");
+        ({registerMock} = mockery);
+        ({mockFetchResponse} = require("../helper"));
 
-    afterEach(() => {
-      mockery.deregisterAll();
-      mockery.disable();
-    });
+        resetConfig();
 
-    describe(`${theme} params`, () => {
-      it("should accept styling params", done => {
-        UpdatePasswordForm = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        findClass = TestUtils.findRenderedDOMComponentWithClass;
-        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-        ({renderConnectedComponent} = require("../helper"));
-
-        let inputProps = {
-          password: {style: {color: "red"}, className: "password-class-override"},
-          passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
-          submit: {className: "submit-class-override"}
-        };
-
-        renderConnectedComponent(
-          <UpdatePasswordForm inputProps={inputProps} />
-        ).then(({instance}) => {
-          let passwordEl             = findTag(instance, "input")[0];
-          let passwordConfirmationEl = findTag(instance, "input")[1];
-          let submitEl               = findClass(instance, "submit-class-override");
-          expect(passwordEl.getAttribute("style")).to.match(/color:red/);
-          expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:pink/);
-          done();
-        }).catch(e => console.log("error:", e));
+        mockery.enable({
+          warnOnReplace: false,
+          warnOnUnregistered: false,
+          useCleanCache: true
+        });
+        global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
       });
 
-      it("should allow configuration of endpoint", done => {
-        var testUrl = "http://alt.dev";
+      afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
+      });
 
-        successRespSpy = sinon.spy((url) => {
-          return mockFetchResponse(url, 200, successResp, successRespHeaders);
+      describe("params", () => {
+        it("should accept styling params", done => {
+          UpdatePasswordForm = require(requirePath);
+          findClass = TestUtils.findRenderedDOMComponentWithClass;
+          findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+          ({renderConnectedComponent} = require("../helper"));
+
+          let inputProps = {
+            password: {style: {color: "red"}, className: "password-class-override"},
+            passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
+            submit: {className: "submit-class-override"}
+          };
+
+          renderConnectedComponent(
+            <UpdatePasswordForm inputProps={inputProps} />
+          ).then(({instance}) => {
+            let passwordEl             = findTag(instance, "input")[0];
+            let passwordConfirmationEl = findTag(instance, "input")[1];
+            findClass(instance, "submit-class-override");
+            expect(passwordEl.getAttribute("style")).to.match(/color:red/);
+            expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:pink/);
+            done();
+          }).catch(e => console.log("error:", e));
         });
 
-        registerMock("isomorphic-fetch", successRespSpy);
-        UpdatePasswordForm = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        findClass = TestUtils.findRenderedDOMComponentWithClass;
-        findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-        ({renderConnectedComponent} = require("../helper"));
+        it("should allow configuration of endpoint", done => {
+          var testUrl = "http://alt.dev";
 
-        let endpointConfig = [
-          {default: {apiUrl: "http://default.dev"}},
-          {alt: {apiUrl: testUrl}}
-        ];
-
-        renderConnectedComponent((
-          <UpdatePasswordForm />
-        ), endpointConfig, initialState).then(({instance, store}) => {
-          // establish that we're using the "alt" endpoint config
-          store.dispatch(storeCurrentEndpointKey("alt"));
-          persistData(C.SAVED_CONFIG_KEY, "alt");
-
-          // change input values
-          let passwordEl = findTag(instance, "input")[0];
-          let passwordConfirmationEl = findTag(instance, "input")[1];
-
-          passwordEl.value = "whatever";
-          passwordConfirmationEl.value = "whatever";
-
-          TestUtils.Simulate.change(passwordEl);
-          TestUtils.Simulate.change(passwordConfirmationEl);
-
-          // submit changed password
-          let submitEl = findClass(instance, "update-password-submit");
-          TestUtils.Simulate.click(submitEl);
-
-          setTimeout(() => {
-            // expect response to have been made to alt endpoint url
-            let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${testUrl}/auth/password`);
-
-            done();
-          }, 0);
-
-        }).catch(e => console.log("errors:", e));
-      });
-    });
-
-    describe(`${theme} success`, () => {
-      beforeEach(() => {
-        try {
-          // mock succes response
           successRespSpy = sinon.spy((url) => {
             return mockFetchResponse(url, 200, successResp, successRespHeaders);
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
           UpdatePasswordForm = require(requirePath);
-          TestUtils = require("react-addons-test-utils");
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           findTag = TestUtils.scryRenderedDOMComponentsWithTag;
           ({renderConnectedComponent} = require("../helper"));
-        } catch (e) {
-          console.log("@-->caught error", e);
-        }
+
+          let endpointConfig = [
+            {default: {apiUrl: "http://default.dev"}},
+            {alt: {apiUrl: testUrl}}
+          ];
+
+          renderConnectedComponent((
+            <UpdatePasswordForm />
+          ), endpointConfig, initialState).then(({instance, store}) => {
+            // establish that we're using the "alt" endpoint config
+            store.dispatch(storeCurrentEndpointKey("alt"));
+            persistData(C.SAVED_CONFIG_KEY, "alt");
+
+            // change input values
+            let passwordEl = findTag(instance, "input")[0];
+            let passwordConfirmationEl = findTag(instance, "input")[1];
+
+            passwordEl.value = "whatever";
+            passwordConfirmationEl.value = "whatever";
+
+            TestUtils.Simulate.change(passwordEl);
+            TestUtils.Simulate.change(passwordConfirmationEl);
+
+            // submit changed password
+            let submitEl = findClass(instance, "update-password-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              // expect response to have been made to alt endpoint url
+              let [[url, ]] = successRespSpy.args;
+              expect(url).to.equal(`${testUrl}/auth/password`);
+
+              done();
+            }, 0);
+
+          }).catch(e => console.log("errors:", e));
+        });
       });
 
-      it("should handle successful sign in", done => {
-        var testPassword = "secret123";
-        var apiUrl       = "http://api.dev";
+      describe("success", () => {
+        beforeEach(() => {
+          try {
+            // mock succes response
+            successRespSpy = sinon.spy((url) => {
+              return mockFetchResponse(url, 200, successResp, successRespHeaders);
+            });
 
-        renderConnectedComponent((
-          <UpdatePasswordForm />
-        ), {apiUrl}, initialState).then(({instance, store}) => {
-          let passwordEl = findTag(instance, "input")[0];
-          let passwordConfirmationEl = findTag(instance, "input")[1];
-
-          // change input values
-          passwordEl.value = testPassword;
-          passwordConfirmationEl.value = testPassword;
-
-          // trigger dom change event
-          TestUtils.Simulate.change(passwordEl);
-          TestUtils.Simulate.change(passwordConfirmationEl);
-
-          // ensure store is updated when inputs are changed
-          expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password"])).to.equal(testPassword);
-          expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password_confirmation"])).to.equal(testPassword);
-
-          // submit the form
-          let submitEl = findClass(instance, "update-password-submit");
-          TestUtils.Simulate.click(submitEl);
-
-          setTimeout(() => {
-            // ensure auth headers were updated
-            let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
-            expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
-
-            // ensure success modal is present
-            let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
-            expect(modalVisible).to.equal(true);
-
-            // ensure default url was used
-            let [[url, ]] = successRespSpy.args;
-            expect(url).to.equal(`${apiUrl}/auth/password`);
-
-            done();
-          }, 0);
-        }).catch(e => console.log("errors", e));
-      });
-    });
-
-    describe(`${theme} error`, () => {
-      beforeEach(() => {
-        // mock succes response
-        errorRespSpy = sinon.spy((url) => {
-          return mockFetchResponse(url, 401, errorResp, {});
+            registerMock("isomorphic-fetch", successRespSpy);
+            UpdatePasswordForm = require(requirePath);
+            findClass = TestUtils.findRenderedDOMComponentWithClass;
+            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+            ({renderConnectedComponent} = require("../helper"));
+          } catch (e) {
+            console.log("@-->caught error", e);
+          }
         });
 
-        registerMock("isomorphic-fetch", errorRespSpy);
-        UpdatePasswordForm = require(requirePath);
-        TestUtils = require("react-addons-test-utils");
-        ({renderConnectedComponent} = require("../helper"));
+        it("should handle successful sign in", done => {
+          var testPassword = "secret123";
+          var apiUrl       = "http://api.dev";
+
+          renderConnectedComponent((
+            <UpdatePasswordForm />
+          ), {apiUrl}, initialState).then(({instance, store}) => {
+            let passwordEl = findTag(instance, "input")[0];
+            let passwordConfirmationEl = findTag(instance, "input")[1];
+
+            // change input values
+            passwordEl.value = testPassword;
+            passwordConfirmationEl.value = testPassword;
+
+            // trigger dom change event
+            TestUtils.Simulate.change(passwordEl);
+            TestUtils.Simulate.change(passwordConfirmationEl);
+
+            // ensure store is updated when inputs are changed
+            expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password"])).to.equal(testPassword);
+            expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password_confirmation"])).to.equal(testPassword);
+
+            // submit the form
+            let submitEl = findClass(instance, "update-password-submit");
+            TestUtils.Simulate.click(submitEl);
+
+            setTimeout(() => {
+              // ensure auth headers were updated
+              let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
+              expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
+
+              // ensure success modal is present
+              let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
+              expect(modalVisible).to.equal(true);
+
+              // ensure default url was used
+              let [[url, ]] = successRespSpy.args;
+              expect(url).to.equal(`${apiUrl}/auth/password`);
+
+              done();
+            }, 0);
+          }).catch(e => console.log("errors", e));
+        });
       });
 
-      it("should handle failed sign in", done => {
-        var apiUrl = "http://api.dev";
+      describe("error", () => {
+        beforeEach(() => {
+          // mock succes response
+          errorRespSpy = sinon.spy((url) => {
+            return mockFetchResponse(url, 401, errorResp, {});
+          });
 
-        renderConnectedComponent(
-          <UpdatePasswordForm />, {apiUrl}, initialState
-        ).then(({instance, store}) => {
-          // change input values
-          let passwordEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
-          passwordEl.value = testUid;
-          TestUtils.Simulate.change(passwordEl);
+          registerMock("isomorphic-fetch", errorRespSpy);
+          UpdatePasswordForm = require(requirePath);
+          ({renderConnectedComponent} = require("../helper"));
+        });
 
-          // submit the form
-          let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "update-password-submit");
-          TestUtils.Simulate.click(submitEl);
+        it("should handle failed sign in", done => {
+          var apiUrl = "http://api.dev";
 
-          setTimeout(() => {
-            let errors = store.getState().auth.getIn(["updatePassword", "default", "errors"]).toJS();
-            expect(errors).to.deep.equal(errorResp["errors"]);
+          renderConnectedComponent(
+            <UpdatePasswordForm />, {apiUrl}, initialState
+          ).then(({instance, store}) => {
+            // change input values
+            let passwordEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
+            passwordEl.value = testUid;
+            TestUtils.Simulate.change(passwordEl);
 
-            // ensure modal is to be shown
-            let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordErrorModalVisible"]);
-            expect(modalVisible).to.equal(true);
+            // submit the form
+            let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "update-password-submit");
+            TestUtils.Simulate.click(submitEl);
 
-            // ensure errors show up in form
-            let errorItems = TestUtils.scryRenderedDOMComponentsWithClass(instance, "inline-error-item");
-            expect(errorItems.length).to.equal(2);
+            setTimeout(() => {
+              let errors = store.getState().auth.getIn(["updatePassword", "default", "errors"]).toJS();
+              expect(errors).to.deep.equal(errorResp["errors"]);
 
-            done();
-          }, 0);
-        }).catch(e => console.log("errors", e));
+              // ensure modal is to be shown
+              let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordErrorModalVisible"]);
+              expect(modalVisible).to.equal(true);
+
+              // ensure errors show up in form
+              let errorItems = TestUtils.scryRenderedDOMComponentsWithClass(instance, "inline-error-item");
+              expect(errorItems.length).to.equal(2);
+
+              done();
+            }, 0);
+          }).catch(e => console.log("errors", e));
+        });
       });
     });
   });

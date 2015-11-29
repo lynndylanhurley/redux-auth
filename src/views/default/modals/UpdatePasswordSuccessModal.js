@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { connect } from "react-redux";
 import { hideUpdatePasswordSuccessModal } from "../../../actions/ui";
 
-@connect()
 class UpdatePasswordSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class UpdatePasswordSuccessModal extends React.Component {
   }
 }
 
-export default UpdatePasswordSuccessModal;
+export default connect()(UpdatePasswordSuccessModal);

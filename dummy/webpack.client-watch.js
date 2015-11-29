@@ -32,7 +32,7 @@ config.module = {
     { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
     { test: /\.scss$/, loader: "style!css!sass" },
     { include: /\.json$/, loaders: ["json-loader"] },
-    { include: /\.js$/, loaders: ["react-hot", "babel-loader?stage=0&optional=runtime&plugins=typecheck"], exclude: /node_modules/ }
+    { include: /\.js$/, loaders: ["react-hot", "babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"], exclude: /node_modules/ }
   ]
 };
 

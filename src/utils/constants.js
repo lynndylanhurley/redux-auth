@@ -1,5 +1,4 @@
-export default {
-  INITIAL_CONFIG_KEY: 'default',
-  SAVED_CONFIG_KEY:   'currentConfigName',
-  SAVED_CREDS_KEY:    'authHeaders'
-};
+export const INITIAL_CONFIG_KEY = "default";
+export const DEFAULT_CONFIG_KEY = "defaultConfigKey";
+export const SAVED_CONFIG_KEY   = "currentConfigName";
+export const SAVED_CREDS_KEY    = "authHeaders";

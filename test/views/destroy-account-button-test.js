@@ -1,43 +1,64 @@
-import React from "react";
-import sinon from "sinon";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
-import {resetConfig, persistData} from "../../src/utils/session-storage";
-import {storeCurrentEndpointKey} from "../../src/actions/configure";
-import {getCurrentEndpointKey} from "../../src/utils/session-storage";
-import * as C from "../../src/utils/constants";
-import mockery, {registerMock} from "mockery";
-import {mockFetchResponse} from "../helper";
+import jsdomify from "jsdomify";
 
+var React,
+    sinon,
+    expect,
+    resetConfig,
+    persistData,
+    storeCurrentEndpointKey,
+    getCurrentEndpointKey,
+    C,
+    mockery,
+    registerMock,
+    mockFetchResponse;
 
 describe("DestroyAccountButton", () => {
+  before(() => {
+    jsdomify.create();
+  });
 
-  jsdom();
+  after(() => {
+    jsdomify.destroy();
+  });
 
   var DestroyAccountButton,
-  TestUtils,
-  findClass,
-  requirePath,
-  renderConnectedComponent,
-  successRespSpy,
-  errorRespSpy,
-    successResp = {
-      "success": true,
-      "message": "Account with uid test@test.com has been destroyed."
-    },
-    errorResp = {
-      "status": "error",
-      "errors":["Unable to locate account for destruction."]
-    };
+      TestUtils,
+      findClass,
+      requirePath,
+      renderConnectedComponent,
+      successRespSpy,
+      errorRespSpy,
+      successResp = {
+        "success": true,
+        "message": "Account with uid test@test.com has been destroyed."
+      },
+      errorResp = {
+        "status": "error",
+        "errors":["Unable to locate account for destruction."]
+      };
 
-    [
-      "material-ui",
-      "default",
-      "bootstrap"
-    ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/DestroyAccountButton`;
+  [
+    "material-ui",
+    "default",
+    "bootstrap"
+  ].forEach((theme) => {
+    requirePath = `../../src/views/${theme}/DestroyAccountButton`;
 
+    describe(`${theme} theme`, () => {
       beforeEach(() => {
+        jsdomify.clear();
+
+        React = require("react");
+        sinon = require("sinon");
+        ({expect} = require("chai"));
+        ({resetConfig, persistData} = require("../../src/utils/session-storage"));
+        ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
+        ({getCurrentEndpointKey} = require("../../src/utils/session-storage"));
+        C = require("../../src/utils/constants");
+        mockery = require("mockery");
+        ({registerMock} = mockery);
+        ({mockFetchResponse} = require("../helper"));
+
         resetConfig();
 
         mockery.enable({
@@ -54,7 +75,7 @@ describe("DestroyAccountButton", () => {
         mockery.disable();
       });
 
-      describe(`${theme} params`, () => {
+      describe(`params`, () => {
         it("should accept styling params", done => {
           DestroyAccountButton = require(requirePath);
           TestUtils = require("react-addons-test-utils");
@@ -115,7 +136,7 @@ describe("DestroyAccountButton", () => {
         });
       });
 
-      describe(`${theme} success`, () => {
+      describe(`success`, () => {
         beforeEach(() => {
           // mock succes response
           successRespSpy = sinon.spy((url) => {
@@ -157,7 +178,7 @@ describe("DestroyAccountButton", () => {
         });
       });
 
-      describe(`${theme} error`, () => {
+      describe(`error`, () => {
         beforeEach(() => {
           // mock succes response
           errorRespSpy = sinon.spy((url) => {
@@ -194,4 +215,5 @@ describe("DestroyAccountButton", () => {
         });
       });
     });
+  });
 });

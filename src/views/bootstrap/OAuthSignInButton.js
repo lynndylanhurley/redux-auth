@@ -4,7 +4,6 @@ import ButtonLoader from "./ButtonLoader";
 import { Glyphicon } from "react-bootstrap";
 import { oAuthSignIn } from "../../actions/oauth-sign-in";
 
-@connect(({auth}) => ({auth}))
 class OAuthSignInButton extends React.Component {
   static propTypes = {
     provider: PropTypes.string.isRequired,
@@ -55,4 +54,4 @@ class OAuthSignInButton extends React.Component {
   }
 }
 
-export default OAuthSignInButton;
+export default connect(({auth}) => ({auth}))(OAuthSignInButton);

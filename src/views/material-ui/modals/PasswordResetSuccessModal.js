@@ -10,7 +10,6 @@ import {
   updatePasswordModalFormUpdate
 } from "../../../actions/update-password-modal";
 
-@connect(({auth}) => ({auth}))
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -36,6 +35,7 @@ class PasswordResetSuccessModal extends React.Component {
   }
 
   handleSubmit () {
+    console.log("@-->handling submit");
     let formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
   }
@@ -74,30 +74,31 @@ class PasswordResetSuccessModal extends React.Component {
         ]}
         title="Reset Your Password">
         <form>
-          <Input type="password"
-                label="Password"
-                placeholder="Password"
-                disabled={loading}
-                className="password-reset-success-modal-password"
-                value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"])}
-                errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"])}
-                onChange={this.handleInput.bind(this, "password")}
-                {...this.props.inputProps.password} />
+          <Input
+            type="password"
+            label="Password"
+            placeholder="Password"
+            disabled={loading}
+            className="password-reset-success-modal-password"
+            value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"])}
+            errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"])}
+            onChange={this.handleInput.bind(this, "password")}
+            {...this.props.inputProps.password} />
 
-          <Input type="password"
-                label="Password Confirmation"
-                placeholder="Password Confirmation"
-                disabled={loading}
-                className="password-reset-success-modal-password-confirmation"
-                value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"])}
-                errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"])}
-                onChange={this.handleInput.bind(this, "password_confirmation")}
-                {...this.props.inputProps.passwordConfirmation} />
+          <Input
+            type="password"
+            label="Password Confirmation"
+            placeholder="Password Confirmation"
+            disabled={loading}
+            className="password-reset-success-modal-password-confirmation"
+            value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"])}
+            errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"])}
+            onChange={this.handleInput.bind(this, "password_confirmation")}
+            {...this.props.inputProps.passwordConfirmation} />
         </form>
       </Dialog>
     );
   }
 }
 
-export default PasswordResetSuccessModal;
-
+export default connect(({auth}) => ({auth}))(PasswordResetSuccessModal);

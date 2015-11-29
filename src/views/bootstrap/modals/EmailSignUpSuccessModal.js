@@ -7,8 +7,8 @@ class EmailSignUpSuccessModal extends React.Component {
   render () {
     return (
       <Modal
-        {...this.props}
         containerClass="email-sign-up-success-modal"
+        show={this.props.show}
         closeAction={hideEmailSignUpSuccessModal}
         title="Sign Up Success">
         <p>

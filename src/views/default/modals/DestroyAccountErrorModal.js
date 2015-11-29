@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { hideDestroyAccountErrorModal } from "../../../actions/ui";
 import ErrorList from "../ErrorList";
 
-@connect(({auth}) => ({auth}))
 class DestroyAccountErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -53,4 +52,4 @@ class DestroyAccountErrorModal extends React.Component {
   }
 }
 
-export default DestroyAccountErrorModal;
+export default connect(({auth}) => ({auth}))(DestroyAccountErrorModal);

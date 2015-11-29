@@ -3,7 +3,6 @@ import ButtonLoader from "./ButtonLoader";
 import { destroyAccount } from "../../actions/destroy-account";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class DestroyAccountButton extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -42,4 +41,4 @@ class DestroyAccountButton extends React.Component {
   }
 }
 
-export default DestroyAccountButton;
+export default connect(({auth}) => ({auth}))(DestroyAccountButton);

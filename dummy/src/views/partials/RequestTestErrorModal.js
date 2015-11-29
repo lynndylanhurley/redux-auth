@@ -3,10 +3,6 @@ import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { dismissRequestTestErrorModal } from "../../actions/request-test-buttons";
 
-@connect(({demoButtons}) => ({
-  show: demoButtons.get("showErrorModal"),
-  url: demoButtons.get("lastRequestUrl")
-}))
 class RequestTestErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool,
@@ -45,5 +41,7 @@ class RequestTestErrorModal extends React.Component {
   }
 }
 
-export default RequestTestErrorModal;
-
+export default connect(({demoButtons}) => ({
+  show: demoButtons.get("showErrorModal"),
+  url: demoButtons.get("lastRequestUrl")
+}))(RequestTestErrorModal);

@@ -19,6 +19,7 @@ export function emailSignInStart(endpoint) {
   return { type: EMAIL_SIGN_IN_START, endpoint };
 }
 export function emailSignInComplete(endpoint, user) {
+  console.log("sign in complete", endpoint);
   return { type: EMAIL_SIGN_IN_COMPLETE, user, endpoint };
 }
 export function emailSignInError(endpoint, errors) {
@@ -31,10 +32,9 @@ export function emailSignIn(body, endpointKey) {
 
     // necessary for fetch to recognize the response as an api request
     setCurrentEndpointKey(endpointKey);
-
     var currentEndpointKey = getCurrentEndpointKey();
-    dispatch(storeCurrentEndpointKey(currentEndpointKey));
 
+    dispatch(storeCurrentEndpointKey(currentEndpointKey));
     dispatch(emailSignInStart(currentEndpointKey));
 
     return fetch(getEmailSignInUrl(currentEndpointKey), {

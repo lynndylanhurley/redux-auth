@@ -1,16 +1,16 @@
 import React from "react";
-import { connect } from "react-redux";
 import { hideOAuthSignInSuccessModal } from "../../../actions/ui";
-import Modal from "./Modal";
+import { connect } from "react-redux";
+import Modal from "./Modal"
 
 class OAuthSignInSuccessModal extends React.Component {
   render () {
     return (
       <Modal
-        {...this.props}
+        show={this.props.show}
         containerClass="oauth-sign-in-success-modal"
-        title="Welcome"
-        closeAction={hideOAuthSignInSuccessModal}>
+        closeAction={hideOAuthSignInSuccessModal}
+        title="Welcome">
         <p>You are now signed in via {this.props.auth.getIn(["user", "attributes", "provider"])}.</p>
       </Modal>
     );

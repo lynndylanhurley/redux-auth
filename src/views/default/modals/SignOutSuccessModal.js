@@ -3,7 +3,6 @@ import Modal from "react-modal";
 import { connect } from "react-redux";
 import { hideSignOutSuccessModal } from "../../../actions/ui";
 
-@connect()
 class SignOutSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class SignOutSuccessModal extends React.Component {
   }
 }
 
-export default SignOutSuccessModal;
+export default connect()(SignOutSuccessModal);

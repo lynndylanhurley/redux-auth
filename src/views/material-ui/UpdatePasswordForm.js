@@ -5,7 +5,6 @@ import { ActionLock } from "material-ui/lib/svg-icons";
 import { updatePassword, updatePasswordFormUpdate } from "../../actions/update-password";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class UpdatePasswordForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -91,4 +90,4 @@ class UpdatePasswordForm extends React.Component {
   }
 }
 
-export default UpdatePasswordForm;
+export default connect(({auth}) => ({auth}))(UpdatePasswordForm);

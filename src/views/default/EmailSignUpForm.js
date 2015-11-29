@@ -4,7 +4,6 @@ import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "../../actions/email-sign-up";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class EmailSignUpForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -95,4 +94,4 @@ class EmailSignUpForm extends React.Component {
   }
 }
 
-export default EmailSignUpForm;
+export default connect(({auth}) => ({auth}))(EmailSignUpForm);

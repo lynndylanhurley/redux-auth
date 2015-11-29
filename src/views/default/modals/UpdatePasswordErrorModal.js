@@ -4,7 +4,6 @@ import { hideUpdatePasswordErrorModal } from "../../../actions/ui";
 import { connect } from "react-redux";
 import ErrorList from "../ErrorList";
 
-@connect(({auth}) => ({auth}))
 class UpdatePasswordErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -54,4 +53,4 @@ class UpdatePasswordErrorModal extends React.Component {
   }
 }
 
-export default UpdatePasswordErrorModal;
+export default connect(({auth}) => ({auth}))(UpdatePasswordErrorModal);

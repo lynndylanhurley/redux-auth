@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { hidePasswordResetRequestSuccessModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class RequestPasswordResetSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class RequestPasswordResetSuccessModal extends React.Component {
   }
 }
 
-export default RequestPasswordResetSuccessModal;
+export default connect(({auth}) => ({auth}))(RequestPasswordResetSuccessModal);

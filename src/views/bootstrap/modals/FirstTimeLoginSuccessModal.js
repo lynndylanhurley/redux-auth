@@ -1,16 +1,17 @@
 import React from "react";
-import { connect } from "react-redux";
 import { hideFirstTimeLoginSuccessModal } from "../../../actions/ui";
 import Modal from "./Modal";
+import { connect } from "react-redux";
 
 class FirstTimeLoginSuccessModal extends React.Component {
   render () {
     return (
       <Modal
-        {...this.props}
+        show={this.props.show}
         containerClass="first-time-login-success-modal"
-        closeAction={hideFirstTimeLoginSuccessModal}
-        title={`Welcome ${this.props.auth.getIn(["user", "attributes", "email"])}!`}>
+        title={`Welcome ${this.props.auth.getIn(["user", "attributes", "email"])}!`}
+        closeBtnLabel="Close"
+        closeAction={hideFirstTimeLoginSuccessModal}>
         <p>Your account has been confirmed.</p>
       </Modal>
     );

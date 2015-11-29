@@ -2,7 +2,6 @@ import React from "react";
 import { PageHeader } from "react-bootstrap";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class Account extends React.Component {
   render () {
     return (
@@ -14,4 +13,4 @@ class Account extends React.Component {
   }
 }
 
-export default Account;
+export default connect(({auth}) => ({auth}))(Account);

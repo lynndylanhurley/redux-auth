@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { hideOAuthSignInSuccessModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class OAuthSignInSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -44,4 +43,4 @@ class OAuthSignInSuccessModal extends React.Component {
   }
 }
 
-export default OAuthSignInSuccessModal;
+export default connect(({auth}) => ({auth}))(OAuthSignInSuccessModal);

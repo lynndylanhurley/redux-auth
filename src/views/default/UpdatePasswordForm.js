@@ -4,7 +4,6 @@ import ButtonLoader from "./ButtonLoader";
 import { updatePassword, updatePasswordFormUpdate } from "../../actions/update-password";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class UpdatePasswordForm extends React.Component {
   static propTypes = {
     icon: PropTypes.string,
@@ -90,4 +89,4 @@ class UpdatePasswordForm extends React.Component {
   }
 }
 
-export default UpdatePasswordForm;
+export default connect(({auth}) => ({auth}))(UpdatePasswordForm);

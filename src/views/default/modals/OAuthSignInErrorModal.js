@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import Modal from "react-modal";
 import { hideOAuthSignInErrorModal } from "../../../actions/ui";
 
-@connect(({auth}) => ({auth}))
 class OAuthSignInErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -48,4 +47,4 @@ class OAuthSignInErrorModal extends React.Component {
   }
 }
 
-export default OAuthSignInErrorModal;
+export default connect(({auth}) => ({auth}))(OAuthSignInErrorModal);

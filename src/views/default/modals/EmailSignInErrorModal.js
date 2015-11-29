@@ -4,7 +4,6 @@ import { hideEmailSignInErrorModal } from "../../../actions/ui";
 import Modal from "react-modal";
 import ErrorList from "../ErrorList";
 
-@connect(({auth}) => ({auth}))
 class EmailSignInErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool
@@ -50,4 +49,4 @@ class EmailSignInErrorModal extends React.Component {
   }
 }
 
-export default EmailSignInErrorModal;
+export default connect(({auth}) => ({auth}))(EmailSignInErrorModal);

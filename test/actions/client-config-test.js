@@ -1,10 +1,15 @@
-import React from "react";
-import sinon from "sinon";
-import {resetConfig, retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
-import {match} from "redux-router/server";
-import {expect} from "chai";
-import jsdom from "mocha-jsdom";
-import mockery, {registerMock} from "mockery";
+import jsdomify from "jsdomify";
+
+// imports
+var React,
+    sinon,
+    resetConfig,
+    retrieveData,
+    getCurrentEndpointKey,
+    match,
+    expect,
+    mockery,
+    registerMock;
 
 global.__TEST__ = true;
 
@@ -46,12 +51,28 @@ function destroyTokenBridge() {
 }
 
 describe("client configuration", () => {
-  jsdom();
+  before(() => {
+    jsdomify.create();
+  });
+
+  after(() => {
+    jsdomify.destroy();
+  });
 
   beforeEach(() => {
+    jsdomify.clear();
+
     // if we don't do this, react will try to run console.debug to tell us
     // about react dev tools, which will crash the test suite.
     window.navigator = global.navigator = {userAgent: ""};
+
+    React = require("react");
+    sinon = require("sinon");
+    ({resetConfig, retrieveData, getCurrentEndpointKey} = require("../../src/utils/session-storage"));
+    ({match} = require("redux-router/server"));
+    ({expect} = require("chai"));
+    mockery = require("mockery");
+    ({registerMock} = mockery);
 
     resetConfig();
     mockery.enable({

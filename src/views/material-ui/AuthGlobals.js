@@ -19,7 +19,6 @@ import PasswordResetSuccessModal from "./modals/PasswordResetSuccessModal";
 import TokenBridge from "../TokenBridge";
 import { connect } from "react-redux";
 
-@connect(({auth}) => ({auth}))
 class AuthGlobals extends React.Component {
   static propTypes = {
     signOutSuccessEnabled: PropTypes.bool,
@@ -179,4 +178,4 @@ class AuthGlobals extends React.Component {
   }
 }
 
-export default AuthGlobals;
+export default connect(({auth}) => ({auth}))(AuthGlobals);
