@@ -35,7 +35,6 @@ class PasswordResetSuccessModal extends React.Component {
   }
 
   handleSubmit () {
-    console.log("@-->handling submit");
     let formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
   }

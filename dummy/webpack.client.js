@@ -29,7 +29,7 @@ module.exports = {
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
       {include: /\.json$/, loaders: ["json-loader"]},
-      {include: /\.js$/, loaders: ["babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"], exclude: /node_modules/},
+      {include: /\.js$/, loaders: ["babel-loader?stage=0&optional=runtime"], exclude: /node_modules/},
       { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader", {publicPath: "/dist/"}) }
     ]
   },

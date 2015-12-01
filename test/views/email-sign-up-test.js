@@ -11,7 +11,7 @@ var React,
     registerMock,
     mockFetchResponse;
 
-describe.only("EmailSignUpForm", () => {
+describe("EmailSignUpForm", () => {
   before(() => {
     jsdomify.create();
   });
@@ -63,36 +63,38 @@ describe.only("EmailSignUpForm", () => {
         jsdomify.clear();
 
         React = require("react");
-        TestUtils = require("react-addons-test-utils");
         sinon = require("sinon");
         ({expect} = require ("chai"));
         ({retrieveData, resetConfig} = require("../../src/utils/session-storage"));
         C = require("../../src/utils/constants");
         mockery = require("mockery");
         ({registerMock} = mockery);
-        ({renderConnectedComponent, mockFetchResponse} = require ("../helper"));
+        ({mockFetchResponse} = require ("../helper"));
 
         resetConfig();
+
+        mockery.enable({
+          warnOnReplace: false,
+          warnOnUnregistered: false,
+          useCleanCache: true
+        });
+
+        mockery.resetCache();
         global.__REACT_DEVTOOLS_GLOBAL_HOOK__ = {};
+
+      });
+
+      afterEach(() => {
+        mockery.deregisterAll();
+        mockery.disable();
       });
 
       describe(`params`, () => {
-        beforeEach(() => {
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         it("should accept styling params", done => {
           EmailSignUpForm = require(requirePath);
+          TestUtils = require("react-addons-test-utils");
           findClass = TestUtils.findRenderedDOMComponentWithClass;
+          ({renderConnectedComponent} = require ("../helper"));
 
           let inputProps = {
             email: {style: {color: "red"}, className: "email-class-override"},
@@ -123,6 +125,8 @@ describe.only("EmailSignUpForm", () => {
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
+          TestUtils = require("react-addons-test-utils");
+          ({renderConnectedComponent} = require ("../helper"));
           EmailSignUpForm = require(requirePath);
           findClass = TestUtils.findRenderedDOMComponentWithClass;
 
@@ -151,29 +155,20 @@ describe.only("EmailSignUpForm", () => {
 
       describe(`success`, () => {
         beforeEach(() => {
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-
           // mock succes response
           successRespSpy = sinon.spy((url) => {
             return mockFetchResponse(url, 200, {data: {uid: testUid, email: testUid}}, successRespHeaders);
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
+          TestUtils = require("react-addons-test-utils");
           EmailSignUpForm = require(requirePath);
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+          ({renderConnectedComponent} = require ("../helper"));
         });
 
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
-        it("should handle successful sign in", done => {
+        it("should handle successful sign up", done => {
           var testEmail = testUid;
           var apiUrl    = "http://api.dev";
 
@@ -182,7 +177,7 @@ describe.only("EmailSignUpForm", () => {
           ), {apiUrl}).then(({instance, store}) => {
             let emailEl = findTag(instance, "input")[0];
             let passwordEl = findTag(instance, "input")[1];
-            let passwordConfirmEl = findTag(instance, "input")[2];
+            let passwordConfirmEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[2];
 
             // change input values
             emailEl.value = testEmail;
@@ -218,30 +213,22 @@ describe.only("EmailSignUpForm", () => {
 
               done();
             }, 0);
-          }).catch(e => console.log("errors", e));
+          }).catch(e => console.log("errors", e.stack));
         });
       });
 
       describe(`error`, () => {
         beforeEach(() => {
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-
           // mock succes response
           errorRespSpy = sinon.spy((url) => {
             return mockFetchResponse(url, 401, errorResp, {});
           });
 
           registerMock("isomorphic-fetch", errorRespSpy);
-          EmailSignUpForm = require(requirePath);
-        });
+          TestUtils = require("react-addons-test-utils");
+          ({renderConnectedComponent} = require ("../helper"));
 
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
+          EmailSignUpForm = require(requirePath);
         });
 
         it("should handle failed sign in", done => {

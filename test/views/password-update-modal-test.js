@@ -13,7 +13,7 @@ var React,
     storeCurrentEndpointKey,
     mockFetchResponse;
 
-xdescribe("PasswordResetSuccessModal", () => {
+describe("PasswordResetSuccessModal update form", () => {
   before(() => {
     jsdomify.create();
   });
@@ -65,9 +65,9 @@ xdescribe("PasswordResetSuccessModal", () => {
       };
 
   [
-    "bootstrap"
-    //"default",
-    //"material-ui"
+    "bootstrap",
+    "default",
+    "material-ui"
   ].forEach((theme) => {
     requirePath = `../../src/views/${theme}/modals/PasswordResetSuccessModal`;
 
@@ -76,7 +76,6 @@ xdescribe("PasswordResetSuccessModal", () => {
         jsdomify.clear();
 
         React = require("react");
-        TestUtils = require("react-addons-test-utils");
         sinon = require("sinon");
         ({expect} = require ("chai"));
         ({retrieveData, persistData, resetConfig} = require("../../src/utils/session-storage"));
@@ -105,6 +104,7 @@ xdescribe("PasswordResetSuccessModal", () => {
 
       describe(`params`, () => {
         it("should accept styling params", done => {
+          TestUtils = require("react-addons-test-utils");
           PasswordResetSuccessModal = require(requirePath);
           ({renderConnectedComponent} = require ("../helper"));
 
@@ -133,6 +133,7 @@ xdescribe("PasswordResetSuccessModal", () => {
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
+          TestUtils = require("react-addons-test-utils");
           ({renderConnectedComponent} = require ("../helper"));
           PasswordResetSuccessModal = require(requirePath);
 
@@ -181,6 +182,7 @@ xdescribe("PasswordResetSuccessModal", () => {
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
+          TestUtils = require("react-addons-test-utils");
           ({renderConnectedComponent} = require ("../helper"));
           PasswordResetSuccessModal = require(requirePath);
         });
@@ -238,6 +240,7 @@ xdescribe("PasswordResetSuccessModal", () => {
           });
 
           registerMock("isomorphic-fetch", errorRespSpy);
+          TestUtils = require("react-addons-test-utils");
           ({renderConnectedComponent} = require ("../helper"));
           PasswordResetSuccessModal = require(requirePath);
         });

@@ -17,10 +17,8 @@ import Account from "../dummy/src/views/Account";
 import SignIn from "../dummy/src/views/SignIn";
 import GlobalComponents from "../dummy/src/views/partials/GlobalComponents";
 
-
 class App extends React.Component {
   render() {
-    console.log("@-->rendering app");
     return (
       <Container>
         <GlobalComponents />
@@ -123,6 +121,12 @@ export function genStore(initialState={}) {
 
   // create the redux store
   return compose(applyMiddleware(thunk))(createStore)(reducer, {auth});
+}
+
+export function p () {
+  return new Promise(res => {
+    setTimeout(res, 100);
+  });
 }
 
 export function renderConnectedComponent(markup, endpointConfig, initialState={}) {

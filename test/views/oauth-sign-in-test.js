@@ -93,7 +93,6 @@ describe("OAuthSignInButton", () => {
         jsdomify.clear();
 
         React = require("react");
-        TestUtils = require("react-addons-test-utils");
         sinon = require("sinon");
         ({expect} = require ("chai"));
         ({retrieveData, resetConfig, getCurrentEndpointKey} = require("../../src/utils/session-storage"));

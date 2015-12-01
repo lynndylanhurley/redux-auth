@@ -100,6 +100,7 @@ describe("UpdatePasswordForm", () => {
 
       describe("params", () => {
         it("should accept styling params", done => {
+          TestUtils = require("react-addons-test-utils");
           UpdatePasswordForm = require(requirePath);
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           findTag = TestUtils.scryRenderedDOMComponentsWithTag;
@@ -131,6 +132,7 @@ describe("UpdatePasswordForm", () => {
           });
 
           registerMock("isomorphic-fetch", successRespSpy);
+          TestUtils = require("react-addons-test-utils");
           UpdatePasswordForm = require(requirePath);
           findClass = TestUtils.findRenderedDOMComponentWithClass;
           findTag = TestUtils.scryRenderedDOMComponentsWithTag;
@@ -183,6 +185,7 @@ describe("UpdatePasswordForm", () => {
             });
 
             registerMock("isomorphic-fetch", successRespSpy);
+            TestUtils = require("react-addons-test-utils");
             UpdatePasswordForm = require(requirePath);
             findClass = TestUtils.findRenderedDOMComponentWithClass;
             findTag = TestUtils.scryRenderedDOMComponentsWithTag;
@@ -245,6 +248,7 @@ describe("UpdatePasswordForm", () => {
           });
 
           registerMock("isomorphic-fetch", errorRespSpy);
+          TestUtils = require("react-addons-test-utils");
           UpdatePasswordForm = require(requirePath);
           ({renderConnectedComponent} = require("../helper"));
         });

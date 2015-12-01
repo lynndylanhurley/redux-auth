@@ -1,11 +1,11 @@
-import React from "react";
-import TestUtils from "react-addons-test-utils";
-import jsdom from "mocha-jsdom";
-import {expect} from "chai";
-import {resetConfig} from "../../src/utils/session-storage";
-import {renderConnectedComponent} from "../helper";
+import jsdomify from "jsdomify";
 
-var AuthGlobals;
+var React,
+    TestUtils,
+    expect,
+    resetConfig,
+    renderConnectedComponent,
+    AuthGlobals;
 
 /*
  * Batch test the functionality shared by the 18 or so modals.
@@ -13,18 +13,20 @@ var AuthGlobals;
 
 
 describe("Modals", () => {
-  before(() => {
-    jsdomify.create();
-  });
-
-  jsdom();
-
   [
     "bootstrap",
     "material-ui"
   ].forEach((theme) => {
 
     describe(`${theme} theme`, () => {
+      before(() => {
+        jsdomify.create();
+      });
+
+      after(() => {
+        jsdomify.destroy();
+      });
+
       [
         ["DestroyAccountErrorModal",         "destroyAccountErrorModalVisible",         "destroy-account-error-modal"],
         ["DestroyAccountSuccessModal",       "destroyAccountSuccessModalVisible",       "destroy-account-success-modal"],

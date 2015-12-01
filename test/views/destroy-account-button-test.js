@@ -87,7 +87,7 @@ describe("DestroyAccountButton", () => {
           renderConnectedComponent(
             <DestroyAccountButton {...inputProps} />
           ).then(({instance}) => {
-            findClass(instance, "destroy-account-class-override");
+            expect(findClass(instance, "destroy-account-class-override")).to.be.ok;
             done();
           }).catch(e => console.log("error:", e));
         });

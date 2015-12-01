@@ -195,11 +195,6 @@ export function retrieveData (key) {
       break;
   }
 
-  if (typeof(val) !== "string") {
-    console.log("returning key", key, "val", val);
-    return val;
-  }
-
   // if value is a simple string, the parser will fail. in that case, simply
   // unescape the quotes and return the string.
   try {

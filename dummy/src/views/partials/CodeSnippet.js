@@ -3,10 +3,6 @@ import hljs from "highlight.js";
 import $ from "jquery";
 
 class CodeSnippet extends React.Component {
-  constructor (props, ctx) {
-    super(props, ctx);
-  }
-
   static propTypes = {
     language: PropTypes.string,
     children: PropTypes.node.isRequired
@@ -33,13 +29,13 @@ class CodeSnippet extends React.Component {
 
   componentDidMount() {
     let $target = $(this.refs.target);
-    //this.highlight($target, this.props.children);
+    this.highlight($target, this.props.children);
   }
 
   componentDidUpdate () {
     let $target = $(this.refs.target);
     $target.html("");
-    //this.highlight($target, this.props.children);
+    this.highlight($target, this.props.children);
   }
 
   render () {
