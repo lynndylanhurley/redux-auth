@@ -1,5 +1,8 @@
-require("babel/register")({
-  stage: 0
+require("babel-polyfill");
+
+require("babel-register")({
+  only: /src/,
+  presets: ["es2015", "react", "stage-0"]
 });
 
 /**

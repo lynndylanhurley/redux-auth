@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 class TokenBridge extends React.Component {
   render () {
-    console.log("initial creds", this.props.initialCredentials);
     return (
       <script id="token-bridge"
               type="application/json"

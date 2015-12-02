@@ -19,7 +19,6 @@ export function emailSignInStart(endpoint) {
   return { type: EMAIL_SIGN_IN_START, endpoint };
 }
 export function emailSignInComplete(endpoint, user) {
-  console.log("sign in complete", endpoint);
   return { type: EMAIL_SIGN_IN_COMPLETE, user, endpoint };
 }
 export function emailSignInError(endpoint, errors) {
