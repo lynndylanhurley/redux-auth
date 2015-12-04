@@ -11,8 +11,7 @@ import nock from "nock";
 var findClass = TestUtils.findRenderedDOMComponentWithClass,
     findTag = TestUtils.scryRenderedDOMComponentsWithTag;
 
-var RequestPasswordResetForm,
-    requirePath,
+var requirePath,
     successRespSpy,
     errorRespSpy,
     testUid = "test@test.com",
@@ -26,14 +25,13 @@ var RequestPasswordResetForm,
 
 export default function() {
   describe("RequestPasswordResetForm", () => {
-
     [
       "bootstrap",
       "material-ui",
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/RequestPasswordResetForm`;
-      RequestPasswordResetForm = require(requirePath).default;
+      var RequestPasswordResetForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe(`params`, () => {
@@ -48,7 +46,7 @@ export default function() {
             ).then(({instance}) => {
               let emailEl = findClass(instance, "email-class-override")
               findClass(instance, "submit-class-override")
-              expect(emailEl.getAttribute("style")).to.equal("color:red;")
+              expect(emailEl.getAttribute("style")).to.match(/color:red/)
               done();
             }).catch(e => console.log("error:", e));
           });

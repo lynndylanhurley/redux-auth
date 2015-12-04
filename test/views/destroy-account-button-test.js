@@ -11,8 +11,7 @@ import nock from "nock";
 
 var findClass = TestUtils.findRenderedDOMComponentWithClass;
 
-var DestroyAccountButton,
-    requirePath,
+var requirePath,
     successRespSpy,
     errorRespSpy,
     successResp = {
@@ -32,7 +31,7 @@ export default function() {
       "bootstrap"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/DestroyAccountButton`;
-      DestroyAccountButton = require(requirePath).default;
+      var DestroyAccountButton = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe(`params`, () => {

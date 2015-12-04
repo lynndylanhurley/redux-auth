@@ -11,8 +11,7 @@ var findClass = TestUtils.findRenderedDOMComponentWithClass,
     findTag = TestUtils.scryRenderedDOMComponentsWithTag;
 
 
-var EmailSignUpForm,
-    requirePath,
+var requirePath,
     successRespSpy,
     errorRespSpy,
     testUid = "test@test.com",
@@ -48,7 +47,7 @@ export default function() {
       "bootstrap"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/EmailSignUpForm`;
-      EmailSignUpForm = require(requirePath).default;
+      var EmailSignUpForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe(`params`, () => {

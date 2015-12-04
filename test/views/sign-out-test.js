@@ -10,8 +10,7 @@ import nock from "nock";
 
 var findClass = TestUtils.findRenderedDOMComponentWithClass;
 
-var SignOutButton,
-    requirePath,
+var requirePath,
     successRespSpy,
     errorRespSpy,
     successResp = {
@@ -31,7 +30,7 @@ export default function() {
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/SignOutButton`;
-      SignOutButton = require(requirePath).default;
+      var SignOutButton = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe("params", () => {

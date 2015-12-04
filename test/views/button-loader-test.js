@@ -13,9 +13,10 @@ export default function() {
       "material-ui"
     ].forEach((theme) => {
       var requirePath = `../../src/views/${theme}/ButtonLoader`
-      ButtonLoader = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
+        ButtonLoader = require(requirePath).default;
+
         it("passes props to button", () => {
           let iconOverride = <span className="icon-override">icon override</span>;
           let clickFn = sinon.spy();

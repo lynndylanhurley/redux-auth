@@ -10,8 +10,7 @@ import nock from "nock";
 
 var findClass = TestUtils.findRenderedDOMComponentWithClass;
 
-var EmailSignInForm,
-    successRespSpy,
+var successRespSpy,
     errorRespSpy,
     testUid = "test@test.com",
     successRespHeaders = {
@@ -28,7 +27,7 @@ export default function() {
       "default"
     ].forEach((theme) => {
       var requirePath = `../../src/views/${theme}/EmailSignInForm`;
-      EmailSignInForm = require(requirePath).default;
+      var EmailSignInForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe(`params`, () => {

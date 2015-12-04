@@ -12,9 +12,7 @@ import nock from "nock";
 
 var findClass = TestUtils.findRenderedDOMComponentWithClass;
 
-var OAuthSignInButton,
-    oAuthActions,
-    tokenValidationSpy,
+var tokenValidationSpy,
     testUid = "test@test.com",
     popupSuccessParams = { "access-token": "abc" },
     successResp = {
@@ -75,8 +73,8 @@ export default function () {
       "material-ui",
       "default"
     ].forEach(theme => {
-      OAuthSignInButton = rewire(`../../src/views/${theme}/OAuthSignInButton`);
-      oAuthActions = rewire("../../src/actions/oauth-sign-in");
+      var OAuthSignInButton = rewire(`../../src/views/${theme}/OAuthSignInButton`);
+      var oAuthActions = rewire("../../src/actions/oauth-sign-in");
 
       describe(`${theme}`, () => {
         describe("params", () => {

@@ -10,8 +10,7 @@ import nock from "nock";
 import jsdomify from "jsdomify";
 
 
-var PasswordResetSuccessModal,
-    findClass = (className) => document.getElementsByClassName(className)[0],
+var findClass = (className) => document.getElementsByClassName(className)[0],
     findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
     requirePath,
     successRespSpy,
@@ -64,7 +63,7 @@ export default function() {
       "material-ui"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/modals/PasswordResetSuccessModal`;
-      PasswordResetSuccessModal = require(requirePath).default;
+      var PasswordResetSuccessModal = require(requirePath).default;
 
       // we have to wait 1 sec to clear all the modals from the dom between
       // test suites. this is due to an issue with the Dialog implementation of

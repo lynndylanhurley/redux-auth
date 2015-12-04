@@ -12,8 +12,7 @@ import nock from "nock";
 var findClass = TestUtils.findRenderedDOMComponentWithClass,
     findTag = TestUtils.scryRenderedDOMComponentsWithTag;
 
-var UpdatePasswordForm,
-    requirePath,
+var requirePath,
     successRespSpy,
     errorRespSpy,
     testUid = "test@test.com",
@@ -56,7 +55,7 @@ export default function() {
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/UpdatePasswordForm`;
-      UpdatePasswordForm = require(requirePath).default;
+      var UpdatePasswordForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
         describe("params", () => {
@@ -70,11 +69,10 @@ export default function() {
             renderConnectedComponent(
               <UpdatePasswordForm inputProps={inputProps} />
             ).then(({instance}) => {
-              let passwordEl             = findTag(instance, "input")[0];
-              let passwordConfirmationEl = findTag(instance, "input")[1];
+              findClass(instance, "password-class-override");
+              findClass(instance, "password-confirmation-class-override");
               findClass(instance, "submit-class-override");
-              expect(passwordEl.getAttribute("style")).to.match(/color:red/);
-              expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:pink/);
+
               done();
             }).catch(e => console.log("error:", e));
           });

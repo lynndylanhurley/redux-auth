@@ -4,8 +4,6 @@ import TestUtils from "react-addons-test-utils";
 import {expect} from "chai";
 import {renderConnectedComponent} from "../helper";
 
-var AuthGlobals;
-
 /*
 * Note that we can't use TestUtils to find the rendered components
 * because modals are rendered outside of the instance tree.
@@ -31,8 +29,6 @@ export default function() {
       "bootstrap",
       "material-ui"
     ].forEach((theme) => {
-      AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
-
       describe(`${theme} theme`, () => {
         // we have to wait 1 sec to clear all the modals from the dom between
         // tests. this is due to an issue with the Dialog implementation of
@@ -62,8 +58,11 @@ export default function() {
           ["UpdatePasswordErrorModal",         "updatePasswordErrorModalVisible",         "update-password-error-modal"],
           ["UpdatePasswordSuccessModal",       "updatePasswordSuccessModalVisible",       "update-password-success-modal"]
         ].forEach(([componentName, vizProp, modalClass]) => {
+          var AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
+
           describe(componentName, () => {
             it(`modal visibility should correlate with ui.${vizProp} value`, done => {
+
               let initialState = {ui: {[vizProp]: true}};
 
               renderConnectedComponent(<AuthGlobals />, undefined, initialState).then(({store}) => {
