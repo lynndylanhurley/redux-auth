@@ -1,21 +1,37 @@
+import React from "react";
 import jsdomify from "jsdomify";
+import TestUtils from "react-addons-test-utils";
+import {expect} from "chai";
+import {renderConnectedComponent} from "../helper";
 
-var React,
-    TestUtils,
-    expect,
-    renderConnectedComponent,
-    AuthGlobals;
+var AuthGlobals;
+
+/*
+* Note that we can't use TestUtils to find the rendered components
+* because modals are rendered outside of the instance tree.
+*/
+function findClass (className) {
+  let matches = jsdomify.getDocument().getElementsByClassName(className);
+
+  if (matches.length !== 1) {
+    let msg = `Expected 1 match to ${className}, instead got ${matches.length}`
+    console.log(msg);
+    throw msg;
+  }
+
+  return matches[0];
+};
 
 /*
  * Batch test the functionality shared by the 18 or so modals.
  */
-
 export default function() {
-  describe("Modals", () => {
+  describe("Modal visibility", () => {
     [
       "bootstrap",
       "material-ui"
     ].forEach((theme) => {
+      AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
 
       describe(`${theme} theme`, () => {
         [
@@ -36,49 +52,15 @@ export default function() {
           ["UpdatePasswordErrorModal",         "updatePasswordErrorModalVisible",         "update-password-error-modal"],
           ["UpdatePasswordSuccessModal",       "updatePasswordSuccessModalVisible",       "update-password-success-modal"]
         ].forEach(([componentName, vizProp, modalClass]) => {
-
-          var modalContainerClass = "redux-auth-modal";
-          if (theme === "bootstrap") {
-            modalContainerClass = "modal";
-          }
-
-          /*
-          * Note that we can't use TestUtils to find the rendered components
-          * because modals are rendered outside of the instance tree.
-          */
-          function findClass (className) {
-            let matches = jsdomify.getDocument().getElementsByClassName(className);
-
-            if (matches.length !== 1) {
-              throw `Expected 1 match to ${className}, instead got ${matches.length}`;
-            }
-
-            return matches[0];
-          };
-
           describe(componentName, () => {
-            beforeEach(() => {
-              if (typeof(window) === "undefined") {
-                jsdomify.create();
-              } else {
-                jsdomify.clear();
-              }
-
-              React = require("react");
-              require("react-tap-event-plugin")();
-              TestUtils = require("react-addons-test-utils");
-              ({expect} = require ("chai"));
-              ({renderConnectedComponent} = require("../helper"));
-              AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
-            });
-
             it(`modal visibility should correlate with ui.${vizProp} value`, done => {
+              jsdomify.clear()
+
               let initialState = {ui: {[vizProp]: true}};
 
               renderConnectedComponent(<AuthGlobals />, undefined, initialState).then(({store}) => {
                 // ensure modal is visible
                 expect(findClass(modalClass)).to.be.ok;
-                expect(findClass(modalContainerClass)).to.be.ok;
 
                 // ensure close button is present
                 let closeBtnEl = findClass(`${modalClass}-close`);

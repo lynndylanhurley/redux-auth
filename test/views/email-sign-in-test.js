@@ -1,67 +1,38 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    getCurrentEndpointKey,
-    retrieveData,
-    C,
-    mockery,
-    registerMock,
-    mockFetchResponse;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import {spy} from "sinon";
+import {expect} from "chai";
+import {retrieveData} from "../../src/utils/session-storage";
+import {getCurrentEndpointKey} from "../../src/utils/session-storage";
+import * as C from "../../src/utils/constants";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+
+var findClass = TestUtils.findRenderedDOMComponentWithClass;
+
+var EmailSignInForm,
+    successRespSpy,
+    errorRespSpy,
+    testUid = "test@test.com",
+    successRespHeaders = {
+      "Content-Type": "application/json",
+      "access-token": "abc"
+    },
+    errorResp = {"errors":["Invalid login credentials. Please try again."]};
 
 export default function() {
   describe("EmailSignInForm", () => {
-    var EmailSignInForm,
-        findClass,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        testUid = "test@test.com",
-        successRespHeaders = {
-          "Content-Type": "application/json",
-          "access-token": "abc"
-        },
-        errorResp = {"errors":["Invalid login credentials. Please try again."]};
-
     [
       "material-ui",
       "bootstrap",
       "default"
     ].forEach((theme) => {
       var requirePath = `../../src/views/${theme}/EmailSignInForm`;
+      EmailSignInForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          TestUtils = require("react-addons-test-utils");
-          sinon = require("sinon");
-          ({expect} = require ("chai"));
-          ({retrieveData} = require("../../src/utils/session-storage"));
-          ({getCurrentEndpointKey} = require("../../src/utils/session-storage"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require ("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe(`params`, () => {
           it("should accept styling params", done => {
-            EmailSignInForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
-
             let inputProps = {
               email: {style: {color: "red"}, className: "email-class-override"},
               password: {style: {color: "green"}, className: "password-class-override"},
@@ -83,16 +54,11 @@ export default function() {
           it("should allow configuration of endpoint", done => {
             var testUrl = "http://alt.dev";
 
-            // mock success response
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, {data: {uid: testUid}}, successRespHeaders);
-            });
+            successRespSpy = spy(() => ({data: {uid: testUid}}));
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            EmailSignInForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
+            nock(testUrl)
+              .post("/auth/sign_in")
+              .reply(200, successRespSpy, successRespHeaders);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -106,6 +72,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure endpoint was hit
+                expect(successRespSpy.called).to.be.ok;
+
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
                 expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
@@ -123,35 +92,24 @@ export default function() {
                 let uid = store.getState().auth.getIn(["user", "attributes", "uid"]);
                 expect(uid).to.equal(testUid)
 
-                // ensure request was sent to alt url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth/sign_in`);
-
                 done();
-              }, 0);
+              }, 100);
 
             }).catch(e => console.log("errors:", e));
           });
         });
 
         describe(`success`, () => {
-          beforeEach(() => {
-            // mock succes response
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, {data: {uid: testUid}}, successRespHeaders);
-            });
-
-            registerMock("isomorphic-fetch", successRespSpy);
-            EmailSignInForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle successful sign in", done => {
             var testEmail    = "test@test.com";
             var testPassword = "test@test.com";
             var apiUrl       = "http://api.dev";
+
+            successRespSpy = spy(() => ({data: {uid: testUid}}));
+
+            nock(apiUrl)
+              .post("/auth/sign_in")
+              .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
               <EmailSignInForm />
@@ -177,6 +135,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // was endpoint hit?
+                expect(successRespSpy.called).to.be.ok;
+
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
                 expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
@@ -189,36 +150,26 @@ export default function() {
                 let modalVisible = store.getState().auth.getIn(["ui", "emailSignInSuccessModalVisible"]);
                 expect(modalVisible).to.equal(true);
 
-                // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth/sign_in`);
-
                 // ensure configuration is set to default
                 expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
                 expect(getCurrentEndpointKey()).to.equal("default");
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
 
 
         describe(`error`, () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            EmailSignInForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle failed sign in", done => {
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = spy(() => errorResp);
+
+            nock(apiUrl)
+              .post("/auth/sign_in")
+              .reply(401, errorRespSpy);
 
             renderConnectedComponent(
               <EmailSignInForm />, {apiUrl}
@@ -228,6 +179,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // was endpoint hit?
+                expect(errorRespSpy.called).to.be.ok;
+
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
                 expect(authHeaders).to.equal(undefined);
@@ -243,7 +197,7 @@ export default function() {
                 expect(modalVisible).to.equal(true);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });

@@ -2,7 +2,7 @@ import React, { PropTypes } from "react";
 import { Grid, Navbar, NavItem, Nav, NavBrand } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-if (!global.__SERVER__ && !global.__TEST__) {
+if (!global.__SERVER__ && !global.__TEST__ && false) {
   require("../../styles/main.scss");
 }
 

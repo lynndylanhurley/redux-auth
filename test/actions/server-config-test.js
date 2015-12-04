@@ -2,9 +2,8 @@ import React from "react";
 import sinon from "sinon";
 import {match} from "redux-router/server";
 import {expect} from "chai";
-import mockery, {registerMock, deregisterMock} from "mockery";
-
-var initialize;
+import {initialize} from "../helper";
+import nock from "nock";
 
 var testUid        = "test@test.com",
     testToken      = "xyz",
@@ -21,54 +20,28 @@ var testUid        = "test@test.com",
 
 
 const fakeErrorResponse = function() {
-  return Promise.resolve({
-    json: () => ({
-      success: false,
-      errors: "Invalid credentials"
-    }),
-    headers: {raw: () => {}}
-  });
+  return {
+    success: false,
+    errors: "Invalid credentials"
+  };
 }
 
 const fakeSuccessResponse = function() {
-  return Promise.resolve({
-    json: () => ({
-      success: true,
-      data: {uid: testUid}
-    }),
-    headers: {
-      raw: () => ({
-        "Content-Type": "application/json",
-        "access-token": testToken,
-        "client": testClient,
-        "uid": testUid,
-        "expiry": testExpiry
-      })
-    }
-  });
+  return {
+    success: true,
+    data: {uid: testUid}
+  }
 }
 
 export default function() {
   describe("server configuration", () => {
     describe("unauthenticated user", () => {
-      beforeEach(() => {
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-
-        errRespSpy = sinon.spy(fakeErrorResponse);
-        registerMock("node-fetch", errRespSpy);
-        ({initialize} = require("../helper"));
-      });
-
-      afterEach(() => {
-        deregisterMock("node-fetch");
-        mockery.disable();
-      });
-
       it("should not make request for users with no credentials", done => {
+        let spy = sinon.spy(fakeErrorResponse);
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(401, spy);
+
         initialize({
           apiUrl
         }, {
@@ -83,7 +56,7 @@ export default function() {
           expect(user.get("attributes")).to.equal(undefined);
 
           // ensure that no calls were made to the API
-          expect(errRespSpy.notCalled).to.equal(true);
+          expect(spy.notCalled).to.be.ok;
           done();
         })
         .catch(err => console.log("error:", err.stack));
@@ -91,6 +64,11 @@ export default function() {
 
       it("handles failed first time logins and password resets", done => {
         let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
+
+        let spy = sinon.spy(fakeErrorResponse);
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(401, spy);
 
         initialize({
           apiUrl
@@ -111,12 +89,22 @@ export default function() {
           expect(server.get("firstTimeLogin")).to.equal(true);
 
           // ensure that the call to the API was made
-          expect(errRespSpy.calledOnce).to.equal(true);
+          expect(spy.calledOnce).to.be.ok;
           done();
-        });
+        }).catch(err => console.log("error", err.stack));
       });
 
       it("should handle failed validations from the API", done => {
+        let reqHeaders;
+        let spy = sinon.spy(function() {
+          reqHeaders = this.req.headers;
+          return fakeErrorResponse();
+        });
+
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(401, spy);
+
         initialize({
           apiUrl
         }, {
@@ -131,27 +119,25 @@ export default function() {
           expect(user.get("attributes")).to.equal(undefined);
 
           // one call should have been made to API
-          expect(errRespSpy.calledOnce).to.equal(true);
-
-          let [[url, {headers}]] = errRespSpy.args;
+          expect(spy.calledOnce).to.be.ok;
 
           // ensure that API call has credentials as defined in cookies
-          expect(headers).to.deep.equal({
-            "access-token": testToken,
-            "token-type": "Bearer",
-            client: testClient,
-            uid: testUid,
-            expiry: `${testExpiry}`
-          });
-
-          // ensure that correct url was visited
-          expect(url).to.equal(`${apiUrl}/auth/validate_token?unbatch=true`);
+          expect(reqHeaders["access-token"]).to.include(testToken);
+          expect(reqHeaders["token-type"]).to.include("Bearer");
+          expect(reqHeaders["client"]).to.include(testClient);
+          expect(reqHeaders["uid"]).to.include(testUid);
+          expect(reqHeaders["expiry"]).to.include(`${testExpiry}`);
 
           done();
-        });
+        }).catch(e => console.log("error", e.stack));
       });
 
       it("should redirect unauthenticated users trying to access restricted pages", done => {
+        let spy = sinon.spy(fakeErrorResponse);
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(401, spy);
+
         initialize({
           apiUrl
         }, {
@@ -162,7 +148,7 @@ export default function() {
           .then(({store}) => {
             store.dispatch(match("/account", (error, {pathname, action}) => {
               // one call should have been made to API
-              expect(errRespSpy.calledOnce);
+              expect(spy.calledOnce).to.be.ok;
 
               // should be redirected to login page
               expect(pathname).to.equal("/login");
@@ -176,26 +162,18 @@ export default function() {
     });
 
     describe("authenticated user", () => {
-      beforeEach(() => {
-        mockery.enable({
-          warnOnReplace: false,
-          warnOnUnregistered: false,
-          useCleanCache: true
-        });
-        successRespSpy = sinon.spy(fakeSuccessResponse);
-        registerMock("node-fetch", successRespSpy);
-        ({initialize} = require("../helper"));
-      });
-
-      afterEach(() => {
-        deregisterMock("node-fetch");
-        mockery.disable();
-      });
-
-
       it("identifies first time logins and sets flag in store for token bridge", done => {
         // this is what urls look like when coming from email confirmation links
         let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oLPqKS5_HvroVw4F_juY3w&config=default&expiry=&token=k5taSSIfQD4hWShkqAjzNQ&uid=z1%40test.com`;
+
+        let spy = sinon.spy(fakeSuccessResponse);
+
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(200, spy, {
+            "Content-Type": "application/json",
+            "access-token": "abc"
+          });
 
         initialize({
           apiUrl
@@ -205,6 +183,8 @@ export default function() {
           cookies: ""
         })
           .then(({store}) => {
+            //expect(spy.called).to.be.ok;
+
             // user should be signed in
             let user = store.getState().auth.get("user");
             let server = store.getState().auth.get("server");
@@ -221,6 +201,14 @@ export default function() {
       });
 
       it("identifies password reset redirects and sets flag in store for token bridge", done => {
+        let spy = sinon.spy(fakeSuccessResponse);
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(200, spy, {
+            "Content-Type": "application/json",
+            "access-token": "abc"
+          });
+
         // this is what urls look like when coming from email confirmation links
         let authRedirectUrl = `${apiUrl}/?client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
 
@@ -235,6 +223,7 @@ export default function() {
           // user should be signed in
           let user = store.getState().auth.get("user");
           let server = store.getState().auth.get("server");
+          expect(spy.called).to.be.ok;
           expect(user.get("isSignedIn")).to.equal(true);
           expect(user.getIn(["attributes", "uid"])).to.equal(testUid);
           expect(server.get("mustResetPassword")).to.equal(true);
@@ -244,6 +233,17 @@ export default function() {
       });
 
       it("allows authenticated users to access restricted pages", done => {
+        let reqHeaders;
+        nock(apiUrl)
+          .get("/auth/validate_token?unbatch=true")
+          .reply(200, function() {
+            reqHeaders = this.req.headers;
+            return fakeSuccessResponse();
+          }, {
+            "Content-Type": "application/json",
+            "access-token": "abc"
+          });
+
         initialize({
           apiUrl
         }, {
@@ -259,26 +259,19 @@ export default function() {
             expect(user.get("mustResetPassword")).to.equal(false);
             expect(user.get("firstTimeLogin")).to.equal(false);
 
-            // one call should have been made to API
-            expect(successRespSpy.calledOnce);
-
-            let [[, {headers}]] = successRespSpy.args;
-
             // ensure that API call has credentials as defined in cookies
-            expect(headers).to.deep.equal({
-              "access-token": testToken,
-              "token-type": "Bearer",
-              client: testClient,
-              uid: testUid,
-              expiry: `${testExpiry}`
-            });
+            expect(reqHeaders["access-token"]).to.include(testToken);
+            expect(reqHeaders["token-type"]).to.include("Bearer");
+            expect(reqHeaders["client"]).to.include(testClient);
+            expect(reqHeaders["uid"]).to.include(testUid);
+            expect(reqHeaders["expiry"]).to.include(`${testExpiry}`);
 
             store.dispatch(match("/account", (error, redirect) => {
               // authorized user should not be redirected
               expect(redirect).to.equal(null);
               done();
             }));
-          });
+          }).catch(e => console.log("error", e.stack));
       });
     });
   });

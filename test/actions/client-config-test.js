@@ -1,39 +1,14 @@
-// imports
-var React,
-    sinon,
-    retrieveData,
-    getCurrentEndpointKey,
-    match,
-    expect,
-    mockery,
-    registerMock;
-
-global.__TEST__ = true;
+import React from "React";
+import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
+import {pushState} from "redux-router";
+import {expect} from "chai";
+import fetch from "../../src/utils/fetch";
+import nock from "nock";
 
 var testUid        = "test@test.com",
     apiUrl         = "http://api.default.com",
     altApiUrl      = "http://api.alt.com",
-    tokenBridge,
-    fetch,
-    initialize;
-
-function fetchSuccessResp (url) {
-  var respHeaders = {
-    "Content-Type": "application/json",
-    "access-token": "abc"
-  };
-
-  return Promise.resolve({
-    url,
-    json: () => ({
-      success: true,
-      data: {uid: testUid}
-    }),
-    headers: {
-      get: (key) => respHeaders[key]
-    }
-  });
-};
+    tokenBridge;
 
 function createTokenBridge(creds) {
   let credStr = JSON.stringify(creds);
@@ -48,34 +23,9 @@ function destroyTokenBridge() {
 }
 
 export default function() {
+  var {initialize} = require("../helper");
+
   describe("client configuration", () => {
-    beforeEach(() => {
-      // if we don't do this, react will try to run console.debug to tell us
-      // about react dev tools, which will crash the test suite.
-      window.navigator = global.navigator = {userAgent: ""};
-
-      React = require("react");
-      sinon = require("sinon");
-      ({retrieveData, getCurrentEndpointKey} = require("../../src/utils/session-storage"));
-      ({match} = require("redux-router/server"));
-      ({expect} = require("chai"));
-      mockery = require("mockery");
-      ({registerMock} = mockery);
-
-      mockery.enable({
-        warnOnReplace: false,
-        warnOnUnregistered: false,
-        useCleanCache: true
-      });
-      registerMock("isomorphic-fetch", sinon.spy(fetchSuccessResp));
-      ({initialize} = require("../helper"));
-    });
-
-    afterEach(() => {
-      mockery.deregisterAll();
-      mockery.disable();
-    });
-
     describe("unauthenticated user", () => {
       it("should handle unauthenticated users", done => {
         initialize()
@@ -90,12 +40,14 @@ export default function() {
 
       it("should redirect unauthenticated users to login page", done => {
         initialize()
-          .then((resp) => {
-            resp.store.dispatch(match("/account", (err, {pathname}) => {
-              expect(pathname).to.equal("/login");
+          .then(({store}) => {
+            store.dispatch(pushState(null, "/account"));
+            setTimeout(() => {
+              expect(store.getState().router.location.pathname).to.equal("/login");
               done();
-            }));
-          });
+            }, 0)
+          })
+          .catch(e => console.log("e", e.stack));
       });
 
       it("should show error modal for failed account confirmations", done => {
@@ -154,7 +106,15 @@ export default function() {
       it("should handle authenticated users", done => {
         const nextToken = "abc";
 
-        fetch = require("../../src/utils/fetch").default;
+        nock(`${altApiUrl}`)
+          .get("/api/hello")
+          .reply(200, {
+            success: true,
+            data: {uid: testUid}
+          }, {
+            "Content-Type": "application/json",
+            "access-token": "abc"
+          });
 
         createTokenBridge({
           user,

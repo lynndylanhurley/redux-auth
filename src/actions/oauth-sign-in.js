@@ -10,11 +10,14 @@ import {
 import {storeCurrentEndpointKey} from "./configure";
 import {parseResponse} from "../utils/handle-fetch-response";
 import fetch from "../utils/fetch";
-import openPopup from "../utils/popup";
+import _openPopup from "../utils/popup";
 
 export const OAUTH_SIGN_IN_START    = "OAUTH_SIGN_IN_START";
 export const OAUTH_SIGN_IN_COMPLETE = "OAUTH_SIGN_IN_COMPLETE";
 export const OAUTH_SIGN_IN_ERROR    = "OAUTH_SIGN_IN_ERROR";
+
+// hook for rewire
+var openPopup = _openPopup;
 
 function listenForCredentials (endpointKey, popup, provider, resolve, reject) {
   if (!resolve) {

@@ -1,8 +1,9 @@
 import React from "react";
+import TestUtils from "react-addons-test-utils";
 import {Provider} from "react-redux";
 import {Route, IndexRoute} from "react-router";
 import {combineReducers, createStore, compose, applyMiddleware} from "redux";
-import {createHistory, createMemoryHistory} from "history";
+import {createMemoryHistory} from "history";
 import {ReduxRouter, routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
 import thunk from "redux-thunk";
 import { reduxReactRouter as serverRouter } from "redux-router/server";
@@ -22,7 +23,6 @@ class App extends React.Component {
     return (
       <Container>
         <GlobalComponents />
-        {console.log("rendering children")}
         {this.props.children}
       </Container>
     );
@@ -66,29 +66,18 @@ export function initialize(
 
   // these methods will differ from server to client
   var reduxReactRouter    = clientRouter;
-  var createHistoryMethod = createHistory;
   if (isServer || global.__TEST__) {
     reduxReactRouter    = serverRouter;
-    createHistoryMethod = createMemoryHistory;
   }
 
   // create the redux store
   store = compose(
     applyMiddleware(thunk),
     reduxReactRouter({
-      createHistory: createHistoryMethod,
+      createHistory: createMemoryHistory,
       routes
     })
   )(createStore)(reducer);
-
-  // this is necessary for material ui to render
-  global.navigator = {
-    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
-  };
-
-  if (typeof(window) !== "undefined") {
-    window.navigator = global.navigator;
-  }
 
   /**
    * The React Router 1.0 routes for both the server and the client.
@@ -131,17 +120,7 @@ export function p () {
 
 export function renderConnectedComponent(markup, endpointConfig, initialState={}) {
   // must re-require TestUtils because of mockery
-  var TestUtils = require("react-addons-test-utils");
   var store = genStore(initialState);
-
-  // this is necessary for material ui to render
-  global.navigator = {
-    userAgent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36"
-  };
-
-  if (typeof(window) !== "undefined") {
-    window.navigator = global.navigator;
-  }
 
   return store.dispatch(configure(endpointConfig)).then(() => {
     return {

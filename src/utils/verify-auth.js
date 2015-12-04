@@ -47,6 +47,7 @@ export function fetchToken({rawEndpoints, cookies, currentLocation}) {
           currentEndpointKey,
           headers;
 
+
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
         headers            = parseHeaders(authRedirectHeaders);
         currentEndpointKey = JSON.parse(authRedirectHeaders.config || "null");

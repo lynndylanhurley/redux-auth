@@ -1,8 +1,9 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    ButtonLoader;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import sinon from "sinon";
+import {expect} from "chai";
+
+var ButtonLoader;
 
 export default function() {
   describe("ButtonLoader", () => {
@@ -12,15 +13,9 @@ export default function() {
       "material-ui"
     ].forEach((theme) => {
       var requirePath = `../../src/views/${theme}/ButtonLoader`
-      describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React          = require("react");
-          TestUtils      = require("react-addons-test-utils");
-          sinon          = require("sinon");
-          ({expect}      = require ("chai"));
-          ButtonLoader   = require(requirePath).default;
-        });
+      ButtonLoader = require(requirePath).default;
 
+      describe(`${theme} theme`, () => {
         it("passes props to button", () => {
           let iconOverride = <span className="icon-override">icon override</span>;
           let clickFn = sinon.spy();
@@ -45,9 +40,7 @@ export default function() {
           let btnEl = TestUtils.findRenderedDOMComponentWithTag(buttonLoader, "button");
 
           // were class and style overridden?
-          if (requirePath.match(/bootstrap/)) {
-            expect(btnEl.getAttribute("class")).to.match(/class-override/);
-          }
+          expect(btnEl.getAttribute("class")).to.match(/class-override/);
 
           // was type overridden?
           expect(btnEl.getAttribute("type")).to.equal("submit");

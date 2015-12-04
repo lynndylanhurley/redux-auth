@@ -1,45 +1,46 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    retrieveData,
-    C,
-    mockery,
-    registerMock,
-    mockFetchResponse;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import sinon from "sinon";
+import {expect} from "chai";
+import {retrieveData} from "../../src/utils/session-storage";
+import * as C from "../../src/utils/constants";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+
+var findClass = TestUtils.findRenderedDOMComponentWithClass,
+    findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+
+
+var EmailSignUpForm,
+    requirePath,
+    successRespSpy,
+    errorRespSpy,
+    testUid = "test@test.com",
+    testPassword = "secret123",
+      successRespHeaders = {
+        "Content-Type": "application/json",
+        "access-token": "abc"
+      },
+      errorResp = {
+        "status":"error",
+        "data": {
+          "uid": testUid,
+          "email": testUid
+        },
+        "errors": {
+          "password_confirmation": ["doesn't match Password"],
+          "password": ["is too short (minimum is 8 characters)"],
+          "email": ["is not an email"],
+          "full_messages":[
+            "Password confirmation doesn't match Password",
+            "Password is too short (minimum is 8 characters)",
+            "Email is not an email"
+          ]
+        }
+      };
 
 export default function() {
   describe("EmailSignUpForm", () => {
-    var EmailSignUpForm,
-        findClass,
-        findTag,
-        requirePath,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        testUid = "test@test.com",
-        testPassword = "secret123",
-        successRespHeaders = {
-          "Content-Type": "application/json",
-          "access-token": "abc"
-        },
-        errorResp = {
-          "status":"error",
-          "data": {
-            "uid": testUid,
-            "email": testUid
-          },
-          "errors": {
-            "password_confirmation": ["doesn't match Password"],
-            "password": ["is too short (minimum is 8 characters)"],
-            "email": ["is not an email"],
-            "full_messages":[
-              "Password confirmation doesn't match Password",
-              "Password is too short (minimum is 8 characters)",
-              "Email is not an email"
-            ]
-          }
-        };
 
     [
       "material-ui",
@@ -47,38 +48,11 @@ export default function() {
       "bootstrap"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/EmailSignUpForm`;
+      EmailSignUpForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          sinon = require("sinon");
-          ({expect} = require ("chai"));
-          ({retrieveData} = require("../../src/utils/session-storage"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require ("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-
-          mockery.resetCache();
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe(`params`, () => {
           it("should accept styling params", done => {
-            EmailSignUpForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require ("../helper"));
 
             let inputProps = {
               email: {style: {color: "red"}, className: "email-class-override"},
@@ -104,15 +78,13 @@ export default function() {
           it("should allow configuration of endpoint", done => {
             var testUrl = "http://alt.dev";
 
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, {data: {uid: testUid, email: testUid}}, successRespHeaders);
+            successRespSpy = sinon.spy(() => {
+              return [200, {data: {uid: testUid, email: testUid}}];
             });
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require ("../helper"));
-            EmailSignUpForm = require(requirePath).default;
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
+            nock(testUrl)
+              .post("/auth?config_name=alt")
+              .reply(200, successRespSpy, successRespHeaders);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -127,13 +99,11 @@ export default function() {
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth?config_name=alt`);
-
+                expect(successRespSpy.called).to.be.ok;
                 done();
               }, 0);
 
-            }).catch(e => console.log("errors:", e));
+            }).catch(e => console.log("errors:", e.stack));
           });
         });
 
@@ -143,18 +113,19 @@ export default function() {
             successRespSpy = sinon.spy((url) => {
               return mockFetchResponse(url, 200, {data: {uid: testUid, email: testUid}}, successRespHeaders);
             });
-
-            registerMock("isomorphic-fetch", successRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            EmailSignUpForm = require(requirePath).default;
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require ("../helper"));
           });
 
           it("should handle successful sign up", done => {
             var testEmail = testUid;
             var apiUrl    = "http://api.dev";
+
+            successRespSpy = sinon.spy(() => {
+              return [200, {data: {uid: testUid, email: testUid}}];
+            });
+
+            nock(apiUrl)
+              .post("/auth?config_name=default")
+              .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
               <EmailSignUpForm />
@@ -192,31 +163,25 @@ export default function() {
                 expect(modalVisible).to.equal(true);
 
                 // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth?config_name=default`);
+                expect(successRespSpy.called).to.be.ok;
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e.stack));
           });
         });
 
         describe(`error`, () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require ("../helper"));
-
-            EmailSignUpForm = require(requirePath).default;
-          });
-
           it("should handle failed sign in", done => {
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = sinon.spy(() => {
+              return [401, errorResp];
+            });
+
+            nock(apiUrl)
+              .post("/auth?config_name=default")
+              .reply(401, errorRespSpy);
 
             renderConnectedComponent(
               <EmailSignUpForm />, {apiUrl}
@@ -246,7 +211,7 @@ export default function() {
                 expect(errorItems.length).to.equal(3);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
