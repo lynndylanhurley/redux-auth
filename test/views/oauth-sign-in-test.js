@@ -1,4 +1,5 @@
 import React from "react";
+import jsdomify from "jsdomify";
 import TestUtils from "react-addons-test-utils";
 import {spy} from "sinon";
 import {expect} from "chai";
@@ -70,9 +71,9 @@ export default function () {
     }
 
     [
-      "bootstrap"
-      //"material-ui",
-      //"default"
+      "bootstrap",
+      "material-ui",
+      "default"
     ].forEach(theme => {
       OAuthSignInButton = rewire(`../../src/views/${theme}/OAuthSignInButton`);
       oAuthActions = rewire("../../src/actions/oauth-sign-in");
@@ -90,7 +91,7 @@ export default function () {
             }).catch(e => console.log("error:", e));
           });
 
-          it.only("should allow the use of alternate endpoints", done => {
+          it("should allow the use of alternate endpoints", done => {
             let apiUrl = "http://alt.dev";
 
             tokenValidationSpy = spy(() => successResp);
@@ -148,15 +149,17 @@ export default function () {
           it("retrieves auth creds from external oauth login window, makes validation request to API", done => {
             let apiUrl = "http://api.dev";
 
-            var tokenValidationSpy = spy((url) => {
-              return mockFetchResponse(url, 200, successResp, successRespHeaders);
-            });
+            tokenValidationSpy = spy(() => successResp);
 
+            nock(apiUrl)
+              .get("/auth/validate_token")
+              .matchHeader("access-token", ([h]) => h === popupSuccessParams["access-token"])
+              .reply(200, tokenValidationSpy, successRespHeaders);
+
+            // mock popup window for successful login
             var popupSpy = spy(popupSuccessMock);
-
-            // note that this is relative to src/actions/oauth-sign-in, not this file
-            //registerMock("../utils/popup", popupSpy);
-            //registerMock("isomorphic-fetch", tokenValidationSpy);
+            oAuthActions.__set__("openPopup", popupSpy);
+            OAuthSignInButton.__set__("oAuthSignIn", oAuthActions.oAuthSignIn);
 
             renderConnectedComponent(
               <OAuthSignInButton.default provider="github" />
@@ -174,9 +177,7 @@ export default function () {
                 expect(popupUrl).to.match(/^http:\/\/api.dev\/auth\/github/);
 
                 // ensure token validation request was called with creds returned from oauth redirect
-                let [[validationUrl, {headers}]] = tokenValidationSpy.args;
-                expect(validationUrl).to.equal(`${apiUrl}/auth/validate_token`);
-                expect(headers["access-token"]).to.deep.equal(popupSuccessParams["access-token"]);
+                expect(tokenValidationSpy.called).to.be.ok;
 
                 // ensure config is set to "default"
                 expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
@@ -205,19 +206,19 @@ export default function () {
             let apiUrl = "http://api.dev";
 
             var popupSpy = spy(popupErrorMock);
-
-            // note that this is relative to src/actions/oauth-sign-in, not this file
-            //registerMock("../utils/popup", popupSpy);
+            oAuthActions.__set__("openPopup", popupSpy);
+            OAuthSignInButton.__set__("oAuthSignIn", oAuthActions.oAuthSignIn);
 
             renderConnectedComponent(
               <OAuthSignInButton.default provider="github" />
             , {apiUrl}).then(({instance, store}) => {
-
               // click button
               let submitEl = findClass(instance, "oauth-sign-in-submit");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                expect(popupSpy.called).to.be.ok;
+
                 // ensure user is not signed in
                 let currentUser = store.getState().auth.get("user");
                 expect(currentUser.get("isSignedIn")).to.equal(false);
@@ -234,15 +235,17 @@ export default function () {
           it("handles token validation failure", done => {
             let apiUrl = "http://api.dev";
 
-            var tokenValidationSpy = spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
+            tokenValidationSpy = spy(() => errorResp);
 
-            //var popupSpy = sinon.spy(popupSuccessMock);
+            nock(apiUrl)
+              .get("/auth/validate_token")
+              .matchHeader("access-token", ([h]) => h === popupSuccessParams["access-token"])
+              .reply(401, tokenValidationSpy);
 
-            // note that this is relative to src/actions/oauth-sign-in, not this file
-            //registerMock("../utils/popup", popupSpy);
-            //registerMock("isomorphic-fetch", tokenValidationSpy);
+            // mock popup window for successfull oauth, but failed login
+            var popupSpy = spy(popupSuccessMock);
+            oAuthActions.__set__("openPopup", popupSpy);
+            OAuthSignInButton.__set__("oAuthSignIn", oAuthActions.oAuthSignIn);
 
             renderConnectedComponent(
               <OAuthSignInButton.default provider="github" />
@@ -254,14 +257,13 @@ export default function () {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure token validation request was made
+                expect(tokenValidationSpy.called).to.be.ok;
+
                 // ensure user is not signed in
                 let currentUser = store.getState().auth.get("user");
                 expect(currentUser.get("isSignedIn")).to.equal(false);
                 expect(currentUser.get("attributes")).to.equal(null);
-
-                // ensure token validation request was made
-                let [[validationUrl]] = tokenValidationSpy.args;
-                expect(validationUrl).to.equal(`${apiUrl}/auth/validate_token`);
 
                 // ensure error message is visible
                 expect(store.getState().auth.getIn(["ui", "oAuthSignInErrorModalVisible"])).to.equal(true);

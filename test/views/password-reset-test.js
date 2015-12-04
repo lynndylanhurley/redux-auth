@@ -1,31 +1,31 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    persistData,
-    C,
-    mockery,
-    registerMock,
-    storeCurrentEndpointKey,
-    mockFetchResponse;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import {spy} from "sinon";
+import {expect} from "chai";
+import {persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
+import * as C from "../../src/utils/constants";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+
+var findClass = TestUtils.findRenderedDOMComponentWithClass,
+    findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+
+var RequestPasswordResetForm,
+    requirePath,
+    successRespSpy,
+    errorRespSpy,
+    testUid = "test@test.com",
+    successResp = {
+      message: "An email has been sent to test@test.com containing "+
+        "instructions for resetting your password."
+    },
+    errorResp = {
+      errors :["Unable to find user with email 'aoeu'."]
+    };
 
 export default function() {
   describe("RequestPasswordResetForm", () => {
-    var RequestPasswordResetForm,
-        findClass,
-        findTag,
-        requirePath,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        testUid = "test@test.com",
-        successResp = {
-          "message": "An email has been sent to test@test.com containing "+
-            "instructions for resetting your password."
-        },
-        errorResp = {
-          "errors":["Unable to find user with email 'aoeu'."]
-        };
 
     [
       "bootstrap",
@@ -33,39 +33,11 @@ export default function() {
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/RequestPasswordResetForm`;
+      RequestPasswordResetForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          TestUtils = require("react-addons-test-utils");
-          sinon = require("sinon");
-          ({expect} = require ("chai"));
-          ({persistData} = require("../../src/utils/session-storage"));
-          ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require ("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe(`params`, () => {
           it("should accept styling params", done => {
-            RequestPasswordResetForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
-
             let inputProps = {
               email: {style: {color: "red"}, className: "email-class-override"},
               submit: {className: "submit-class-override"}
@@ -84,16 +56,11 @@ export default function() {
           it("should allow configuration of endpoint", done => {
             var testUrl = "http://alt.dev";
 
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, {});
-            });
+            successRespSpy = spy(() => [200, successResp]);
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            RequestPasswordResetForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require("../helper"));
+            nock(testUrl)
+              .post("/auth/password")
+              .reply(successRespSpy);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -109,7 +76,7 @@ export default function() {
 
               // change input values
               let emailEl = findTag(instance, "input")[0];
-              emailEl.value = "bogus";
+              emailEl.value = "whatever";
               TestUtils.Simulate.change(emailEl);
 
               let submitEl = findClass(instance, "request-password-reset-submit");
@@ -117,8 +84,7 @@ export default function() {
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth/password`);
+                expect(successRespSpy.called).to.be.ok;
 
                 done();
               }, 0);
@@ -128,23 +94,15 @@ export default function() {
         });
 
         describe(`success`, () => {
-          beforeEach(() => {
-            // mock succes response
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, {});
-            });
-
-            registerMock("isomorphic-fetch", successRespSpy);
-            RequestPasswordResetForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle successful sign in", done => {
             var testEmail = testUid;
             var apiUrl    = "http://api.dev";
+
+            successRespSpy = spy(() => [200, successResp]);
+
+            nock(apiUrl)
+              .post("/auth/password")
+              .reply(successRespSpy);
 
             renderConnectedComponent((
               <RequestPasswordResetForm />
@@ -165,6 +123,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure default url was used
+                expect(successRespSpy.called).to.be.ok;
+
                 // ensure user was set
                 let sentMessage = store.getState().auth.getIn(["ui", "requestPasswordResetSuccessMessage"]);
                 expect(sentMessage).to.equal(successResp["message"]);
@@ -173,32 +134,21 @@ export default function() {
                 let modalVisible = store.getState().auth.getIn(["ui", "requestPasswordResetSuccessModalVisible"]);
                 expect(modalVisible).to.equal(true);
 
-                // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth/password`);
-
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
 
         describe(`error`, () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            RequestPasswordResetForm = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle failed sign in", done => {
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = spy(() => [401, errorResp]);
+
+            nock(apiUrl)
+              .post("/auth/password")
+              .reply(errorRespSpy);
 
             renderConnectedComponent(
               <RequestPasswordResetForm />, {apiUrl}
@@ -214,6 +164,10 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure endpoint was hit
+                expect(errorRespSpy.called).to.be.ok;
+
+                // ensure errors are parsed
                 let errors = store.getState().auth.getIn(["requestPasswordReset", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp["errors"]);
 
@@ -222,7 +176,7 @@ export default function() {
                 expect(modalVisible).to.equal(true);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });

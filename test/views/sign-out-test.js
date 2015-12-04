@@ -1,69 +1,41 @@
-var React,
-    sinon,
-    expect,
-    persistData,
-    retrieveData,
-    storeCurrentEndpointKey,
-    C,
-    mockery,
-    registerMock,
-    mockFetchResponse;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import {spy} from "sinon";
+import {expect} from "chai";
+import {persistData, retrieveData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
+import * as C from "../../src/utils/constants";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+
+var findClass = TestUtils.findRenderedDOMComponentWithClass;
+
+var SignOutButton,
+    requirePath,
+    successRespSpy,
+    errorRespSpy,
+    successResp = {
+      "success": true,
+      "message": "Account with uid test@test.com has been destroyed."
+    },
+    errorResp = {
+      "errors":["User was not found or was not logged in."]
+    };
+
 
 export default function() {
   describe("SignOutButton", () => {
-    var SignOutButton,
-        TestUtils,
-        findClass,
-        requirePath,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        successResp = {
-          "success": true,
-          "message": "Account with uid test@test.com has been destroyed."
-        },
-        errorResp = {
-          "errors":["User was not found or was not logged in."]
-        };
-
     [
       "bootstrap",
       "material-ui",
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/SignOutButton`;
+      SignOutButton = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          sinon = require("sinon");
-          ({expect} = require("chai"));
-          ({persistData, retrieveData} = require("../../src/utils/session-storage"));
-          ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe("params", () => {
           it("should accept styling params", done => {
-            SignOutButton = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
-
             let inputProps = {className: "sign-out-class-override"};
 
             renderConnectedComponent(
@@ -77,15 +49,11 @@ export default function() {
           it("should allow configuration of endpoint", done => {
             var testUrl = "http://alt.dev";
 
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, {});
-            });
+            successRespSpy = spy(() => [200, successResp]);
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            SignOutButton = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
+            nock(testUrl)
+              .delete("/auth/sign_out")
+              .reply(successRespSpy);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -104,9 +72,7 @@ export default function() {
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth/sign_out`);
-
+                expect(successRespSpy.called).to.be.ok;
                 done();
               }, 0);
 
@@ -115,21 +81,14 @@ export default function() {
         });
 
         describe("success", () => {
-          beforeEach(() => {
-            // mock succes response
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, {});
-            });
-
-            registerMock("isomorphic-fetch", successRespSpy);
-            SignOutButton = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle successful account destruction", done => {
             var apiUrl    = "http://api.dev";
+
+            successRespSpy = spy(() => [200, successResp]);
+
+            nock(apiUrl)
+              .delete("/auth/sign_out")
+              .reply(successRespSpy);
 
             renderConnectedComponent((
               <SignOutButton />
@@ -139,6 +98,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure default url was used
+                expect(successRespSpy.called).to.be.ok;
+
                 // ensure success modal is present
                 let modalVisible = store.getState().auth.getIn(["ui", "signOutSuccessModalVisible"]);
                 expect(modalVisible).to.equal(true);
@@ -146,31 +108,21 @@ export default function() {
                 let isSignedIn = store.getState().auth.getIn(["user", "isSignedIn"]);
                 expect(isSignedIn).to.equal(false);
 
-                // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth/sign_out`);
-
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
 
         describe("error", () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            SignOutButton = require(requirePath).default;
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
           it("should handle failed account destruction", done => {
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = spy(() => [401, errorResp]);
+
+            nock(apiUrl)
+              .delete("/auth/sign_out")
+              .reply(errorRespSpy);
 
             renderConnectedComponent(
               <SignOutButton />, {apiUrl}, {user: {isSignedIn: true}}
@@ -184,6 +136,8 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                expect(errorRespSpy.called).to.be.ok;
+
                 let errors = store.getState().auth.getIn(["signOut", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp["errors"]);
 
@@ -198,7 +152,7 @@ export default function() {
                 expect(creds).to.equal(undefined);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });

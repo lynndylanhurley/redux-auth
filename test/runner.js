@@ -2,10 +2,6 @@ import jsdomify from "jsdomify";
 import nock from "nock";
 import {resetConfig} from "../src/utils/session-storage";
 
-//import passwordReset from "./views/password-reset-test";
-//import passwordUpdateModal from "./views/password-update-modal-test";
-//import passwordUpdate from "./views/password-update-test";
-//import signOut from "./views/sign-out-test";
 
 jsdomify.create();
 
@@ -28,12 +24,16 @@ beforeEach(() => {
 // these must be required (not imported) AFTER jsdomify.create() so that React
 // uses the global jsdom defined in this file
 [
-  //"./actions/client-config-test",
-  //"./actions/server-config-test",
-  //"./views/button-loader-test",
-  //"./views/email-sign-up-test",
-  //"./views/destroy-account-button-test",
-  //"./views/email-sign-in-test",
-  //"./views/modals-test",
-  "./views/oauth-sign-in-test"
+  "./actions/client-config-test",
+  "./actions/server-config-test",
+  "./views/button-loader-test",
+  "./views/email-sign-up-test",
+  "./views/destroy-account-button-test",
+  "./views/email-sign-in-test",
+  "./views/modals-test",
+  "./views/oauth-sign-in-test",
+  "./views/password-reset-test",
+  "./views/password-update-modal-test",
+  "./views/password-update-test",
+  "./views/sign-out-test"
 ].forEach(suite => require(suite).default());

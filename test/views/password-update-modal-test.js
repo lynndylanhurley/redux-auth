@@ -1,95 +1,85 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    persistData,
-    C,
-    mockery,
-    registerMock,
-    retrieveData,
-    storeCurrentEndpointKey,
-    mockFetchResponse;
+import React from "react";
+import TestUtils from "react-addons-test-utils";
+import {spy} from "sinon";
+import {expect} from "chai";
+import {retrieveData, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
+import * as C from "../../src/utils/constants";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+import jsdomify from "jsdomify";
+
+
+var PasswordResetSuccessModal,
+    findClass = (className) => document.getElementsByClassName(className)[0],
+    findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
+    requirePath,
+    successRespSpy,
+    errorRespSpy,
+    testUid = "test@test.com",
+    initialState = {
+      user: {
+        isSignedIn: true,
+        attributes: {
+          provider: "email"
+        }
+      },
+      ui: {
+        passwordResetSuccessModalVisible: true
+      }
+    },
+    successRespHeaders = {
+      "Content-Type": "application/json",
+      "access-token": "abc"
+    },
+    successResp = {
+      "success":true,
+      "data": {
+        "user":{"email":"test@test.com"},
+        "message":"Your password has been successfully updated."
+      }
+    },
+    errorResp = {
+      "success":false,
+      "errors":{
+        "password_confirmation":["doesn't match Password"],
+        "password":["is too short (minimum is 8 characters)"],
+        "full_messages":[
+          "Password confirmation doesn't match Password",
+          "Password is too short (minimum is 8 characters)"
+        ]
+      }
+    };
+
+
+function wipeout () {
+  jsdomify.getDocument().body.innerHTML = "";
+}
 
 export default function() {
   describe("PasswordResetSuccessModal update form", () => {
-    var PasswordResetSuccessModal,
-        findClass = (className) => document.getElementsByClassName(className)[0],
-        findTag = (tagName, i) => document.getElementsByTagName(tagName)[i],
-        requirePath,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        testUid = "test@test.com",
-        initialState = {
-          user: {
-            isSignedIn: true,
-            attributes: {
-              provider: "email"
-            }
-          },
-          ui: {
-            passwordResetSuccessModalVisible: true
-          }
-        },
-        successRespHeaders = {
-          "Content-Type": "application/json",
-          "access-token": "abc"
-        },
-        successResp = {
-          "success":true,
-          "data": {
-            "user":{"email":"test@test.com"},
-            "message":"Your password has been successfully updated."
-          }
-        },
-        errorResp = {
-          "success":false,
-          "errors":{
-            "password_confirmation":["doesn't match Password"],
-            "password":["is too short (minimum is 8 characters)"],
-            "full_messages":[
-              "Password confirmation doesn't match Password",
-              "Password is too short (minimum is 8 characters)"
-            ]
-          }
-        };
-
     [
       "bootstrap",
       "default",
       "material-ui"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/modals/PasswordResetSuccessModal`;
+      PasswordResetSuccessModal = require(requirePath).default;
+
+      // we have to wait 1 sec to clear all the modals from the dom between
+      // test suites. this is due to an issue with the Dialog implementation of
+      // material-ui.
+      after(done => {
+        setTimeout(() => {
+          wipeout();
+          done();
+        }, 1000);
+      })
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          sinon = require("sinon");
-          ({expect} = require ("chai"));
-          ({retrieveData, persistData} = require("../../src/utils/session-storage"));
-          ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require ("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe(`params`, () => {
           it("should accept styling params", done => {
-            TestUtils = require("react-addons-test-utils");
-            PasswordResetSuccessModal = require(requirePath).default;
-            ({renderConnectedComponent} = require ("../helper"));
+            wipeout();
 
             let inputProps = {
               password: {className: "password-class-override"},
@@ -109,16 +99,15 @@ export default function() {
           });
 
           it("should allow configuration of endpoint", done => {
+            wipeout();
+
             var testUrl = "http://alt.dev";
 
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, successRespHeaders);
-            });
+            successRespSpy = spy(() => successResp);
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require ("../helper"));
-            PasswordResetSuccessModal = require(requirePath).default;
+            nock(testUrl)
+              .put("/auth/password")
+              .reply(200, successRespSpy, successRespHeaders);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -148,9 +137,7 @@ export default function() {
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth/password`);
-
+                expect(successRespSpy.called).to.be.ok;
                 done();
               }, 0);
             }).catch(e => console.log("errors:", e));
@@ -158,27 +145,25 @@ export default function() {
         });
 
         describe(`success`, () => {
-          beforeEach(() => {
-            // mock succes response
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, successRespHeaders);
-            });
-
-            registerMock("isomorphic-fetch", successRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require ("../helper"));
-            PasswordResetSuccessModal = require(requirePath).default;
-          });
-
           it("should handle successful password update", done => {
+            wipeout();
+
             var testPassword = "secret123";
             var apiUrl       = "http://api.dev";
+
+            successRespSpy = spy(() => successResp);
+
+            nock(apiUrl)
+              .put("/auth/password")
+              .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
               <PasswordResetSuccessModal show={true} />
             ), {apiUrl}, initialState).then(({store}) => {
               let passwordEl = findTag("input", 0);
               let passwordConfirmationEl = findTag("input", 1);
+
+              console.log("input el count", document.getElementsByTagName("input").length);
 
               // change input values
               passwordEl.value = testPassword;
@@ -197,6 +182,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure default url was used
+                expect(successRespSpy.called).to.be.ok;
+
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
                 expect(authHeaders["access-token"]).to.equal(successRespHeaders["access-token"]);
@@ -205,31 +193,23 @@ export default function() {
                 let modalVisible = store.getState().auth.getIn(["ui", "updatePasswordSuccessModalVisible"]);
                 expect(modalVisible).to.equal(true);
 
-                // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth/password`);
-
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
 
         describe(`error`, () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            ({renderConnectedComponent} = require ("../helper"));
-            PasswordResetSuccessModal = require(requirePath).default;
-          });
-
           it("should handle failed sign in", done => {
+            wipeout();
+
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = spy(() => errorResp);
+
+            nock(apiUrl)
+              .put("/auth/password")
+              .reply(401, errorRespSpy);
 
             renderConnectedComponent(
               <PasswordResetSuccessModal show={true} />, {apiUrl}, initialState
@@ -244,6 +224,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure endpoint was hit
+                expect(errorRespSpy.called).to.be.ok;
+
                 let errors = store.getState().auth.getIn(["updatePasswordModal", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp["errors"]);
 
@@ -256,7 +239,7 @@ export default function() {
                 expect(errorItems.length).to.equal(2);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });

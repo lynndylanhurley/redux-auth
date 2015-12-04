@@ -1,95 +1,66 @@
-var React,
-    TestUtils,
-    sinon,
-    expect,
-    retrieveData,
-    persistData,
-    storeCurrentEndpointKey,
-    C,
-    mockery,
-    registerMock,
-    mockFetchResponse;
+import React from "react";
+import {spy} from "sinon";
+import {expect} from "chai";
+import {retrieveData, persistData} from "../../src/utils/session-storage";
+import {storeCurrentEndpointKey} from "../../src/actions/configure";
+import * as C from "../../src/utils/constants";
+import TestUtils from "react-addons-test-utils";
+import {renderConnectedComponent} from "../helper";
+import nock from "nock";
+
+
+var findClass = TestUtils.findRenderedDOMComponentWithClass,
+    findTag = TestUtils.scryRenderedDOMComponentsWithTag;
+
+var UpdatePasswordForm,
+    requirePath,
+    successRespSpy,
+    errorRespSpy,
+    testUid = "test@test.com",
+    initialState = {
+      user: {
+        isSignedIn: true,
+        attributes: {
+          provider: "email"
+        }
+      }
+    },
+    successRespHeaders = {
+      "Content-Type": "application/json",
+      "access-token": "abc"
+    },
+    successResp = {
+      "success":true,
+      "data": {
+        "user":{"email":"test@test.com"},
+        "message":"Your password has been successfully updated."
+      }
+    },
+    errorResp = {
+      "success":false,
+      "errors":{
+        "password_confirmation":["doesn't match Password"],
+        "password":["is too short (minimum is 8 characters)"],
+        "full_messages":[
+          "Password confirmation doesn't match Password",
+          "Password is too short (minimum is 8 characters)"
+        ]
+      }
+    };
 
 export default function() {
   describe("UpdatePasswordForm", () => {
-    var UpdatePasswordForm,
-        findClass,
-        findTag,
-        requirePath,
-        renderConnectedComponent,
-        successRespSpy,
-        errorRespSpy,
-        testUid = "test@test.com",
-        initialState = {
-          user: {
-            isSignedIn: true,
-            attributes: {
-              provider: "email"
-            }
-          }
-        },
-        successRespHeaders = {
-          "Content-Type": "application/json",
-          "access-token": "abc"
-        },
-        successResp = {
-          "success":true,
-          "data": {
-            "user":{"email":"test@test.com"},
-            "message":"Your password has been successfully updated."
-          }
-        },
-        errorResp = {
-          "success":false,
-          "errors":{
-            "password_confirmation":["doesn't match Password"],
-            "password":["is too short (minimum is 8 characters)"],
-            "full_messages":[
-              "Password confirmation doesn't match Password",
-              "Password is too short (minimum is 8 characters)"
-            ]
-          }
-        };
-
     [
       "bootstrap",
       "material-ui",
       "default"
     ].forEach((theme) => {
       requirePath = `../../src/views/${theme}/UpdatePasswordForm`;
+      UpdatePasswordForm = require(requirePath).default;
 
       describe(`${theme} theme`, () => {
-        beforeEach(() => {
-          React = require("react");
-          sinon = require("sinon");
-          ({expect} = require ("chai"));
-          ({retrieveData, persistData} = require("../../src/utils/session-storage"));
-          ({storeCurrentEndpointKey} = require("../../src/actions/configure"));
-          C = require("../../src/utils/constants");
-          mockery = require("mockery");
-          ({registerMock} = mockery);
-          ({mockFetchResponse} = require("../helper"));
-
-          mockery.enable({
-            warnOnReplace: false,
-            warnOnUnregistered: false,
-            useCleanCache: true
-          });
-        });
-
-        afterEach(() => {
-          mockery.deregisterAll();
-          mockery.disable();
-        });
-
         describe("params", () => {
           it("should accept styling params", done => {
-            TestUtils = require("react-addons-test-utils");
-            UpdatePasswordForm = require(requirePath).default;
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require("../helper"));
-
             let inputProps = {
               password: {style: {color: "red"}, className: "password-class-override"},
               passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
@@ -111,16 +82,11 @@ export default function() {
           it("should allow configuration of endpoint", done => {
             var testUrl = "http://alt.dev";
 
-            successRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 200, successResp, successRespHeaders);
-            });
+            successRespSpy = spy(() => successResp);
 
-            registerMock("isomorphic-fetch", successRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            UpdatePasswordForm = require(requirePath).default;
-            findClass = TestUtils.findRenderedDOMComponentWithClass;
-            findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-            ({renderConnectedComponent} = require("../helper"));
+            nock(testUrl)
+              .put("/auth/password")
+              .reply(200, successRespSpy, successRespHeaders);
 
             let endpointConfig = [
               {default: {apiUrl: "http://default.dev"}},
@@ -150,9 +116,7 @@ export default function() {
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${testUrl}/auth/password`);
-
+                expect(successRespSpy.called).to.be.ok;
                 done();
               }, 0);
 
@@ -161,27 +125,15 @@ export default function() {
         });
 
         describe("success", () => {
-          beforeEach(() => {
-            try {
-              // mock succes response
-              successRespSpy = sinon.spy((url) => {
-                return mockFetchResponse(url, 200, successResp, successRespHeaders);
-              });
-
-              registerMock("isomorphic-fetch", successRespSpy);
-              TestUtils = require("react-addons-test-utils");
-              UpdatePasswordForm = require(requirePath).default;
-              findClass = TestUtils.findRenderedDOMComponentWithClass;
-              findTag = TestUtils.scryRenderedDOMComponentsWithTag;
-              ({renderConnectedComponent} = require("../helper"));
-            } catch (e) {
-              console.log("@-->caught error", e);
-            }
-          });
-
-          it("should handle successful sign in", done => {
+          it("should handle successful password update", done => {
             var testPassword = "secret123";
             var apiUrl       = "http://api.dev";
+
+            successRespSpy = spy(() => successResp);
+
+            nock(apiUrl)
+              .put("/auth/password")
+              .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
               <UpdatePasswordForm />
@@ -215,30 +167,23 @@ export default function() {
                 expect(modalVisible).to.equal(true);
 
                 // ensure default url was used
-                let [[url, ]] = successRespSpy.args;
-                expect(url).to.equal(`${apiUrl}/auth/password`);
+                expect(successRespSpy.called).to.be.ok;
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });
 
         describe("error", () => {
-          beforeEach(() => {
-            // mock succes response
-            errorRespSpy = sinon.spy((url) => {
-              return mockFetchResponse(url, 401, errorResp, {});
-            });
-
-            registerMock("isomorphic-fetch", errorRespSpy);
-            TestUtils = require("react-addons-test-utils");
-            UpdatePasswordForm = require(requirePath).default;
-            ({renderConnectedComponent} = require("../helper"));
-          });
-
-          it("should handle failed sign in", done => {
+          it("should handle password update", done => {
             var apiUrl = "http://api.dev";
+
+            errorRespSpy = spy(() => errorResp);
+
+            nock(apiUrl)
+              .put("/auth/password")
+              .reply(401, errorRespSpy);
 
             renderConnectedComponent(
               <UpdatePasswordForm />, {apiUrl}, initialState
@@ -253,6 +198,9 @@ export default function() {
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
+                // ensure endpoint was hit
+                expect(errorRespSpy.called).to.be.ok;
+
                 let errors = store.getState().auth.getIn(["updatePassword", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp["errors"]);
 
@@ -265,7 +213,7 @@ export default function() {
                 expect(errorItems.length).to.equal(2);
 
                 done();
-              }, 0);
+              }, 100);
             }).catch(e => console.log("errors", e));
           });
         });

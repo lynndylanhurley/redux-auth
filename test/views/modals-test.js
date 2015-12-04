@@ -34,6 +34,16 @@ export default function() {
       AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
 
       describe(`${theme} theme`, () => {
+        // we have to wait 1 sec to clear all the modals from the dom between
+        // tests. this is due to an issue with the Dialog implementation of
+        // material-ui.
+        after(done => {
+          setTimeout(() => {
+            jsdomify.getDocument().body.innerHTML = "";
+            done();
+          }, 1000);
+        });
+
         [
           ["DestroyAccountErrorModal",         "destroyAccountErrorModalVisible",         "destroy-account-error-modal"],
           ["DestroyAccountSuccessModal",       "destroyAccountSuccessModalVisible",       "destroy-account-success-modal"],
@@ -54,8 +64,6 @@ export default function() {
         ].forEach(([componentName, vizProp, modalClass]) => {
           describe(componentName, () => {
             it(`modal visibility should correlate with ui.${vizProp} value`, done => {
-              jsdomify.clear()
-
               let initialState = {ui: {[vizProp]: true}};
 
               renderConnectedComponent(<AuthGlobals />, undefined, initialState).then(({store}) => {
