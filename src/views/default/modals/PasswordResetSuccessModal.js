@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
+import { Modal, Button, Glyphicon } from "react-bootstrap";
 import ButtonLoader from "../ButtonLoader";
-import Modal from "react-modal";
 import Input from "../Input";
 import { connect } from "react-redux";
 import { hidePasswordResetSuccessModal } from "../../../actions/ui";
@@ -11,7 +11,6 @@ import {
 
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
-    endpoint: PropTypes.string,
     show: PropTypes.bool,
     inputProps: PropTypes.object
   }
@@ -34,30 +33,30 @@ class PasswordResetSuccessModal extends React.Component {
   }
 
   handleSubmit () {
+    console.log("@-->submitting");
     let formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
   }
 
   close () {
-    this.props.dispatch(hidePasswordResetSuccessModal());
+    this.props.dispatch(hidePasswordResetSuccessModal(this.getEndpoint()));
   }
 
   render () {
-    let endpoint = this.getEndpoint();
-    let loading = this.props.auth.getIn(["updatePasswordModal", endpoint, "loading"]);
+    let loading = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "loading"]),
+        endpoint = this.getEndpoint();
 
     return (
       <Modal
-        isOpen={this.props.show}
-        className="redux-auth-modal password-reset-success-modal"
-        onRequestClose={this.close.bind(this)}>
-        <h2 className="redux-auth-modal-header">
-          Reset Your Password
-          <button className="close-modal" onClick={this.close.bind(this)}>close</button>
-        </h2>
+        show={this.props.show}
+        className="password-reset-success-modal"
+        onHide={this.close.bind(this)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Reset Your Password</Modal.Title>
+        </Modal.Header>
 
         <form>
-          <div className="redux-auth-modal-body">
+          <Modal.Body>
             <Input
               type="password"
               label="Password"
@@ -79,23 +78,25 @@ class PasswordResetSuccessModal extends React.Component {
               errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"])}
               onChange={this.handleInput.bind(this, "password_confirmation")}
               {...this.props.inputProps.passwordConfirmation} />
-          </div>
+          </Modal.Body>
 
-          <div className="redux-auth-modal-footer">
-            <button
+          <Modal.Footer>
+            <Button
               className="password-reset-success-modal-close"
               onClick={this.close.bind(this)}
               {...this.props.inputProps.cancel}>
               Cancel
-            </button>
+            </Button>
 
             <ButtonLoader
+              {...this.props}
               loading={loading}
               type="submit"
               className="password-reset-success-modal-submit"
+              icon={<Glyphicon glyph="lock" />}
               onClick={this.handleSubmit.bind(this)}
               {...this.props.inputProps.submit} />
-          </div>
+          </Modal.Footer>
         </form>
       </Modal>
     );

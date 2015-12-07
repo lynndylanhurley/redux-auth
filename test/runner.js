@@ -5,6 +5,9 @@ import {resetConfig} from "../src/utils/session-storage";
 
 jsdomify.create();
 
+// basically don't render any css
+global.__TEST__ = true;
+
 beforeEach(() => {
   // this is necessary for material ui to render
   global.navigator = window.navigator = {

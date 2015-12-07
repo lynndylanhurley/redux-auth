@@ -1,43 +1,17 @@
-import React, { PropTypes } from "react";
-import Modal from "react-modal";
+import React from "react";
 import { connect } from "react-redux";
 import { hideDestroyAccountSuccessModal } from "../../../actions/ui";
+import Modal from "./Modal";
 
 class DestroyAccountSuccessModal extends React.Component {
-  static propTypes = {
-    show: PropTypes.bool
-  }
-
-  static defaultProps = {
-    show: false
-  }
-
-  close () {
-    this.props.dispatch(hideDestroyAccountSuccessModal());
-  }
-
   render () {
     return (
       <Modal
-        isOpen={this.props.show}
-        className="redux-auth-modal destroy-account-success-modal"
-        onRequestClose={this.close.bind(this)}>
-        <h2 className="redux-auth-modal-header">
-          Destroy Account Success
-          <button className="close-modal" onClick={this.close.bind(this)}>close</button>
-        </h2>
-
-        <div className="redux-auth-modal-body">
-          {this.props.auth.getIn(["ui", "destroyAccountMessage"])}
-        </div>
-
-        <div className="redux-auth-modal-footer">
-          <button
-            className="destroy-account-success-modal-close"
-            onClick={this.close.bind(this)}>
-            Ok
-          </button>
-        </div>
+        show={this.props.show}
+        containerClass="destroy-account-success-modal"
+        closeAction={hideDestroyAccountSuccessModal}
+        title="Destroy Account Success">
+        <p>{this.props.auth.getIn(["ui", "destroyAccountMessage"])}</p>
       </Modal>
     );
   }

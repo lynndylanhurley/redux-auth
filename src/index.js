@@ -44,7 +44,7 @@ export {destroyAccount} from "./actions/destroy-account";
 export verifyAuth from "./utils/verify-auth";
 
 /* UI */
-export {bootstrap, materialUi} from "./views";
+//export {bootstrap, materialUi} from "./views";
 export {
   AuthGlobals,
   EmailSignInForm,

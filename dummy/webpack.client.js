@@ -28,10 +28,13 @@ module.exports = {
       { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
       { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
       { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
-      {include: /\.json$/, loaders: ["json-loader"]},
-      {include: /\.js$/, loaders: ["babel-loader?stage=0&optional=runtime"], exclude: /node_modules/},
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader", {publicPath: "/dist/"}) }
-    ]
+      { include: /\.json$/, loaders: ["json"] },
+      { include: /\.js$/, loaders: ["babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"], exclude: /node_modules/ },
+      { test: /\.scss$/, loaders: ["style", "css", "sass"] }
+      //{ test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader", {publicPath: "/dist/"}) }
+    ],
+    postLoaders: [],
+    noParse: /\.min\.js/
   },
   resolve: {
     alias: {
@@ -41,6 +44,7 @@ module.exports = {
       "src",
       "../src",
       "node_modules",
+      "../node_modules",
       "web_modules"
     ],
     extensions: ["", ".json", ".js"]

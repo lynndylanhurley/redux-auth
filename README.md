@@ -1,155 +1,101 @@
-![screenshot](https://i.imgur.com/uZSZ5Y4.png?1)
-
-# React Isomorphic Starterkit
-
-Isomorphic starterkit with server-side React rendering using 
-[npm](https://www.npmjs.com),
-[piping](https://github.com/mdlawson/piping), 
-[webpack](https://webpack.github.io/), 
-[webpack-dev-server](https://github.com/webpack/webpack-dev-server),
-[koa](http://koajs.com),
-[babel](http://babeljs.io),
-[react](https://facebook.github.io/react),
-[react-router](https://github.com/rackt/react-router), 
-[react-hot-loader](https://gaearon.github.io/react-hot-loader), 
-[react-transmit](https://github.com/RickWong/react-transmit),
-[react-inline-css](https://github.com/RickWong/react-inline-css)
-
-![version](https://img.shields.io/npm/v/react-isomorphic-starterkit.svg) ![license](https://img.shields.io/npm/l/react-isomorphic-starterkit.svg) [![Package Quality](http://npm.packagequality.com/shield/react-isomorphic-starterkit.svg)](http://packagequality.com/#?package=react-isomorphic-starterkit) ![installs](https://img.shields.io/npm/dt/react-isomorphic-starterkit.svg) ![downloads](https://img.shields.io/github/downloads/RickWong/react-isomorphic-starterkit/latest/total.svg)
-
-## Features
-
-- Fully automated toolchain with npm run scripts
-- React 0.14 + React Router 1.0 on the client and server
-- Babel 6 automatically compiles ES2015 + ES7 draft
-- Auto-restarting web server with Koa and Piping
-- Webpack for watching and production builds
-- React Hot Loader for instant client updates
-- React Transmit to preload on server and hydrate client
-- InlineCss-component for styling components
-
-It just works out-of-the-box.
-
-## Installation
-
-Development
-
-```bash
-git clone https://github.com/RickWong/react-isomorphic-starterkit.git
-cd react-isomorphic-starterkit
-
-npm install
-npm run watch     # Yes, ONE command for server AND client development!
-```
-
-Production
-
-```bash
-NODE_ENV=production npm run build
-NODE_ENV=production npm run start
-```
-
-## Usage
-
-Run `npm run watch` in your terminal and play with `views/Main.js` to get a feel of
-the server-side rendering and client-side hot updates.
-
-## Community
-
-Let's start one together! After you ★Star this project, follow [@Rygu](https://twitter.com/rygu)
-on Twitter.
-
-## License
-
-BSD 3-Clause license. Copyright © 2015, Rick Wong. All rights reserved.
-
-## Progress
-
-[x] coverage
-[x] client configuration
-[x] server configuration
-[x] firstTimeLogin success
-[x] firstTimeLogin error
-[x] mustResetPassword success
-[x] mustResetPassword error
-
-[x] $.ajax -> fetch
-  [x] generic
-  [ ] configure
-  [ ] signUp
-  [ ] signIn
-  [ ] destroyAccount
-  [ ] updatePassword
-  [ ] requestPasswordReset
-
-[x] namespace bootstrap views
-
-[x] button loader glyph -> icon
-
-[ ] fix token bridge bug
-
-[ ] test bootstrap views
-  [ ] ButtonLoader.js
-  [ ] DestroyAccountButton.js
-  [ ] EmailSignInForm.js
-  [ ] EmailSignUpForm.js
-  [ ] ErrorList.js
-  [ ] Input.js
-  [ ] OAuthSignInButton.js
-  [ ] RequestPasswordResetForm.js
-  [ ] SignOutButton.js
-  [ ] UpdatePasswordForm.js
-
-  [ ] modals
-    [ ] AuthModals.js
-    [ ] DestroyAccountErrorModal.js
-    [ ] DestroyAccountSuccessModal.js
-    [ ] EmailSignInErrorModal.js
-    [ ] EmailSignInSuccessModal.js
-    [ ] EmailSignUpErrorModal.js
-    [ ] EmailSignUpSuccessModal.js
-    [ ] FirstTimeLoginErrorModal.js
-    [ ] FirstTimeLoginSuccessModal.js
-    [ ] OAuthSignInErrorModal.js
-    [ ] OAuthSignInSuccessModal.js
-    [ ] PasswordResetSuccessModal.js
-    [ ] RequestPasswordResetErrorModal.js
-    [ ] RequestPasswordResetSuccessModal.js
-    [ ] SignOutErrorModal.js
-    [ ] SignOutSuccessModal.js
-    [ ] UpdatePasswordErrorModal.js
-    [ ] UpdatePasswordSuccessModal.js
-
-[ ] create material ui views
-  [ ] ButtonLoader.js
-  [ ] DestroyAccountButton.js
-  [ ] EmailSignInForm.js
-  [ ] EmailSignUpForm.js
-  [ ] ErrorList.js
-  [ ] Input.js
-  [ ] OAuthSignInButton.js
-  [ ] RequestPasswordResetForm.js
-  [ ] SignOutButton.js
-  [ ] UpdatePasswordForm.js
-
-  [ ] modals
-    [ ] AuthModals.js
-    [ ] DestroyAccountErrorModal.js
-    [ ] DestroyAccountSuccessModal.js
-    [ ] EmailSignInErrorModal.js
-    [ ] EmailSignInSuccessModal.js
-    [ ] EmailSignUpErrorModal.js
-    [ ] EmailSignUpSuccessModal.js
-    [ ] FirstTimeLoginErrorModal.js
-    [ ] FirstTimeLoginSuccessModal.js
-    [ ] OAuthSignInErrorModal.js
-    [ ] OAuthSignInSuccessModal.js
-    [ ] PasswordResetSuccessModal.js
-    [ ] RequestPasswordResetErrorModal.js
-    [ ] RequestPasswordResetSuccessModal.js
-    [ ] SignOutErrorModal.js
-    [ ] SignOutSuccessModal.js
-    [ ] UpdatePasswordErrorModal.js
-    [ ] UpdatePasswordSuccessModal.js
-
-[ ] react native demo
+# Redux Auth
+
+### Simple, secure user authentication for react + redux
+
+### Features:
+
+* Supports isomorphic / universal / server-side rendering
+* OAuth2 authentication
+* Email authentication, including:
+	* User registration
+	* Password resets
+	* Account updates
+	* Account deletion
+* Seamless integration with the [devise token auth][dta] Rails gem.
+* Includes the following themes:
+	* [React Bootstrap][react-bootstrap] 
+	* [Material UI][material-ui]
+	* A plain theme that you can style from scratch
+* Can be configured to work with any API
+* *React Native support coming soon*
+
+# About this plugin
+
+This plugin relies on [token based authentication][token-auth-wiki]. This requires coordination between the client and the server. [Diagrams](#conceptual) are included to illustrate this relationship.
+
+This plugin was designed to work out of the box with the wonderful [devise token auth][dta] gem, but it's flexible enough to be used in just about any environment.
+
+**About security**: [read here][so-post] for more information on securing your token auth system. The [devise token auth][dta] gem has adequate security measures in place, and this plugin was built to work seamlessly with that gem.
+
+# Installation
+
+Only npm is currently supported.
+
+~~~sh
+npm install redux-auth --save
+~~~
+
+# Configuration
+
+This is the most difficult step, but only because configuring a [redux][redux] app is inherently difficult.
+
+The following example assumes that you are familiar with redux, and that you know how to [create a store][redux-create-store].
+
+~~~js
+// include dependencies
+import React from "react";
+import {Provider} from "react-redux";
+import {configure, authStateReducer, AuthGlobals} from "../../src";
+import {createStore, compose, applyMiddleware, combineReducers} from "redux";
+import {AuthGlobals} from "redux-auth"
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <AuthGlobals />
+        {this.props.children}
+      </div>
+    );
+  }
+}
+
+
+~~~
+
+# License
+
+WTFPL © Lynn Dylan Hurley
+
+[ng-token-auth]: https://github.com/lynndylanhurley/ng-token-auth
+[dta]: https://github.com/lynndylanhurley/devise_token_auth
+[token-auth-wiki]: http://stackoverflow.com/questions/1592534/what-is-token-based-authentication
+[so-post]: http://stackoverflow.com/questions/18605294/is-devises-token-authenticatable-secure
+[jquery]: https://jquery.com/
+[jquery-cookie]: https://github.com/carhartl/jquery-cookie
+[jquery-deparam]: https://www.npmjs.com/package/jquery-deparam
+[pubsub-js]: https://github.com/mroderick/PubSubJS
+[bower]: http://bower.io/
+[npm]: https://www.npmjs.com/
+[browserify]: http://browserify.org/
+[cors]: http://en.wikipedia.org/wiki/Cross-origin_resource_sharing
+[common-js]: http://en.wikipedia.org/wiki/CommonJS
+[dfd]: https://api.jquery.com/jQuery.Deferred/
+[angular]: https://angularjs.org/
+[react]: http://facebook.github.io/react/
+[j-toker-demo]: http://j-toker-demo.herokuapp.com/#/
+[multi-user-demo]: http://j-toker-demo.herokuapp.com/#/alt-user
+
+[o-auth-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/omniauth-flow.jpg
+[token-validation-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/validation-flow.jpg
+[email-registration-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/email-registration-flow.jpg
+[email-sign-in-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/email-sign-in-flow.jpg
+[password-reset-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/password-reset-flow.jpg
+[token-handling-diagram]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/token-update-detail.jpg
+[batch-request-a]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-overview.jpg
+[batch-request-b]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-detail.jpg
+[logo]: https://github.com/lynndylanhurley/j-toker/raw/master/demo/src/images/j-toker-logo.gif
+[react-bootstrap]: https://react-bootstrap.github.io/
+[material-ui]: http://www.material-ui.com
+[redux]: http://rackt.org/redux/index.html
+[redux-create-store]: http://rackt.org/redux/docs/basics/Store.html

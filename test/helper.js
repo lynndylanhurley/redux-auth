@@ -66,7 +66,7 @@ export function initialize(
 
   // these methods will differ from server to client
   var reduxReactRouter    = clientRouter;
-  if (isServer || global.__TEST__) {
+  if (isServer) {
     reduxReactRouter    = serverRouter;
   }
 

@@ -5,7 +5,7 @@ var hostname = process.env.HOSTNAME || "localhost";
 
 config.cache = true;
 config.debug = true;
-config.devtool = "eval";
+config.devtool = "eval-sourcemap";
 
 config.entry.unshift(
   "webpack-dev-server/client?http://" + hostname + ":8080",
@@ -22,17 +22,9 @@ config.plugins = [
   new webpack.NoErrorsPlugin()
 ];
 
-config.module = {
-  loaders: [
-    { test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/font-woff" },
-    { test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=application/octet-stream" },
-    { test: /\.eot(\?v=\d+\.\d+\.\d+)?$/, loader: "file" },
-    { test: /\.svg(\?v=\d+\.\d+\.\d+)?$/, loader: "url?limit=10000&mimetype=image/svg+xml" },
-    { test: /\.scss$/, loader: "style!css!sass" },
-    { include: /\.json$/, loaders: ["json-loader"] },
-    { include: /\.js$/, loaders: ["react-hot", "babel-loader?stage=0&optional=runtime"], exclude: /node_modules/ }
-  ]
-};
+config.module.postLoaders = [
+  {test: /\.js$/, loaders: ["react-hot"], exclude: /node_modules/}
+]
 
 config.devServer = {
   publicPath:  "http://" + hostname + ":8080/dist/",
