@@ -19,6 +19,44 @@
 * Can be configured to work with any API
 * *React Native support coming soon*
 
+
+This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][j-toker-demo] in production.
+
+The demo uses [React][react], and the source can be found [here](https://github.com/lynndylanhurley/j-toker/tree/master/demo/src).
+
+---
+
+# Table of Contents
+
+* [About this plugin](#about-this-plugin)
+* [Installation](#installation)
+* [Configuration](#configuration)
+* [Methods](#methods)
+  * [fetch](#fetch)
+* [Components](#components)
+  * [EmailSignUpForm](#emailsignupform)
+  * [EmailSignInForm](#emailsigninform)
+  * [OAuthSignInForm](#oauthsigninform)
+  * [SignOutButton](#signoutbutton)
+  * [DestroyAccountButton](#destroyaccountbutton)
+  * [RequestPasswordResetForm](#requestpasswordresetform)
+  * [UpdatePasswordForm](#updatepasswordform)
+  * [AuthGlobals](#authglobals)
+* [Using multiple user types](#multiple-user-types)
+* [Conceptual diagrams](#conceptual)
+  * [OAuth2 Authentication](#oauth2-signin)
+  * [Email Registration](#email-registration)
+  * [Email Sign In](#email-sign-in)
+  * [Password Reset Requests](#password-reset)
+* [Notes on Token Management](#token-management)
+* [Notes on Batch Requests](#batch-requests)
+* [Token Formatting](#identifying-users-on-the-server)
+* [Contributing](#contributing)
+* [Development](#development)
+* [Callouts](#credits)
+
+
+
 # About this plugin
 
 This plugin relies on [token based authentication][token-auth-wiki]. This requires coordination between the client and the server. [Diagrams](#conceptual) are included to illustrate this relationship.
