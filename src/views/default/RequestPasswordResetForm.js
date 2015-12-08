@@ -55,7 +55,7 @@ class RequestPasswordResetForm extends React.Component {
 
         <Input
           type="text"
-          floatingLabelText="Email Address"
+          placeholder="Email Address"
           className="request-password-reset-email"
           disabled={loading || inputDisabled}
           value={this.props.auth.getIn(["requestPasswordReset", endpoint, "form", "email"])}

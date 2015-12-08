@@ -1,6 +1,6 @@
 {
   "name": "redux-auth",
-  "description": "Token authentication for redux with isomorphic support.",
+  "description": "Complete token authentication system for react + redux.",
   "version": "0.0.1-alpha1",
   "license": "BSD-3-Clause",
   "repository": {

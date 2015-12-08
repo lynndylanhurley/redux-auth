@@ -11,6 +11,7 @@ class EmailSignUpForm extends React.Component {
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       password: PropTypes.object,
+      passwordConfirmation: PropTypes.object,
       submit: PropTypes.object
     })
   }

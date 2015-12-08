@@ -54,7 +54,7 @@ class UpdatePasswordForm extends React.Component {
         onSubmit={this.handleSubmit.bind(this)}>
         <Input
           type="password"
-          floatingLabelText="Password"
+          placeholder="Password"
           disabled={disabled}
           className="update-password-password"
           value={this.props.auth.getIn(["updatePassword", endpoint, "form", "password"])}
@@ -64,7 +64,7 @@ class UpdatePasswordForm extends React.Component {
 
         <Input
           type="password"
-          floatingLabelText="Password Confirmation"
+          placeholder="Password Confirmation"
           className="update-password-password-confirmation"
           disabled={disabled}
           value={this.props.auth.getIn(["updatePassword", endpoint, "form", "password_confirmation"])}
