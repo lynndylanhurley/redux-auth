@@ -55,4 +55,3 @@ class ErrorList extends React.Component {
 }
 
 export default ErrorList;
-

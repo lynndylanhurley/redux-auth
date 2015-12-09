@@ -1,19 +1,18 @@
 import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
-import { destroyAccount } from "../actions/destroy-account";
-import { connect } from "react-redux";
 import { Glyphicon } from "react-bootstrap";
+import { connect } from "react-redux";
+import { signOut } from "../../actions/sign-out";
 
-class DestroyAccountButton extends React.Component {
+class SignOutButton extends React.Component {
   static propTypes = {
-    endpoint: PropTypes.string,
     children: PropTypes.node,
     icon: PropTypes.node
   }
 
   static defaultProps = {
-    children: <span>Destroy Account</span>,
-    icon: <Glyphicon glyph="remove" />
+    children: <span>Sign Out</span>,
+    icon: <Glyphicon glyph="log-out" />
   }
 
   getEndpoint () {
@@ -25,21 +24,21 @@ class DestroyAccountButton extends React.Component {
   }
 
   handleClick () {
-    this.props.dispatch(destroyAccount(this.getEndpoint()));
+    this.props.dispatch(signOut(this.getEndpoint()));
   }
 
   render () {
     let disabled = !this.props.auth.getIn(["user", "isSignedIn"]);
     return (
       <ButtonLoader
-        loading={this.props.auth.getIn(["destroyAccount", this.getEndpoint(), "loading"])}
+        loading={this.props.auth.getIn(["signOut", this.getEndpoint(), "loading"])}
         icon={this.props.icon}
         disabled={disabled}
-        className="destroy-account-submit"
+        className="sign-out-submit"
         onClick={this.handleClick.bind(this)}
         {...this.props} />
     );
   }
 }
 
-export default connect(({auth}) => ({auth}))(DestroyAccountButton);
+export default connect(({auth}) => ({auth}))(SignOutButton);

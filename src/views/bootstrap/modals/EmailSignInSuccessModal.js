@@ -19,3 +19,4 @@ class EmailSignInSuccessModal extends React.Component {
 }
 
 export default connect(({auth}) => ({auth}))(EmailSignInSuccessModal);
+

@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
-import { emailSignUpFormUpdate, emailSignUp } from "../actions/email-sign-up";
+import { emailSignUpFormUpdate, emailSignUp } from "../../actions/email-sign-up";
 import { connect } from "react-redux";
 import { Glyphicon } from "react-bootstrap";
 
