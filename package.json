@@ -23,7 +23,7 @@
   "scripts": {
     "release": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.release.js",
     "test": "mocha -gc --max-old-space-size=3072 --timeout 5000 --compilers .:test/compiler.js test/runner.js",
-    "test-coverage": "node_modules/.bin/babel-node node_modules/.bin/isparta cover --root ./src node_modules/.bin/_mocha -- --timeout 5000 test/runner.js"
+    "test-coverage": "node_modules/.bin/babel-node node_modules/.bin/isparta cover --root ./src node_modules/.bin/_mocha -- --timeout 5000 test/runner.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
     "classnames": "^2.1.5",
@@ -61,6 +61,7 @@
     "chai": "^3.3.0",
     "chai-as-promised": "^5.1.0",
     "concurrently": "0.1.1",
+    "coveralls": "^2.11.4",
     "css-loader": "^0.19.0",
     "exports-loader": "^0.6.2",
     "extract-text-webpack-plugin": "0.9.1",
