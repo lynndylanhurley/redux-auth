@@ -2,6 +2,8 @@
 
 ### Simple, secure user authentication for react + redux
 
+[![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
+
 ### Features:
 
 * Supports isomorphic / universal / server-side rendering
@@ -136,14 +138,14 @@ export function renderApp({cookies, isServer, currentLocation} = {}) {
     // confirmation, etc.). you will want to use your routing framework
     // (redux-router, redux-simple-router, etc.) to redirect to this path.
     // see the demo app for an example of this.
-    
+
     // the `blank` argument is used when returning from OAuth redirects, in
     // which case the page will be a popup that should be immediately closed.
-    
+
     if (blank) {
       return <noscript />;
     } else {
-      return (        
+      return (
         <Provider store={store} key="provider">
           <App />
         </Provider>
@@ -363,7 +365,7 @@ import { OAuthSignInButton } from "redux-auth/views/bootstrap";
 render: () {
   // using the default label
   return <OAuthSignInButton />;
-  
+
   // or using custom label text
   return <OAuthSignInButton>Custom Label</OAuthSignInButton>;
 }
@@ -407,7 +409,7 @@ import { SignOutButton } from "redux-auth/views/bootstrap";
 render: () {
   // using the default label
   return <SignOutButton />;
-  
+
   // or using custom label text
   return <SignOutButton>Custom Label</SignOutButton>;
 }
@@ -451,7 +453,7 @@ import { DestroyAccountButton } from "redux-auth/views/bootstrap";
 render: () {
   // using the default label
   return <DestroyAccountButton />;
-  
+
   // or using custom label text
   return <DestroyAccountButton>Custom Label</DestroyAccountButton>;
 }
