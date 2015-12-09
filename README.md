@@ -21,10 +21,9 @@
 * Can be configured to work with any API *coming soon*
 * React Native support *coming soon*
 
+This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][redux-auth-demo] in production.
 
-This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][j-toker-demo] in production.
-
-The demo uses [React][react], and the source can be found [here](https://github.com/lynndylanhurley/j-toker/tree/master/demo/src).
+The demo uses [React][react], and the source can be found [here](https://github.com/lynndylanhurley/redux-auth/tree/master/dummy).
 
 ---
 
@@ -837,8 +836,6 @@ WTFPL © Lynn Dylan Hurley
 [dfd]: https://api.jquery.com/jQuery.Deferred/
 [angular]: https://angularjs.org/
 [react]: http://facebook.github.io/react/
-[j-toker-demo]: http://j-toker-demo.herokuapp.com/#/
-[multi-user-demo]: http://j-toker-demo.herokuapp.com/#/alt-user
 [react-bootstrap]: https://react-bootstrap.github.io/
 [material-ui]: http://www.material-ui.com
 [redux]: http://rackt.org/redux/index.html
@@ -856,7 +853,6 @@ WTFPL © Lynn Dylan Hurley
 [token-handling-diagram]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/token-update-detail.jpg
 [batch-request-a]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-overview.jpg
 [batch-request-b]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-detail.jpg
-[logo]: https://github.com/lynndylanhurley/j-toker/raw/master/demo/src/images/j-toker-logo.gif
 
 [bs-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-destroy-account.png
 [bs-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-email-sign-in.png
