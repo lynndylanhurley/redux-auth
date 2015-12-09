@@ -22,7 +22,7 @@
   "main": "src/index.js",
   "scripts": {
     "release": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.release.js",
-    "test": "mocha -gc --max-old-space-size=3072 --timeout 5000 --compilers .:test/compiler.js test/runner.js",
+    "test": "node_modules/.bin/_mocha --timeout 5000 --compilers .:test/compiler.js test/runner.js",
     "test-coverage": "node_modules/.bin/babel-node node_modules/.bin/isparta cover --root ./src node_modules/.bin/_mocha -- --timeout 5000 test/runner.js && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
   },
   "dependencies": {
