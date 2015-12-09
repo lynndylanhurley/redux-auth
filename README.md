@@ -8,8 +8,8 @@
 ### Features:
 
 * Supports isomorphic / universal / server-side rendering
-* OAuth2 authentication
-* Email authentication, including:
+* OAuth2 authentication components
+* Email authentication components, including:
 	* User registration
 	* Password resets
 	* Account updates
@@ -155,7 +155,7 @@ export function renderApp({cookies, isServer, currentLocation} = {}) {
 }
 ~~~
 
-##### server-side rendering
+##### server-side rendering configuration
 ~~~js
 // server.js
 import qs from "query-string";
@@ -195,9 +195,10 @@ server.ext("onPreResponse", (request, reply) => {
 }
 ~~~
 
-##### client side rendering
+##### client side rendering configuration
 
 ~~~js
+// client.js
 import React from "react";
 import ReactDOM from "react-dom";
 import { renderApp } from "./app";
