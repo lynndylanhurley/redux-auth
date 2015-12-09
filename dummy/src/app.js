@@ -86,11 +86,11 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
   return store.dispatch(configure([
     {
       default: {
-        apiUrl: "http://devise-token-auth.dev"
+        apiUrl: __API_URL__
       }
     }, {
       evilUser: {
-        apiUrl:                "http://devise-token-auth.dev",
+        apiUrl:                __API_URL__,
         signOutPath:           "/mangs/sign_out",
         emailSignInPath:       "/mangs/sign_in",
         emailRegistrationPath: "/mangs",

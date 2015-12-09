@@ -7,13 +7,14 @@ import {match} from "redux-router/server";
 import url from "url";
 import qs from "query-string";
 import {initialize} from "./app";
+import config from "config";
 
 var hostname = process.env.HOSTNAME || "localhost";
+global.__API_URL__ = config.get("apiUrl");
 
 /**
- * template
+ * base html template
  */
-
 function getMarkup(webserver, provider) {
   var markup = renderToString(provider),
       styles = "";
@@ -26,6 +27,9 @@ function getMarkup(webserver, provider) {
           <html>
             <head>
               <title>Redux Auth – Isomorphic Example</title>
+              <script>
+                window.__API_URL__ = "${global.__API_URL__}";
+              </script>
               ${styles}
             </head>
             <body>
@@ -56,6 +60,7 @@ server.register([
   });
 });
 
+
 /**
  * Attempt to serve static requests from the public folder.
  */
@@ -67,29 +72,6 @@ server.route({
   }
 });
 
-/**
- * Endpoint that proxies all GitHub API requests to https://api.github.com.
- */
-server.route({
-  method: "GET",
-  path: "/api/github/{path*}",
-  handler: {
-    proxy: {
-      passThrough: true,
-      mapUri (request, callback) {
-        callback(null, url.format({
-          protocol: "https",
-          host:     "api.github.com",
-          pathname: request.params.path,
-          query:    request.query
-        }));
-      },
-      onResponse (err, res, request, reply, settings, ttl) {
-        reply(res);
-      }
-    }
-  }
-});
 
 /**
  * Catch dynamic requests here to fire-up React Router.

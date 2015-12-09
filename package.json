@@ -19,7 +19,7 @@
     "koa",
     "transmit"
   ],
-  "main": "src/index.js",
+  "main": "release/index.js",
   "scripts": {
     "release": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.release.js",
     "test": "node_modules/.bin/_mocha --timeout 5000 --compilers .:test/compiler.js test/runner.js",
@@ -37,7 +37,6 @@
     "react": "^0.14.3",
     "react-bootstrap": "^0.27.1",
     "react-dom": "^0.14.3",
-    "react-modal": "^0.6.1",
     "react-redux": "^3.1.0",
     "redux": "^3.0.2",
     "redux-immutablejs": "^0.0.6",

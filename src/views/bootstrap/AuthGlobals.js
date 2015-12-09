@@ -18,8 +18,6 @@ import DestroyAccountSuccessModal from "./modals/DestroyAccountSuccessModal";
 import PasswordResetSuccessModal from "./modals/PasswordResetSuccessModal";
 import TokenBridge from "../TokenBridge";
 import { connect } from "react-redux";
-//import Modal from "react-modal";
-//import ExecutionEnvironment from "react/lib/ExecutionEnvironment";
 
 class AuthGlobals extends React.Component {
   static propTypes = {

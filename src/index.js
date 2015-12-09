@@ -42,9 +42,9 @@ export {updatePassword} from "./actions/update-password";
 export {updatePasswordModal} from "./actions/update-password-modal";
 export {destroyAccount} from "./actions/destroy-account";
 export verifyAuth from "./utils/verify-auth";
+export * from "./actions/ui";
 
 /* UI */
-//export {bootstrap, materialUi} from "./views";
 export {
   AuthGlobals,
   EmailSignInForm,

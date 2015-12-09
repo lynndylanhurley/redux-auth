@@ -6,12 +6,14 @@ module.exports = {
   cache:   false,
   context: __dirname,
   devtool: false,
-  entry:   ["./src/index"],
+  entry:   {
+    "index":       "./src/index",
+    "bootstrap":   "./src/bootstrap",
+    "material-ui": "./src/material-ui"
+  },
   output:  {
     path:          path.join(__dirname, "release"),
-    filename:      "index.js",
-    chunkFilename: "[name].[id].js",
-    publicPath:    "dist/"
+    filename:      "[name].js"
   },
   externals: {
     "react": "react",
@@ -27,7 +29,6 @@ module.exports = {
     "querystring": "querystring",
     "react-bootstrap": "react-bootstrap",
     "react-dom": "react-dom",
-    "react-modal": "react-modal",
     "react-redux": "react-redux",
     "redux": "redux",
     "redux-immutablejs": "redux-immutablejs",
@@ -37,7 +38,20 @@ module.exports = {
     "thunk": "thunk",
     "rc-dialog": "rc-dialog",
     "react-loader": "react-loader",
-    "url": "url"
+    "url": "url",
+    "react-bootstrap": "react-bootstrap",
+    "material-ui": "material-ui",
+    "material-ui/lib/styles/colors": "material-ui/lib/styles/colors",
+    "material-ui/lib/svg-icons": "material-ui/lib/styles/colors",
+    "../../../actions/ui":                    "./index",
+    "../../actions/destroy-account":          "./index",
+    "../../actions/email-sign-in":            "./index",
+    "../../actions/email-sign-up":            "./index",
+    "../../actions/oauth-sign-in":            "./index",
+    "../../actions/request-password-reset":   "./index",
+    "../../actions/sign-out":                 "./index",
+    "../../actions/update-password":          "./index",
+    "../../../actions/update-password-modal": "./index"
   },
   plugins: [
     new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false}),
@@ -54,7 +68,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      react: path.join(__dirname, "node_modules/react")
+      react: path.join(__dirname, "node_modules/react"),
+      "redux-auth": "src/index"
     },
     modulesDirectories: [
       "src",

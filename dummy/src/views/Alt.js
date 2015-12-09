@@ -1,7 +1,7 @@
 import React from "react";
-import IndexPanel from "./partials/material-ui/IndexPanel";
+import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
-import ExampleWell from "./partials/material-ui/ExampleWell";
+import ExampleWell from "./partials/ExampleWell";
 import RequestTestButton from "./partials/RequestTestButton";
 import { PageHeader, ButtonGroup } from "react-bootstrap";
 import { GridList } from "material-ui";
@@ -14,7 +14,7 @@ import {
   OAuthSignInButton,
   UpdatePasswordForm,
   DestroyAccountButton
-} from "../../../src/views/material-ui";
+} from "../../../src/material-ui";
 
 class Alt extends React.Component {
 

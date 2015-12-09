@@ -37,11 +37,13 @@
     "bootstrap-sass": "^3.3.5",
     "bootstrap-webpack": "0.0.5",
     "classnames": "^2.1.5",
+    "config": "^1.17.1",
     "cookie": "^0.2.2",
     "exports-loader": "^0.6.2",
     "extend": "^3.0.0",
     "h2o2": "4.0.1",
     "hapi": "9.3.1",
+    "highlight.js": "^8.8.0",
     "history": "1.13.0",
     "immutable": "^3.7.5",
     "imports-loader": "^0.6.4",
@@ -71,8 +73,7 @@
     "serialize-javascript": "^1.1.2",
     "thunk": "0.0.1",
     "url-loader": "^0.5.6",
-    "whatwg-fetch": "^0.9.0",
-    "highlight.js": "^8.8.0"
+    "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
     "babel-loader": "6.1.0",
