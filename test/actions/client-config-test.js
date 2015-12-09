@@ -1,4 +1,4 @@
-import React from "React";
+import React from "react";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import {pushState} from "redux-router";
 import {expect} from "chai";
