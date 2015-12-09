@@ -21,6 +21,7 @@
 	* A plain theme that you can style from scratch
 * Can be configured to work with any API *coming soon*
 * React Native support *coming soon*
+* I18n support *coming soon*
 
 This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][redux-auth-demo] in production.
 
