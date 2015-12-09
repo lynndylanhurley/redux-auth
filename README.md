@@ -18,8 +18,8 @@
 	* [React Bootstrap][react-bootstrap]
 	* [Material UI][material-ui]
 	* A plain theme that you can style from scratch
-* Can be configured to work with any API
-* *React Native support coming soon*
+* Can be configured to work with any API *coming soon*
+* React Native support *coming soon*
 
 
 This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][j-toker-demo] in production.
