@@ -725,11 +725,11 @@ By default, the API should update the auth token for each request ([read more](#
 ##### Example batch request
 
 ~~~javascript
-$.getJSON('/api/restricted_resource_1').success(function(resp) {
+fetch('/api/restricted_resource_1').then(resp => {
   // handle response
 });
 
-$.getJSON('/api/restricted_resource_2').success(function(resp) {
+fetch('/api/restricted_resource_2').then(resp => {
   // handle response
 });
 ~~~
