@@ -3,6 +3,7 @@
 ### Simple, secure user authentication for react + redux
 
 [![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
+[![Coverage Status](https://coveralls.io/repos/lynndylanhurley/redux-auth/badge.svg?branch=master&service=github)](https://coveralls.io/github/lynndylanhurley/redux-auth?branch=master)
 
 ### Features:
 
