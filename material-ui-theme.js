@@ -1060,7 +1060,6 @@
 	  }, {
 	    key: "handleSubmit",
 	    value: function handleSubmit() {
-	      console.log("endpoint", this.props.endpoint, this.props.auth.getIn(["configure", "currentEndpointKey"]), this.props.auth.getIn(["configure", "defaultEndpointKey"]));
 	      var formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
 	      this.props.dispatch((0, _emailSignIn.emailSignIn)(formData, this.getEndpoint()));
 	    }

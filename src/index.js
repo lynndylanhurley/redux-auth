@@ -33,13 +33,13 @@ export const authStateReducer = combineReducers({
 /* actions */
 export {configure} from "./actions/configure";
 export {authenticate} from "./actions/authenticate";
-export {emailSignIn} from "./actions/email-sign-in";
+export {emailSignIn, emailSignInFormUpdate} from "./actions/email-sign-in";
 export {signOut} from "./actions/sign-out";
-export {emailSignUp} from "./actions/email-sign-up";
+export {emailSignUp, emailSignUpFormUpdate} from "./actions/email-sign-up";
 export {oAuthSignIn} from "./actions/oauth-sign-in";
-export {requestPasswordReset} from "./actions/request-password-reset";
-export {updatePassword} from "./actions/update-password";
-export {updatePasswordModal} from "./actions/update-password-modal";
+export {requestPasswordReset, requestPasswordResetFormUpdate} from "./actions/request-password-reset";
+export {updatePassword, updatePasswordFormUpdate} from "./actions/update-password";
+export {updatePasswordModal, updatePasswordModalFormUpdate} from "./actions/update-password-modal";
 export {destroyAccount} from "./actions/destroy-account";
 export verifyAuth from "./utils/verify-auth";
 export {getApiUrl} from "./utils/session-storage";

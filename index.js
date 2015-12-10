@@ -49,7 +49,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetch = exports.TokenBridge = exports.DestroyAccountButton = exports.UpdatePasswordForm = exports.OAuthSignInButton = exports.RequestPasswordResetForm = exports.SignOutButton = exports.EmailSignUpForm = exports.EmailSignInForm = exports.AuthGlobals = exports.hideDestroyAccountErrorModal = exports.hideDestroyAccountSuccessModal = exports.hideUpdatePasswordErrorModal = exports.hideUpdatePasswordSuccessModal = exports.hidePasswordResetRequestErrorModal = exports.hidePasswordResetRequestSuccessModal = exports.hidePasswordResetErrorModal = exports.hideFirstTimeLoginErrorModal = exports.showPasswordResetErrorModal = exports.showFirstTimeLoginErrorModal = exports.hidePasswordResetSuccessModal = exports.hideFirstTimeLoginSuccessModal = exports.showPasswordResetSuccessModal = exports.showFirstTimeLoginSuccessModal = exports.hideEmailSignUpErrorModal = exports.hideEmailSignUpSuccessModal = exports.hideSignOutErrorModal = exports.hideSignOutSuccessModal = exports.hideOAuthSignInErrorModal = exports.hideOAuthSignInSuccessModal = exports.hideEmailSignInErrorModal = exports.hideEmailSignInSuccessModal = exports.getApiUrl = exports.verifyAuth = exports.destroyAccount = exports.updatePasswordModal = exports.updatePassword = exports.requestPasswordReset = exports.oAuthSignIn = exports.emailSignUp = exports.signOut = exports.emailSignIn = exports.authenticate = exports.configure = exports.authStateReducer = undefined;
+	exports.fetch = exports.TokenBridge = exports.DestroyAccountButton = exports.UpdatePasswordForm = exports.OAuthSignInButton = exports.RequestPasswordResetForm = exports.SignOutButton = exports.EmailSignUpForm = exports.EmailSignInForm = exports.AuthGlobals = exports.hideDestroyAccountErrorModal = exports.hideDestroyAccountSuccessModal = exports.hideUpdatePasswordErrorModal = exports.hideUpdatePasswordSuccessModal = exports.hidePasswordResetRequestErrorModal = exports.hidePasswordResetRequestSuccessModal = exports.hidePasswordResetErrorModal = exports.hideFirstTimeLoginErrorModal = exports.showPasswordResetErrorModal = exports.showFirstTimeLoginErrorModal = exports.hidePasswordResetSuccessModal = exports.hideFirstTimeLoginSuccessModal = exports.showPasswordResetSuccessModal = exports.showFirstTimeLoginSuccessModal = exports.hideEmailSignUpErrorModal = exports.hideEmailSignUpSuccessModal = exports.hideSignOutErrorModal = exports.hideSignOutSuccessModal = exports.hideOAuthSignInErrorModal = exports.hideOAuthSignInSuccessModal = exports.hideEmailSignInErrorModal = exports.hideEmailSignInSuccessModal = exports.getApiUrl = exports.verifyAuth = exports.destroyAccount = exports.updatePasswordModalFormUpdate = exports.updatePasswordModal = exports.updatePasswordFormUpdate = exports.updatePassword = exports.requestPasswordResetFormUpdate = exports.requestPasswordReset = exports.oAuthSignIn = exports.emailSignUpFormUpdate = exports.emailSignUp = exports.signOut = exports.emailSignInFormUpdate = exports.emailSignIn = exports.authenticate = exports.configure = exports.authStateReducer = undefined;
 
 	var _configure = __webpack_require__(5);
 
@@ -77,6 +77,12 @@
 	    return _emailSignIn.emailSignIn;
 	  }
 	});
+	Object.defineProperty(exports, "emailSignInFormUpdate", {
+	  enumerable: true,
+	  get: function get() {
+	    return _emailSignIn.emailSignInFormUpdate;
+	  }
+	});
 
 	var _signOut = __webpack_require__(30);
 
@@ -93,6 +99,12 @@
 	  enumerable: true,
 	  get: function get() {
 	    return _emailSignUp.emailSignUp;
+	  }
+	});
+	Object.defineProperty(exports, "emailSignUpFormUpdate", {
+	  enumerable: true,
+	  get: function get() {
+	    return _emailSignUp.emailSignUpFormUpdate;
 	  }
 	});
 
@@ -113,6 +125,12 @@
 	    return _requestPasswordReset.requestPasswordReset;
 	  }
 	});
+	Object.defineProperty(exports, "requestPasswordResetFormUpdate", {
+	  enumerable: true,
+	  get: function get() {
+	    return _requestPasswordReset.requestPasswordResetFormUpdate;
+	  }
+	});
 
 	var _updatePassword = __webpack_require__(37);
 
@@ -122,6 +140,12 @@
 	    return _updatePassword.updatePassword;
 	  }
 	});
+	Object.defineProperty(exports, "updatePasswordFormUpdate", {
+	  enumerable: true,
+	  get: function get() {
+	    return _updatePassword.updatePasswordFormUpdate;
+	  }
+	});
 
 	var _updatePasswordModal = __webpack_require__(36);
 
@@ -129,6 +153,12 @@
 	  enumerable: true,
 	  get: function get() {
 	    return _updatePasswordModal.updatePasswordModal;
+	  }
+	});
+	Object.defineProperty(exports, "updatePasswordModalFormUpdate", {
+	  enumerable: true,
+	  get: function get() {
+	    return _updatePasswordModal.updatePasswordModalFormUpdate;
 	  }
 	});
 
