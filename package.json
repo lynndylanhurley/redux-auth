@@ -19,7 +19,7 @@
     "koa",
     "transmit"
   ],
-  "main": "release/index.js",
+  "main": "index.js",
   "scripts": {
     "release": "node ./node_modules/webpack/bin/webpack.js --verbose --colors --display-error-details --config webpack.release.js",
     "test": "node_modules/.bin/_mocha --timeout 5000 --compilers .:test/compiler.js test/runner.js",
