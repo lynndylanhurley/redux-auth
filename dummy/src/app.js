@@ -13,7 +13,6 @@ import demoUi from "./reducers/demo-ui";
 import thunk from "redux-thunk";
 import Container from "./views/partials/Container";
 import Main from "./views/Main";
-import Alt from "./views/Alt";
 import Account from "./views/Account";
 import SignIn from "./views/SignIn";
 import GlobalComponents from "./views/partials/GlobalComponents";
@@ -56,7 +55,6 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
   var routes = (
     <Route path="/" component={App}>
       <IndexRoute component={Main} />
-      <Route path="alt" component={Alt} />
       <Route path="login" component={SignIn} />
       <Route path="account" component={Account} onEnter={requireAuth} />
     </Route>

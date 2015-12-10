@@ -1,9 +1,9 @@
 import React from "react";
 import RequestTestSuccessModal from "./RequestTestSuccessModal";
 import RequestTestErrorModal from "./RequestTestErrorModal";
-import * as BSTheme from "../../../../src/bootstrap";
+import * as BSTheme from "../../../../src/views/bootstrap";
 import * as DefaultTheme from "../../../../src/views/default";
-import * as MUITheme from "../../../../src/material-ui";
+import * as MUITheme from "../../../../src/views/material-ui";
 import { connect } from "react-redux";
 
 class GlobalComponents extends React.Component {

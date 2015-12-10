@@ -7,12 +7,12 @@ module.exports = {
   context: __dirname,
   devtool: false,
   entry:   {
-    "index":       "./src/index",
+    "index":             "./src/index",
     "bootstrap-theme":   "./src/views/bootstrap/index",
     "material-ui-theme": "./src/views/material-ui/index"
   },
   output:  {
-    path:          path.join(__dirname, "release"),
+    path:          path.join(__dirname),
     filename:      "[name].js",
     libraryTarget: "commonjs"
   },

@@ -6,9 +6,9 @@ import RequestTestButton from "./partials/RequestTestButton";
 import { updateDemoTheme, updateDemoEndpoint } from "../actions/demo-ui";
 import { PageHeader, Row, ButtonGroup, Table } from "react-bootstrap";
 import { connect } from "react-redux";
-import * as BSTheme from "../../../src/bootstrap";
+import * as BSTheme from "../../../src/views/bootstrap";
 import * as DefaultTheme from "../../../src/views/default";
-import * as MUITheme from "../../../src/material-ui";
+import * as MUITheme from "../../../src/views/material-ui";
 import Select from "react-select";
 
 
