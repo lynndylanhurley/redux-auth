@@ -18,8 +18,8 @@ The password of the user trying to sign in
 
 ~~~json
 {
-  email: "test@test.com",
-  password: "secret123"
+  "email": "test@test.com",
+  "password": "secret123"
 }
 ~~~
 
@@ -46,12 +46,12 @@ The account provider type (email, github, facebook, etc.).
 ###### Success Response Body Example
 
 ~~~json
-data: {
-  uid: "test@test.com",
-  provider: "email",
-  email: "test@test.com",
-  favorite_color: null,
-  id: 6
+"data": {
+  "uid": "test@test.com",
+  "provider": "email",
+  "email": "test@test.com",
+  "favorite_color": null,
+  "id": 6
 }
 ~~~
 
@@ -96,7 +96,7 @@ This will an array containing any errors that the server encountered in processi
 #### Error Response Body Example
 ~~~json
 {
-  errors: ["Invalid login credentials. Please try again."]
+  "errors": ["Invalid login credentials. Please try again."]
 }
 ~~~
 
