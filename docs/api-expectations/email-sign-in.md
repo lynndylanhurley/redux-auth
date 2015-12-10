@@ -36,11 +36,11 @@ The password of the user trying to sign in
 }
 ~~~
 
+--
+
 ### Request Headers
 
 None. The API won't care about any headers for this request.
-
---
 
 ## Success Response
 
@@ -69,6 +69,8 @@ The account provider type (email, github, facebook, etc.).
   "id": 6
 }
 ~~~
+
+--
 
 #### Success Response Headers
 
@@ -99,6 +101,8 @@ expiry:       1450988710
 uid:          test@test.com
 ~~~
 
+--
+
 ## Error Response
 
 This will an array containing any errors that the server encountered in processing the request.
@@ -118,6 +122,8 @@ A list of errors that will be displayed to the user.
   "errors": ["Invalid login credentials. Please try again."]
 }
 ~~~
+
+--
 
 ### Error Response Headers
 None. The client won't care about any headers for this response.
