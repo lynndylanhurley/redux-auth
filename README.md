@@ -5,7 +5,13 @@
 [![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
 [![Coverage Status](https://coveralls.io/repos/lynndylanhurley/redux-auth/badge.svg?branch=master&service=github)](https://coveralls.io/github/lynndylanhurley/redux-auth?branch=master)
 
-### Features:
+
+# TL;DR - View the [Live Demo](http://redux-auth.herokuapp.com/)
+
+You can see a complete working example [here](http://redux-auth.herokuapp.com/). The code for the demo is [here](https://github.com/lynndylanhurley/redux-auth-demo).
+
+
+# Features:
 
 * Supports isomorphic / universal / server-side rendering
 * OAuth2 authentication components
@@ -18,7 +24,7 @@
 * Includes the following themes:
 	* [React Bootstrap][react-bootstrap]
 	* [Material UI][material-ui]
-	* A plain theme that you can style from scratch
+	* An ugly plain theme that you can style from scratch
 * Can be configured to work with any API *coming soon*
 * React Native support *coming soon*
 * I18n support *coming soon*
@@ -134,16 +140,9 @@ export function renderApp({cookies, isServer, currentLocation} = {}) {
     {apiUrl: "http://api.catfancy.com"},
     {isServer, cookies, currentLocation}
   ).then({redirectPath, blank} = {}) => {
-    // the `redirectPath` argument provided to this callback is used in cases
-    // where auth credentials have been appended to the header (email
-    // confirmation, etc.). you will want to use your routing framework
-    // (redux-router, redux-simple-router, etc.) to redirect to this path.
-    // see the demo app for an example of this.
-
-    // the `blank` argument is used when returning from OAuth redirects, in
-    // which case the page will be a popup that should be immediately closed.
-
     if (blank) {
+      // if `blank` is true, this is an OAuth redirect and should not 
+      // be rendered
       return <noscript />;
     } else {
       return (
@@ -217,6 +216,43 @@ See below for the complete list of configuration options.
 # Usage
 
 ## Methods
+
+### configure
+
+This must be run before your app is initialized. This should be run on both the server, and on the client. The server will need an additional argument containing information about the current request's cookies and location.
+
+##### configure arguments
+* **`endpoints`**: An object containing information about your API. This at least needs to contain the full path to your URL as the `apiUrl` property. See [here](#complete-config-options) for a complete list of endpoint config options.
+* **`settings`**: When rendering serverside, this will need to be an object that contains the following attributes:
+  * **`isServer`**: A boolean that must be set to `true` when rendering server-side.
+  * **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
+  * **`location`**: A string representation of the current request's URL.
+
+
+~~~js
+import { configure } from "redux-auth";
+
+// server-side usage
+store.dispatch(configure(
+  {apiUrl: "https://api.graveflex.com"},
+  {isServer: true, cookies, currentLocation}
+).then(({redirectPath, blank} = {}) => {    
+  // if `blank` is true, it is because this is an OAuth popup window 
+  // that should be closed. in this case just render a blank page.
+  
+  // use your server to render the page markup or redirect
+  // to another location if the user is unauthorized.
+  // see the demo app for a more complete example.
+});
+
+// client-side usage
+store.dispatch(configure(
+  {apiUrl: "https://api.graveflex.com"}
+).then(() => {
+  // your store should now have the current user. now render your
+  // app to the DOM. see the demo app for a more complete example.
+});
+~~~
 
 ### fetch
 A wrapper around the [whatwg fetch][whatwg-fetch] implementation that automatically sends and tracks authentication headers. See [here][fetch-spec] for the complete spec.
@@ -603,7 +639,7 @@ var routes = (
 );
 ~~~
 
-
+--
 
 # Multiple user types
 
@@ -666,6 +702,94 @@ import { EmailSignInForm } from "redux-auth";
 <EmailSignInForm endpoint="alt" />
 ~~~
 
+--
+
+### Endpoint config options
+
+This is the complete list of options that can be passed to the endpoint config.
+
+~~~js
+import { config } from "redux-auth";
+
+// ... configure store, routes, etc... //
+
+store.dispatch(configure({
+  apiUrl:                  'https://devise-token-auth.dev',
+  signOutPath:             '/evil_user_auth/sign_out',
+  emailSignInPath:         '/evil_user_auth/sign_in',
+  emailRegistrationPath:   '/evil_user_auth',
+  accountUpdatePath:       '/evil_user_auth',
+  accountDeletePath:       '/evil_user_auth',
+  passwordResetPath:       '/evil_user_auth/password',
+  passwordUpdatePath:      '/evil_user_auth/password',
+  tokenValidationPath:     '/evil_user_auth/validate_token',
+  authProviderPaths: {
+    github:    '/evil_user_auth/github',
+    facebook:  '/evil_user_auth/facebook',
+    google:    '/evil_user_auth/google_oauth2'
+  }
+}).then(// ... render your app ... //
+~~~
+
+#### apiUrl
+###### string
+The base route to your api. Each of the following paths will be relative to this URL. Authentication headers will only be added to requests with this value as the base URL.
+
+--
+
+#### tokenValidationPath
+###### string
+Path (relative to `apiUrl`) to validate authentication tokens. [Read more](#token-validation-flow).
+
+--
+
+#### signOutPath
+###### string
+Path (relative to `apiUrl`) to de-authenticate the current user. This will destroy the user's token both server-side and client-side.
+
+--
+
+#### authProviderPaths
+###### object
+An object containing paths to auth endpoints. Keys should be the names of the providers, and the values should be the auth paths relative to the `apiUrl`. [Read more](#oauth-2-authentication-flow).
+
+--
+
+#### emailRegistrationPath
+###### string
+Path (relative to `apiUrl`) for submitting new email registrations. [Read more](#email-registration-flow).
+
+--
+
+#### accountUpdatePath
+###### string
+Path (relative to `apiUrl`) for submitting account update requests.
+
+--
+
+#### accountDeletePath
+###### string
+Path (relative to `apiUrl`) for submitting account deletion requests.
+
+--
+
+#### emailSignInPath
+###### string
+Path (relative to `apiUrl`) for signing in to an existing email account.
+
+--
+
+#### passwordResetPath
+###### string
+Path (relative to `apiUrl`) for requesting password reset emails.
+
+--
+
+#### passwordUpdatePath
+###### string
+Path (relative to `apiUrl`) for submitting new passwords for authenticated users.
+
+--
 
 # Conceptual
 
