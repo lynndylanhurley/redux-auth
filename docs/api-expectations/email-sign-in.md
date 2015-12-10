@@ -80,8 +80,6 @@ The unique identifier for the current user.
 
 ##### Success Response Headers Example
 
-The response will need to contain each of the following headers
-
 ~~~
 access-token: bgINB4atOxd8SMNvtOTDxg
 client:       V7EN7LSRYAbpE_-c5PvRSw
