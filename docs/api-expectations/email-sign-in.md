@@ -1,16 +1,17 @@
 # Email Sign In
 
-## Method: POST
-
 ## Request
+
+##### method
+###### POST
 
 ### Request Body
 
-#### email
+##### email
 ###### string
 The email address of the user trying to sign in.
 
-#### password
+##### password
 ###### string
 The password of the user trying to sign in
 
