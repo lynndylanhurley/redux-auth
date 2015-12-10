@@ -1,8 +1,14 @@
 # Email Sign In
 
 * [Request](#request)
+  * [Request Body](#request-body)
+  * [Request Headers](#request-headers)
 * [Success Response](#success-response)
+  * [Success Response Body](#success-response-body)
+  * [Success Response Headers](#success-response-headers)
 * [Error Response](#error-response)
+  * [Error Response Body](#error-response-body)
+  * [Error Response Headers](#error-response-headers)
 
 ## Request
 
