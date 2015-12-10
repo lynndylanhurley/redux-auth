@@ -94,6 +94,8 @@ This will an array containing any errors that the server encountered in processi
 ##### errors
 ###### array of strings
 
+A list of errors that will be displayed to the user.
+
 ##### Error Response Body Example
 ~~~json
 {
