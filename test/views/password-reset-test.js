@@ -26,14 +26,14 @@ var requirePath,
 export default function() {
   describe("RequestPasswordResetForm", () => {
     [
-      "bootstrap",
-      "material-ui",
-      "default"
+      "",
+      "/bootstrap",
+      "/material-ui",
     ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/RequestPasswordResetForm`;
-      var RequestPasswordResetForm = require(requirePath).default;
+      requirePath = `../../src${theme}`;
+      var {RequestPasswordResetForm} = require(requirePath);
 
-      describe(`${theme} theme`, () => {
+      describe(`${theme || "default"} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
             let inputProps = {

@@ -76,7 +76,7 @@ export default function () {
       var OAuthSignInButton = rewire(`../../src/views/${theme}/OAuthSignInButton`);
       var oAuthActions = rewire("../../src/actions/oauth-sign-in");
 
-      describe(`${theme}`, () => {
+      describe(`${theme} theme`, () => {
         describe("params", () => {
           it("should accept styling params", done => {
             let inputProps = {className: "oauth-class-override"};

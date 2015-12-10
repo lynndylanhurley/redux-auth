@@ -25,12 +25,12 @@ var requirePath,
 export default function() {
   describe("SignOutButton", () => {
     [
-      "bootstrap",
-      "material-ui",
-      "default"
+      "",
+      "/bootstrap",
+      "/material-ui"
     ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/SignOutButton`;
-      var SignOutButton = require(requirePath).default;
+      requirePath = `../../src${theme}`;
+      var {SignOutButton} = require(requirePath);
 
       describe(`${theme} theme`, () => {
         describe("params", () => {

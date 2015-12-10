@@ -42,6 +42,7 @@ export {updatePassword} from "./actions/update-password";
 export {updatePasswordModal} from "./actions/update-password-modal";
 export {destroyAccount} from "./actions/destroy-account";
 export verifyAuth from "./utils/verify-auth";
+export {getApiUrl} from "./utils/session-storage";
 export * from "./actions/ui";
 
 /* UI */
@@ -58,4 +59,4 @@ export {
 } from "./views/default";
 
 /* utils */
-export fetch from "./utils/fetch";
+export {default as fetch} from "./utils/fetch";

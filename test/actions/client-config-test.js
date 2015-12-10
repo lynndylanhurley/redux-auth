@@ -2,7 +2,7 @@ import React from "react";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import {pushState} from "redux-router";
 import {expect} from "chai";
-import fetch from "../../src/utils/fetch";
+import {fetch} from "../../src";
 import nock from "nock";
 
 var testUid        = "test@test.com",
@@ -144,7 +144,7 @@ export default function() {
               done();
             });
           })
-          .catch(err => console.log("@-->error", err));
+          .catch(err => console.log("@-->error", err.stack));
 
       });
 

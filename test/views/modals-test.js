@@ -26,11 +26,11 @@ function findClass (className) {
 export default function() {
   describe("Modal visibility", () => {
     [
-      "bootstrap",
-      "material-ui",
-      "default"
+      "",
+      "/bootstrap",
+      "/material-ui"
     ].forEach((theme) => {
-      describe(`${theme} theme`, () => {
+      describe(`${theme || "default"} theme`, () => {
         // we have to wait 1 sec to clear all the modals from the dom between
         // tests. this is due to an issue with the Dialog implementation of
         // material-ui.
@@ -59,7 +59,7 @@ export default function() {
           ["UpdatePasswordErrorModal",         "updatePasswordErrorModalVisible",         "update-password-error-modal"],
           ["UpdatePasswordSuccessModal",       "updatePasswordSuccessModalVisible",       "update-password-success-modal"]
         ].forEach(([componentName, vizProp, modalClass]) => {
-          var AuthGlobals = require(`../../src/views/${theme}/AuthGlobals`).default;
+          var {AuthGlobals} = require(`../../src${theme}`);
 
           describe(componentName, () => {
             it(`modal visibility should correlate with ui.${vizProp} value`, done => {

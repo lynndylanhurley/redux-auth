@@ -8,51 +8,50 @@ module.exports = {
   devtool: false,
   entry:   {
     "index":       "./src/index",
-    "bootstrap":   "./src/bootstrap",
-    "material-ui": "./src/material-ui"
+    "bootstrap-theme":   "./src/views/bootstrap/index",
+    "material-ui-theme": "./src/views/material-ui/index"
   },
   output:  {
     path:          path.join(__dirname, "release"),
-    filename:      "[name].js"
+    filename:      "[name].js",
+    libraryTarget: "commonjs"
   },
-  externals: {
-    "react": "react",
-    "classnames": "classnames",
-    "js-cookie": "js-cookie",
-    "cookie": "cookie",
-    "extend": "extend",
-    "history": "history",
-    "immutable": "immutable",
-    "isomorphic-fetch": "isomorphic-fetch",
-    "node-fetch": "node-fetch",
-    "query-string": "query-string",
-    "querystring": "querystring",
-    "react-bootstrap": "react-bootstrap",
-    "react-dom": "react-dom",
-    "react-redux": "react-redux",
-    "redux": "redux",
-    "redux-immutablejs": "redux-immutablejs",
-    "react-router": "react-router",
-    "redux-router": "redux-router",
-    "redux-thunk": "redux-thunk",
-    "thunk": "thunk",
-    "rc-dialog": "rc-dialog",
-    "react-loader": "react-loader",
-    "url": "url",
-    "react-bootstrap": "react-bootstrap",
-    "material-ui": "material-ui",
-    "material-ui/lib/styles/colors": "material-ui/lib/styles/colors",
-    "material-ui/lib/svg-icons": "material-ui/lib/styles/colors",
-    "../../../actions/ui":                    "./index",
-    "../../actions/destroy-account":          "./index",
-    "../../actions/email-sign-in":            "./index",
-    "../../actions/email-sign-up":            "./index",
-    "../../actions/oauth-sign-in":            "./index",
-    "../../actions/request-password-reset":   "./index",
-    "../../actions/sign-out":                 "./index",
-    "../../actions/update-password":          "./index",
-    "../../../actions/update-password-modal": "./index"
-  },
+  externals: [
+    function(rtx, req, cb) {
+      if (/\.\.\/\.\.\//.test(req)) {
+        return cb(null, "commonjs redux-auth");
+      } else {
+        cb();
+      }
+    }, {
+      "react": "commonjs react",
+      "classnames": "commonjs classnames",
+      "js-cookie": "commonjs js-cookie",
+      "cookie": "commonjs cookie",
+      "extend": "commonjs extend",
+      "history": "commonjs history",
+      "immutable": "commonjs immutable",
+      "isomorphic-fetch": "commonjs isomorphic-fetch",
+      "node-fetch": "commonjs node-fetch",
+      "query-string": "commonjs query-string",
+      "querystring": "commonjs querystring",
+      "react-dom": "commonjs react-dom",
+      "react-redux": "commonjs react-redux",
+      "redux": "commonjs redux",
+      "redux-immutablejs": "commonjs redux-immutablejs",
+      "react-router": "commonjs react-router",
+      "redux-router": "commonjs redux-router",
+      "redux-thunk": "commonjs redux-thunk",
+      "thunk": "commonjs thunk",
+      "rc-dialog": "commonjs rc-dialog",
+      "react-loader": "commonjs react-loader",
+      "url": "commonjs url",
+      "react-bootstrap": "commonjs react-bootstrap",
+      "material-ui": "commonjs material-ui",
+      "material-ui/lib/styles/colors": "commonjs material-ui/lib/styles/colors",
+      "material-ui/lib/svg-icons": "commonjs material-ui/lib/svg-icons"
+    }
+  ],
   plugins: [
     new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false}),
     new webpack.DefinePlugin({"process.env": {NODE_ENV: "\"production\""}}),
@@ -68,8 +67,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      react: path.join(__dirname, "node_modules/react"),
-      "redux-auth": "src/index"
+      react: path.join(__dirname, "node_modules/react")
     },
     modulesDirectories: [
       "src",

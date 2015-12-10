@@ -1,4 +1,4 @@
-/******/ (function(modules) { // webpackBootstrap
+(function(e, a) { for(var i in a) e[i] = a[i]; }(exports, /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -51,35 +51,35 @@
 	});
 	exports.ButtonLoader = exports.TokenBridge = exports.DestroyAccountButton = exports.UpdatePasswordForm = exports.OAuthSignInButton = exports.RequestPasswordResetForm = exports.SignOutButton = exports.EmailSignUpForm = exports.EmailSignInForm = exports.AuthGlobals = undefined;
 
-	var _AuthGlobals2 = __webpack_require__(55);
+	var _AuthGlobals2 = __webpack_require__(109);
 
 	var _AuthGlobals3 = _interopRequireDefault(_AuthGlobals2);
 
-	var _EmailSignInForm2 = __webpack_require__(57);
+	var _EmailSignInForm2 = __webpack_require__(111);
 
 	var _EmailSignInForm3 = _interopRequireDefault(_EmailSignInForm2);
 
-	var _EmailSignUpForm2 = __webpack_require__(58);
+	var _EmailSignUpForm2 = __webpack_require__(112);
 
 	var _EmailSignUpForm3 = _interopRequireDefault(_EmailSignUpForm2);
 
-	var _SignOutButton2 = __webpack_require__(62);
+	var _SignOutButton2 = __webpack_require__(116);
 
 	var _SignOutButton3 = _interopRequireDefault(_SignOutButton2);
 
-	var _RequestPasswordResetForm2 = __webpack_require__(61);
+	var _RequestPasswordResetForm2 = __webpack_require__(115);
 
 	var _RequestPasswordResetForm3 = _interopRequireDefault(_RequestPasswordResetForm2);
 
-	var _OAuthSignInButton2 = __webpack_require__(60);
+	var _OAuthSignInButton2 = __webpack_require__(114);
 
 	var _OAuthSignInButton3 = _interopRequireDefault(_OAuthSignInButton2);
 
-	var _UpdatePasswordForm2 = __webpack_require__(63);
+	var _UpdatePasswordForm2 = __webpack_require__(117);
 
 	var _UpdatePasswordForm3 = _interopRequireDefault(_UpdatePasswordForm2);
 
-	var _DestroyAccountButton2 = __webpack_require__(56);
+	var _DestroyAccountButton2 = __webpack_require__(110);
 
 	var _DestroyAccountButton3 = _interopRequireDefault(_DestroyAccountButton2);
 
@@ -87,7 +87,7 @@
 
 	var _TokenBridge3 = _interopRequireDefault(_TokenBridge2);
 
-	var _ButtonLoader2 = __webpack_require__(14);
+	var _ButtonLoader2 = __webpack_require__(16);
 
 	var _ButtonLoader3 = _interopRequireDefault(_ButtonLoader2);
 
@@ -104,35 +104,35 @@
 	exports.TokenBridge = _TokenBridge3.default;
 	exports.ButtonLoader = _ButtonLoader3.default;
 
-	// "export * from './views/bootstrap' is broken in babel 6
-
 /***/ },
 /* 1 */
 /***/ function(module, exports) {
 
-	module.exports = react;
+	module.exports = require("react");
 
 /***/ },
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = ./index;
+	module.exports = require("redux-auth");
 
 /***/ },
 /* 3 */
 /***/ function(module, exports) {
 
-	module.exports = react-redux;
+	module.exports = require("react-redux");
 
 /***/ },
 /* 4 */
 /***/ function(module, exports) {
 
-	module.exports = immutable;
+	module.exports = require("immutable");
 
 /***/ },
 /* 5 */,
-/* 6 */
+/* 6 */,
+/* 7 */,
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -147,9 +147,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _materialUi = __webpack_require__(31);
 
-	var _ErrorList = __webpack_require__(59);
+	var _ErrorList = __webpack_require__(113);
 
 	var _ErrorList2 = _interopRequireDefault(_ErrorList);
 
@@ -203,36 +203,20 @@
 	      var body = this.props.errorAddr ? this.getErrorList() : this.props.children;
 
 	      return _react2.default.createElement(
-	        _reactBootstrap.Modal,
+	        _materialUi.Dialog,
 	        {
-	          show: this.props.show,
-	          className: "redux-auth-modal " + this.props.containerClass,
-	          onHide: this.close.bind(this) },
-	        _react2.default.createElement(
-	          _reactBootstrap.Modal.Header,
-	          { closeButton: true },
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Title,
-	            null,
-	            this.props.title
-	          )
-	        ),
-	        _react2.default.createElement(
-	          _reactBootstrap.Modal.Body,
-	          null,
-	          body
-	        ),
-	        _react2.default.createElement(
-	          _reactBootstrap.Modal.Footer,
-	          null,
-	          _react2.default.createElement(
-	            _reactBootstrap.Button,
+	          open: this.props.show,
+	          contentClassName: "redux-auth-modal " + this.props.containerClass,
+	          title: this.props.title,
+	          actions: [_react2.default.createElement(
+	            _materialUi.FlatButton,
 	            {
-	              onClick: this.close.bind(this),
-	              className: this.props.containerClass + "-close" },
+	              key: "close",
+	              className: this.props.containerClass + "-close",
+	              onClick: this.close.bind(this) },
 	            this.props.closeBtnLabel
-	          )
-	        )
+	          )].concat(_toConsumableArray(this.props.actions)) },
+	        body
 	      );
 	    }
 	  }]);
@@ -243,12 +227,15 @@
 	BaseModal.propTypes = {
 	  show: _react.PropTypes.bool,
 	  errorAddr: _react.PropTypes.array,
-	  closeBtnLabel: _react.PropTypes.string
+	  closeBtnLabel: _react.PropTypes.string,
+	  actions: _react.PropTypes.array,
+	  closeAction: _react.PropTypes.func
 	};
 	BaseModal.defaultProps = {
 	  show: false,
 	  errorAddr: null,
-	  closeBtnLabel: "Ok"
+	  closeBtnLabel: "Ok",
+	  actions: []
 	};
 	exports.default = (0, _reactRedux.connect)(function (_ref) {
 	  var auth = _ref.auth;
@@ -256,19 +243,19 @@
 	})(BaseModal);
 
 /***/ },
-/* 7 */,
-/* 8 */,
 /* 9 */,
-/* 10 */
+/* 10 */,
+/* 11 */,
+/* 12 */
 /***/ function(module, exports) {
 
-	module.exports = react-bootstrap;
+	module.exports = require("material-ui/lib/svg-icons");
 
 /***/ },
-/* 11 */,
-/* 12 */,
 /* 13 */,
-/* 14 */
+/* 14 */,
+/* 15 */,
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -285,13 +272,21 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _materialUi = __webpack_require__(31);
+
+	var _svgIcons = __webpack_require__(12);
+
+	var _colors = __webpack_require__(32);
+
+	var _colors2 = _interopRequireDefault(_colors);
 
 	var _reactLoader = __webpack_require__(24);
 
 	var _reactLoader2 = _interopRequireDefault(_reactLoader);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _typeof(obj) { return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -309,27 +304,46 @@
 	  }
 
 	  _createClass(ButtonLoader, [{
+	    key: "handleClick",
+	    value: function handleClick(ev) {
+	      ev.preventDefault();
+	      this.props.onClick();
+	    }
+	  }, {
+	    key: "getColor",
+	    value: function getColor() {
+	      if (this.props.disabled) {
+	        return this.props.spinColorDisabled;
+	      } else if (this.props.primary || this.props.secondary) {
+	        return this.props.spinColorLight;
+	      } else {
+	        return this.props.spinColorDark;
+	      }
+	    }
+	  }, {
 	    key: "renderIcon",
 	    value: function renderIcon() {
-	      var icon = undefined;
+	      var icon = undefined,
+	          color = this.getColor();
 
 	      if (this.props.loading) {
-	        var spinColor = !this.props.bsStyle || this.props.bsStyle === "default" ? this.props.spinColorDark : this.props.spinColorLight;
-
-	        icon = _react2.default.createElement(_reactLoader2.default, _extends({ ref: "spinner" }, this.props.spinConfig, { color: spinColor, loaded: false }));
+	        icon = _react2.default.createElement(_reactLoader2.default, _extends({ ref: "spinner" }, this.props.spinConfig, { color: color, loaded: false }));
 	      } else {
-	        icon = this.props.icon;
+	        if (_typeof(this.props.icon) === "object") {
+	          icon = this.props.icon;
+	        } else {
+	          icon = _react2.default.createElement(this.props.icon, { color: color, style: { width: 15, height: 15 } });
+	        }
 	      }
 
 	      return _react2.default.createElement(
-	        "div",
+	        "span",
 	        { style: {
-	            position: "relative",
-	            display: "inline-block",
-	            marginRight: "6px",
-	            width: "10px",
-	            height: "10px",
-	            top: "1px"
+	            width: 15,
+	            height: 15,
+	            position: "absolute",
+	            left: 10,
+	            top: 10
 	          } },
 	        icon
 	      );
@@ -337,19 +351,22 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
+	      var color = this.getColor();
+
 	      return _react2.default.createElement(
-	        _reactBootstrap.Button,
-	        {
-	          onClick: this.props.onClick,
-	          disabled: this.props.disabled || this.props.loading,
-	          bsStyle: this.props.bsStyle,
-	          className: this.props.className,
-	          type: this.props.type,
-	          style: this.props.style,
-	          bsSize: this.props.bsSize },
-	        this.renderIcon(),
-	        " ",
-	        this.props.children
+	        _materialUi.RaisedButton,
+	        _extends({
+	          onClick: this.handleClick.bind(this),
+	          label: _react2.default.createElement(
+	            "span",
+	            { style: { paddingLeft: 15, color: color } },
+	            this.props.children
+	          ),
+	          labelPosition: "after",
+	          labelColor: color
+	        }, this.props, {
+	          disabled: this.props.disabled || this.props.loading }),
+	        this.renderIcon()
 	      );
 	    }
 	  }]);
@@ -358,17 +375,18 @@
 	})(_react2.default.Component);
 
 	ButtonLoader.propTypes = {
-	  icon: _react.PropTypes.node,
+	  icon: _react.PropTypes.func,
 	  loading: _react.PropTypes.bool,
 	  spinConfig: _react.PropTypes.object,
 	  spinColorDark: _react.PropTypes.string,
 	  spinColorLight: _react.PropTypes.string,
+	  spinColorDisabled: _react.PropTypes.string,
 	  children: _react.PropTypes.node,
 	  onClick: _react.PropTypes.func.isRequired,
 	  style: _react.PropTypes.object
 	};
 	ButtonLoader.defaultProps = {
-	  icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "heart" }),
+	  icon: _svgIcons.ActionFavorite,
 	  loading: false,
 	  spinConfig: {
 	    lines: 10,
@@ -376,8 +394,9 @@
 	    width: 2,
 	    radius: 3
 	  },
-	  spinColorDark: "#444",
-	  spinColorLight: "#fff",
+	  spinColorDark: _colors2.default.darkBlack,
+	  spinColorLight: _colors2.default.darkWhite,
+	  spinColorDisabled: _colors2.default.minBlack,
 	  children: _react2.default.createElement(
 	    "span",
 	    null,
@@ -388,8 +407,6 @@
 	exports.default = ButtonLoader;
 
 /***/ },
-/* 15 */,
-/* 16 */,
 /* 17 */,
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
@@ -457,7 +474,9 @@
 /***/ },
 /* 19 */,
 /* 20 */,
-/* 21 */
+/* 21 */,
+/* 22 */,
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -474,7 +493,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _colors = __webpack_require__(32);
+
+	var _colors2 = _interopRequireDefault(_colors);
+
+	var _materialUi = __webpack_require__(31);
+
+	var _svgIcons = __webpack_require__(12);
 
 	var _immutable = __webpack_require__(4);
 
@@ -500,6 +525,7 @@
 	  _createClass(AuthInput, [{
 	    key: "handleInput",
 	    value: function handleInput(ev) {
+	      ev.preventDefault();
 	      this.props.onChange(ev.target.value);
 	    }
 	  }, {
@@ -510,42 +536,38 @@
 	      if (this.props.errors.size) {
 	        return _react2.default.createElement(
 	          "div",
-	          { className: "auth-error-message has-error" },
+	          { className: "auth-error-message" },
 	          this.props.errors.map(function (err, i) {
 	            return _react2.default.createElement(
 	              "p",
-	              { className: "control-label inline-error-item",
+	              { className: "inline-error-item",
 	                style: { paddingLeft: "20px", position: "relative", marginBottom: "28px" },
 	                key: i },
-	              _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "exclamation-sign",
+	              _react2.default.createElement(_svgIcons.AlertError, {
+	                viewBox: "0 0 50 50",
+	                color: _colors2.default.red500,
 	                style: {
 	                  position: "absolute",
 	                  left: 0,
-	                  top: 2
-	                }
-	              }),
-	              " ",
-	              _this2.props.label,
+	                  top: 0 } }),
+	              _this2.props.floatingLabelText,
 	              " ",
 	              err
 	            );
 	          })
 	        );
 	      } else {
-	        return _react2.default.createElement("span", null);
+	        return null;
 	      }
 	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(
-	        "div",
-	        null,
-	        _react2.default.createElement(_reactBootstrap.Input, _extends({}, this.props, {
-	          bsStyle: this.props.errors.size ? "error" : null,
-	          onChange: this.handleInput.bind(this) })),
-	        this.renderErrorList()
-	      );
+	      return _react2.default.createElement(_materialUi.TextField, _extends({
+	        fullWidth: true
+	      }, this.props, {
+	        errorText: this.renderErrorList(),
+	        onChange: this.handleInput.bind(this) }));
 	    }
 	  }]);
 
@@ -565,12 +587,10 @@
 	exports.default = AuthInput;
 
 /***/ },
-/* 22 */,
-/* 23 */,
 /* 24 */
 /***/ function(module, exports) {
 
-	module.exports = react-loader;
+	module.exports = require("react-loader");
 
 /***/ },
 /* 25 */,
@@ -579,8 +599,18 @@
 /* 28 */,
 /* 29 */,
 /* 30 */,
-/* 31 */,
-/* 32 */,
+/* 31 */
+/***/ function(module, exports) {
+
+	module.exports = require("material-ui");
+
+/***/ },
+/* 32 */
+/***/ function(module, exports) {
+
+	module.exports = require("material-ui/lib/styles/colors");
+
+/***/ },
 /* 33 */,
 /* 34 */,
 /* 35 */,
@@ -603,7 +633,61 @@
 /* 52 */,
 /* 53 */,
 /* 54 */,
-/* 55 */
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */,
+/* 83 */,
+/* 84 */,
+/* 85 */,
+/* 86 */,
+/* 87 */,
+/* 88 */,
+/* 89 */,
+/* 90 */,
+/* 91 */,
+/* 92 */,
+/* 93 */,
+/* 94 */,
+/* 95 */,
+/* 96 */,
+/* 97 */,
+/* 98 */,
+/* 99 */,
+/* 100 */,
+/* 101 */,
+/* 102 */,
+/* 103 */,
+/* 104 */,
+/* 105 */,
+/* 106 */,
+/* 107 */,
+/* 108 */,
+/* 109 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -618,71 +702,71 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _EmailSignInSuccessModal = __webpack_require__(67);
+	var _EmailSignInSuccessModal = __webpack_require__(121);
 
 	var _EmailSignInSuccessModal2 = _interopRequireDefault(_EmailSignInSuccessModal);
 
-	var _EmailSignInErrorModal = __webpack_require__(66);
+	var _EmailSignInErrorModal = __webpack_require__(120);
 
 	var _EmailSignInErrorModal2 = _interopRequireDefault(_EmailSignInErrorModal);
 
-	var _OAuthSignInSuccessModal = __webpack_require__(73);
+	var _OAuthSignInSuccessModal = __webpack_require__(127);
 
 	var _OAuthSignInSuccessModal2 = _interopRequireDefault(_OAuthSignInSuccessModal);
 
-	var _OAuthSignInErrorModal = __webpack_require__(72);
+	var _OAuthSignInErrorModal = __webpack_require__(126);
 
 	var _OAuthSignInErrorModal2 = _interopRequireDefault(_OAuthSignInErrorModal);
 
-	var _EmailSignUpSuccessModal = __webpack_require__(69);
+	var _EmailSignUpSuccessModal = __webpack_require__(123);
 
 	var _EmailSignUpSuccessModal2 = _interopRequireDefault(_EmailSignUpSuccessModal);
 
-	var _EmailSignUpErrorModal = __webpack_require__(68);
+	var _EmailSignUpErrorModal = __webpack_require__(122);
 
 	var _EmailSignUpErrorModal2 = _interopRequireDefault(_EmailSignUpErrorModal);
 
-	var _SignOutSuccessModal = __webpack_require__(78);
+	var _SignOutSuccessModal = __webpack_require__(132);
 
 	var _SignOutSuccessModal2 = _interopRequireDefault(_SignOutSuccessModal);
 
-	var _SignOutErrorModal = __webpack_require__(77);
+	var _SignOutErrorModal = __webpack_require__(131);
 
 	var _SignOutErrorModal2 = _interopRequireDefault(_SignOutErrorModal);
 
-	var _FirstTimeLoginSuccessModal = __webpack_require__(71);
+	var _FirstTimeLoginSuccessModal = __webpack_require__(125);
 
 	var _FirstTimeLoginSuccessModal2 = _interopRequireDefault(_FirstTimeLoginSuccessModal);
 
-	var _FirstTimeLoginErrorModal = __webpack_require__(70);
+	var _FirstTimeLoginErrorModal = __webpack_require__(124);
 
 	var _FirstTimeLoginErrorModal2 = _interopRequireDefault(_FirstTimeLoginErrorModal);
 
-	var _RequestPasswordResetErrorModal = __webpack_require__(75);
+	var _RequestPasswordResetErrorModal = __webpack_require__(129);
 
 	var _RequestPasswordResetErrorModal2 = _interopRequireDefault(_RequestPasswordResetErrorModal);
 
-	var _RequestPasswordResetSuccessModal = __webpack_require__(76);
+	var _RequestPasswordResetSuccessModal = __webpack_require__(130);
 
 	var _RequestPasswordResetSuccessModal2 = _interopRequireDefault(_RequestPasswordResetSuccessModal);
 
-	var _UpdatePasswordErrorModal = __webpack_require__(79);
+	var _UpdatePasswordErrorModal = __webpack_require__(133);
 
 	var _UpdatePasswordErrorModal2 = _interopRequireDefault(_UpdatePasswordErrorModal);
 
-	var _UpdatePasswordSuccessModal = __webpack_require__(80);
+	var _UpdatePasswordSuccessModal = __webpack_require__(134);
 
 	var _UpdatePasswordSuccessModal2 = _interopRequireDefault(_UpdatePasswordSuccessModal);
 
-	var _DestroyAccountErrorModal = __webpack_require__(64);
+	var _DestroyAccountErrorModal = __webpack_require__(118);
 
 	var _DestroyAccountErrorModal2 = _interopRequireDefault(_DestroyAccountErrorModal);
 
-	var _DestroyAccountSuccessModal = __webpack_require__(65);
+	var _DestroyAccountSuccessModal = __webpack_require__(119);
 
 	var _DestroyAccountSuccessModal2 = _interopRequireDefault(_DestroyAccountSuccessModal);
 
-	var _PasswordResetSuccessModal = __webpack_require__(74);
+	var _PasswordResetSuccessModal = __webpack_require__(128);
 
 	var _PasswordResetSuccessModal2 = _interopRequireDefault(_PasswordResetSuccessModal);
 
@@ -825,7 +909,7 @@
 	})(AuthGlobals);
 
 /***/ },
-/* 56 */
+/* 110 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -842,15 +926,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
 	var _destroyAccount = __webpack_require__(2);
 
-	var _reactRedux = __webpack_require__(3);
+	var _svgIcons = __webpack_require__(12);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _reactRedux = __webpack_require__(3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -887,6 +971,7 @@
 	        loading: this.props.auth.getIn(["destroyAccount", this.getEndpoint(), "loading"]),
 	        icon: this.props.icon,
 	        disabled: disabled,
+	        primary: true,
 	        className: "destroy-account-submit",
 	        onClick: this.handleClick.bind(this)
 	      }, this.props));
@@ -897,9 +982,8 @@
 	})(_react2.default.Component);
 
 	DestroyAccountButton.propTypes = {
-	  endpoint: _react.PropTypes.string,
 	  children: _react.PropTypes.node,
-	  icon: _react.PropTypes.node
+	  icon: _react.PropTypes.func
 	};
 	DestroyAccountButton.defaultProps = {
 	  children: _react2.default.createElement(
@@ -907,7 +991,7 @@
 	    null,
 	    "Destroy Account"
 	  ),
-	  icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "remove" })
+	  icon: _svgIcons.ActionDelete
 	};
 	exports.default = (0, _reactRedux.connect)(function (_ref) {
 	  var auth = _ref.auth;
@@ -915,7 +999,7 @@
 	})(DestroyAccountButton);
 
 /***/ },
-/* 57 */
+/* 111 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -932,17 +1016,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
-	var _Input = __webpack_require__(21);
+	var _Input = __webpack_require__(23);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
 	var _emailSignIn = __webpack_require__(2);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _svgIcons = __webpack_require__(12);
 
 	var _reactRedux = __webpack_require__(3);
 
@@ -976,6 +1060,7 @@
 	  }, {
 	    key: "handleSubmit",
 	    value: function handleSubmit() {
+	      console.log("endpoint", this.props.endpoint, this.props.auth.getIn(["configure", "currentEndpointKey"]), this.props.auth.getIn(["configure", "defaultEndpointKey"]));
 	      var formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
 	      this.props.dispatch((0, _emailSignIn.emailSignIn)(formData, this.getEndpoint()));
 	    }
@@ -986,21 +1071,21 @@
 
 	      return _react2.default.createElement(
 	        "form",
-	        { className: "redux-auth email-sign-in-form clearfix",
+	        { className: "redux-auth email-sign-in-form",
+	          style: { clear: "both", overflow: "hidden" },
 	          onSubmit: this.handleSubmit.bind(this) },
 	        _react2.default.createElement(_Input2.default, _extends({ type: "text",
 	          className: "email-sign-in-email",
-	          label: "Email",
-	          placeholder: "Email",
+	          ref: "emailSignInEmail",
+	          floatingLabelText: "Email",
 	          disabled: disabled,
 	          value: this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form", "email"]),
 	          errors: this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "errors", "email"]),
 	          onChange: this.handleInput.bind(this, "email")
 	        }, this.props.inputProps.email)),
 	        _react2.default.createElement(_Input2.default, _extends({ type: "password",
-	          label: "Password",
+	          floatingLabelText: "Password",
 	          className: "email-sign-in-password",
-	          placeholder: "Password",
 	          disabled: disabled,
 	          value: this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form", "password"]),
 	          errors: this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "errors", "password"]),
@@ -1008,12 +1093,14 @@
 	        }, this.props.inputProps.password)),
 	        _react2.default.createElement(
 	          _ButtonLoader2.default,
-	          _extends({ loading: this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"]),
+	          _extends({ loading: this.props.auth.getIn(["emailSignIn", "loading"]),
 	            type: "submit",
-	            icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "log-in" }),
-	            className: "email-sign-in-submit pull-right",
+	            style: { float: "right" },
+	            icon: _svgIcons.ActionExitToApp,
+	            className: "email-sign-in-submit",
 	            disabled: disabled,
-	            onClick: this.handleSubmit.bind(this)
+	            onClick: this.handleSubmit.bind(this),
+	            primary: true
 	          }, this.props.inputProps.submit),
 	          "Sign In"
 	        )
@@ -1045,7 +1132,7 @@
 	})(EmailSignInForm);
 
 /***/ },
-/* 58 */
+/* 112 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1062,11 +1149,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Input = __webpack_require__(21);
+	var _Input = __webpack_require__(23);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
@@ -1074,7 +1161,7 @@
 
 	var _reactRedux = __webpack_require__(3);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _svgIcons = __webpack_require__(12);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1106,6 +1193,7 @@
 	  }, {
 	    key: "handleSubmit",
 	    value: function handleSubmit() {
+	      console.log("@-->handling submit");
 	      var formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
 	      this.props.dispatch((0, _emailSignUp.emailSignUp)(formData, this.getEndpoint()));
 	    }
@@ -1117,10 +1205,10 @@
 	      return _react2.default.createElement(
 	        "form",
 	        { className: "redux-auth email-sign-up-form clearfix",
+	          style: { clear: "both", overflow: "hidden" },
 	          onSubmit: this.handleSubmit.bind(this) },
 	        _react2.default.createElement(_Input2.default, _extends({ type: "text",
-	          label: "Email",
-	          placeholder: "Email",
+	          floatingLabelText: "Email",
 	          className: "email-sign-up-email",
 	          disabled: disabled,
 	          value: this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "email"]),
@@ -1128,8 +1216,7 @@
 	          onChange: this.handleInput.bind(this, "email")
 	        }, this.props.inputProps.email)),
 	        _react2.default.createElement(_Input2.default, _extends({ type: "password",
-	          label: "Password",
-	          placeholder: "Password",
+	          floatingLabelText: "Password",
 	          className: "email-sign-up-password",
 	          disabled: disabled,
 	          value: this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "password"]),
@@ -1137,8 +1224,7 @@
 	          onChange: this.handleInput.bind(this, "password")
 	        }, this.props.inputProps.password)),
 	        _react2.default.createElement(_Input2.default, _extends({ type: "password",
-	          label: "Password Confirmation",
-	          placeholder: "Password Confirmation",
+	          floatingLabelText: "Password Confirmation",
 	          className: "email-sign-up-password-confirmation",
 	          disabled: disabled,
 	          value: this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form", "password_confirmation"]),
@@ -1149,8 +1235,10 @@
 	          _ButtonLoader2.default,
 	          _extends({ loading: this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "loading"]),
 	            type: "submit",
-	            className: "email-sign-up-submit pull-right",
-	            icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "send" }),
+	            className: "email-sign-up-submit",
+	            primary: true,
+	            style: { float: "right" },
+	            icon: _svgIcons.ContentSend,
 	            disabled: disabled,
 	            onClick: this.handleSubmit.bind(this)
 	          }, this.props.inputProps.submit),
@@ -1185,7 +1273,7 @@
 	})(EmailSignUpForm);
 
 /***/ },
-/* 59 */
+/* 113 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1200,7 +1288,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _colors = __webpack_require__(32);
+
+	var _colors2 = _interopRequireDefault(_colors);
+
+	var _svgIcons = __webpack_require__(12);
 
 	var _immutable = __webpack_require__(4);
 
@@ -1250,8 +1342,13 @@
 	                key: i,
 	                className: "control-label modal-error-item",
 	                style: { paddingLeft: "20px", position: "relative" } },
-	              _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "exclamation-sign",
-	                style: { position: "absolute", left: 0, top: 2 } }),
+	              _react2.default.createElement(_svgIcons.AlertError, {
+	                viewBox: "0 0 50 50",
+	                color: _colors2.default.red500,
+	                style: {
+	                  position: "absolute",
+	                  left: 0,
+	                  top: 3 } }),
 	              " ",
 	              err
 	            );
@@ -1260,8 +1357,14 @@
 	      } else {
 	        return _react2.default.createElement(
 	          "p",
-	          null,
-	          _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "exclamation-sign" }),
+	          { style: { paddingLeft: "20px", position: "relative" } },
+	          _react2.default.createElement(_svgIcons.AlertError, {
+	            viewBox: "0 0 50 50",
+	            style: {
+	              position: "absolute",
+	              left: 0,
+	              top: 3 },
+	            color: _colors2.default.red500 }),
 	          " There was an error processing this form. Please check each field and try again."
 	        );
 	      }
@@ -1289,7 +1392,7 @@
 	exports.default = ErrorList;
 
 /***/ },
-/* 60 */
+/* 114 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1308,11 +1411,11 @@
 
 	var _reactRedux = __webpack_require__(3);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _svgIcons = __webpack_require__(12);
 
 	var _oauthSignIn = __webpack_require__(2);
 
@@ -1374,7 +1477,7 @@
 	  label: _react.PropTypes.string,
 	  signInParams: _react.PropTypes.object,
 	  children: _react.PropTypes.node,
-	  icon: _react.PropTypes.node
+	  icon: _react.PropTypes.func
 	};
 	OAuthSignInButton.defaultProps = {
 	  signInParams: {},
@@ -1383,7 +1486,7 @@
 	    null,
 	    "OAuth Sign In"
 	  ),
-	  icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "log-in" })
+	  icon: _svgIcons.ActionExitToApp
 	};
 	exports.default = (0, _reactRedux.connect)(function (_ref) {
 	  var auth = _ref.auth;
@@ -1391,7 +1494,7 @@
 	})(OAuthSignInButton);
 
 /***/ },
-/* 61 */
+/* 115 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1408,17 +1511,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Input = __webpack_require__(21);
+	var _Input = __webpack_require__(23);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
-	var _reactBootstrap = __webpack_require__(10);
-
 	var _reactRedux = __webpack_require__(3);
+
+	var _svgIcons = __webpack_require__(12);
 
 	var _requestPasswordReset = __webpack_require__(2);
 
@@ -1458,23 +1561,24 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var loading = this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "loading"]);
+	      var endpoint = this.getEndpoint();
+	      var loading = this.props.auth.getIn(["requestPasswordReset", endpoint, "loading"]);
 	      var inputDisabled = this.props.auth.getIn(["user", "isSignedIn"]);
-	      var submitDisabled = !this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "form", "email"]);
+	      var submitDisabled = !this.props.auth.getIn(["requestPasswordReset", endpoint, "form", "email"]);
 
 	      return _react2.default.createElement(
 	        "form",
 	        {
 	          className: "redux-auth request-password-reset-form clearfix",
+	          style: { clear: "both", overflow: "hidden" },
 	          onSubmit: this.handleSubmit.bind(this) },
 	        _react2.default.createElement(_Input2.default, _extends({
 	          type: "text",
-	          label: "Email Address",
+	          floatingLabelText: "Email Address",
 	          className: "request-password-reset-email",
-	          placeholder: "Email Address",
 	          disabled: loading || inputDisabled,
-	          value: this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "form", "email"]),
-	          errors: this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "errors", "email"]),
+	          value: this.props.auth.getIn(["requestPasswordReset", endpoint, "form", "email"]),
+	          errors: this.props.auth.getIn(["requestPasswordReset", endpoint, "errors", "email"]),
 	          onChange: this.handleInput.bind(this, "email")
 	        }, this.props.inputProps.email)),
 	        _react2.default.createElement(
@@ -1482,8 +1586,10 @@
 	          _extends({
 	            loading: loading,
 	            type: "submit",
-	            icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "lock" }),
-	            className: "pull-right request-password-reset-submit",
+	            primary: true,
+	            icon: _svgIcons.ContentSend,
+	            style: { float: "right" },
+	            className: "request-password-reset-submit",
 	            disabled: inputDisabled || submitDisabled,
 	            onClick: this.handleSubmit.bind(this)
 	          }, this.props.inputProps.submit),
@@ -1515,7 +1621,7 @@
 	})(RequestPasswordResetForm);
 
 /***/ },
-/* 62 */
+/* 116 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1532,11 +1638,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _svgIcons = __webpack_require__(12);
 
 	var _reactRedux = __webpack_require__(3);
 
@@ -1577,6 +1683,7 @@
 	        loading: this.props.auth.getIn(["signOut", this.getEndpoint(), "loading"]),
 	        icon: this.props.icon,
 	        disabled: disabled,
+	        primary: true,
 	        className: "sign-out-submit",
 	        onClick: this.handleClick.bind(this)
 	      }, this.props));
@@ -1587,8 +1694,9 @@
 	})(_react2.default.Component);
 
 	SignOutButton.propTypes = {
+	  endpoint: _react.PropTypes.string,
 	  children: _react.PropTypes.node,
-	  icon: _react.PropTypes.node
+	  icon: _react.PropTypes.func
 	};
 	SignOutButton.defaultProps = {
 	  children: _react2.default.createElement(
@@ -1596,7 +1704,7 @@
 	    null,
 	    "Sign Out"
 	  ),
-	  icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "log-out" })
+	  icon: _svgIcons.ActionLock
 	};
 	exports.default = (0, _reactRedux.connect)(function (_ref) {
 	  var auth = _ref.auth;
@@ -1604,7 +1712,7 @@
 	})(SignOutButton);
 
 /***/ },
-/* 63 */
+/* 117 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -1621,13 +1729,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _Input = __webpack_require__(21);
+	var _Input = __webpack_require__(23);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
+
+	var _svgIcons = __webpack_require__(12);
 
 	var _updatePassword = __webpack_require__(2);
 
@@ -1662,7 +1772,8 @@
 	    }
 	  }, {
 	    key: "handleSubmit",
-	    value: function handleSubmit() {
+	    value: function handleSubmit(ev) {
+	      ev.preventDefault();
 	      var formData = this.props.auth.getIn(["updatePassword", this.getEndpoint(), "form"]).toJS();
 	      this.props.dispatch((0, _updatePassword.updatePassword)(formData, this.getEndpoint()));
 	    }
@@ -1675,34 +1786,37 @@
 
 	      return _react2.default.createElement(
 	        "form",
-	        { className: "redux-auth update-password-form clearfix",
+	        {
+	          className: "redux-auth update-password-form clearfix",
 	          onSubmit: this.handleSubmit.bind(this) },
-	        _react2.default.createElement(_Input2.default, _extends({ type: "password",
-	          label: "Password",
-	          placeholder: "Password",
+	        _react2.default.createElement(_Input2.default, _extends({
+	          type: "password",
+	          floatingLabelText: "Password",
 	          disabled: disabled,
 	          className: "update-password-password",
 	          value: this.props.auth.getIn(["updatePassword", endpoint, "form", "password"]),
 	          errors: this.props.auth.getIn(["updatePassword", endpoint, "errors", "password"]),
 	          onChange: this.handleInput.bind(this, "password")
 	        }, this.props.inputProps.password)),
-	        _react2.default.createElement(_Input2.default, _extends({ type: "password",
-	          label: "Password Confirmation",
-	          placeholder: "Password Confirmation",
-	          disabled: disabled,
+	        _react2.default.createElement(_Input2.default, _extends({
+	          type: "password",
+	          floatingLabelText: "Password Confirmation",
 	          className: "update-password-password-confirmation",
+	          disabled: disabled,
 	          value: this.props.auth.getIn(["updatePassword", endpoint, "form", "password_confirmation"]),
 	          errors: this.props.auth.getIn(["updatePassword", endpoint, "errors", "password_confirmation"]),
 	          onChange: this.handleInput.bind(this, "password_confirmation")
 	        }, this.props.inputProps.passwordConfirmation)),
 	        _react2.default.createElement(
 	          _ButtonLoader2.default,
-	          _extends({ loading: loading,
+	          _extends({
+	            loading: loading,
 	            type: "submit",
-	            className: "pull-right",
-	            icon: this.props.icon,
-	            disabled: disabled,
 	            className: "update-password-submit",
+	            icon: _svgIcons.ActionLock,
+	            primary: true,
+	            disabled: disabled,
+	            style: { float: "right" },
 	            onClick: this.handleSubmit.bind(this)
 	          }, this.props.inputProps.submit),
 	          "Update Password"
@@ -1718,13 +1832,15 @@
 	  endpoint: _react.PropTypes.string,
 	  inputProps: _react.PropTypes.shape({
 	    password: _react.PropTypes.object,
-	    passwordConfirmation: _react.PropTypes.object
+	    passwordConfirmation: _react.PropTypes.object,
+	    submit: _react.PropTypes.object
 	  })
 	};
 	UpdatePasswordForm.defaultProps = {
 	  inputProps: {
 	    password: {},
-	    passwordConfirmation: {}
+	    passwordConfirmation: {},
+	    submit: {}
 	  }
 	};
 	exports.default = (0, _reactRedux.connect)(function (_ref) {
@@ -1733,10 +1849,12 @@
 	})(UpdatePasswordForm);
 
 /***/ },
-/* 64 */
+/* 118 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1748,11 +1866,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ui = __webpack_require__(2);
-
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
+
+	var _ui = __webpack_require__(2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1774,12 +1892,11 @@
 	  _createClass(DestroyAccountErrorModal, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(_Modal2.default, {
+	      return _react2.default.createElement(_Modal2.default, _extends({}, this.props, {
 	        containerClass: "destroy-account-error-modal",
-	        show: this.props.show,
 	        closeAction: _ui.hideDestroyAccountErrorModal,
-	        title: "Error",
-	        errorAddr: ["destroyAccount", "errors"] });
+	        errorAddr: ["destroyAccount", "errors"],
+	        title: "Error" }));
 	    }
 	  }]);
 
@@ -1789,10 +1906,12 @@
 	exports.default = DestroyAccountErrorModal;
 
 /***/ },
-/* 65 */
+/* 119 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1804,13 +1923,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Modal = __webpack_require__(8);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
 	var _reactRedux = __webpack_require__(3);
 
 	var _ui = __webpack_require__(2);
-
-	var _Modal = __webpack_require__(6);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1834,11 +1953,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
+	          title: "Destroy Account Success",
 	          containerClass: "destroy-account-success-modal",
-	          closeAction: _ui.hideDestroyAccountSuccessModal,
-	          title: "Destroy Account Success" },
+	          closeAction: _ui.hideDestroyAccountSuccessModal }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -1857,10 +1975,12 @@
 	})(DestroyAccountSuccessModal);
 
 /***/ },
-/* 66 */
+/* 120 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1874,7 +1994,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -1898,12 +2018,11 @@
 	  _createClass(EmailSignInErrorModal, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(_Modal2.default, {
-	        show: this.props.show,
-	        containerClass: "email-sign-in-error-modal",
+	      return _react2.default.createElement(_Modal2.default, _extends({}, this.props, {
 	        closeAction: _ui.hideEmailSignInErrorModal,
+	        containerClass: "email-sign-in-error-modal",
 	        title: "Sign In Error",
-	        errorAddr: ["emailSignIn", "errors"] });
+	        errorAddr: ["emailSignIn", "errors"] }));
 	    }
 	  }]);
 
@@ -1913,10 +2032,12 @@
 	exports.default = EmailSignInErrorModal;
 
 /***/ },
-/* 67 */
+/* 121 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1928,13 +2049,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _Modal = __webpack_require__(8);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
 	var _reactRedux = __webpack_require__(3);
 
 	var _ui = __webpack_require__(2);
-
-	var _Modal = __webpack_require__(6);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1958,12 +2079,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
-	          containerClass: "email-sign-in-success-modal",
+	        _extends({}, this.props, {
+	          title: "Welcome Back",
 	          closeAction: _ui.hideEmailSignInSuccessModal,
-	          closeBtnLabel: "Close",
-	          title: "Welcome Back" },
+	          containerClass: "email-sign-in-success-modal" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -1984,10 +2103,12 @@
 	})(EmailSignInSuccessModal);
 
 /***/ },
-/* 68 */
+/* 122 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2001,7 +2122,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2025,12 +2146,11 @@
 	  _createClass(EmailSignUpErrorModal, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(_Modal2.default, {
-	        show: this.props.show,
-	        containerClass: "email-sign-up-error-modal",
+	      return _react2.default.createElement(_Modal2.default, _extends({}, this.props, {
 	        title: "Sign Up Error",
-	        errorAddr: ["emailSignUp", "errors", "full_messages"],
-	        closeAction: _ui.hideEmailSignUpErrorModal });
+	        containerClass: "email-sign-up-form-error-modal",
+	        closeAction: _ui.hideEmailSignUpErrorModal,
+	        errorAddr: ["emailSignUp", "errors", "full_messages"] }));
 	    }
 	  }]);
 
@@ -2040,10 +2160,12 @@
 	exports.default = EmailSignUpErrorModal;
 
 /***/ },
-/* 69 */
+/* 123 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2059,7 +2181,7 @@
 
 	var _reactRedux = __webpack_require__(3);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2085,11 +2207,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
+	        _extends({}, this.props, {
 	          containerClass: "email-sign-up-success-modal",
-	          show: this.props.show,
 	          closeAction: _ui.hideEmailSignUpSuccessModal,
-	          title: "Sign Up Success" },
+	          title: "Sign Up Success" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2110,10 +2231,12 @@
 	})(EmailSignUpSuccessModal);
 
 /***/ },
-/* 70 */
+/* 124 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2127,7 +2250,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2153,11 +2276,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "first-time-login-error-modal",
 	          closeAction: _ui.hideFirstTimeLoginErrorModal,
-	          title: "Confirmation Error" },
+	          title: "Confirmation Error" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2173,10 +2295,12 @@
 	exports.default = FirstTimeLoginErrorModal;
 
 /***/ },
-/* 71 */
+/* 125 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2188,13 +2312,13 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _reactRedux = __webpack_require__(3);
+
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
-
-	var _reactRedux = __webpack_require__(3);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2218,12 +2342,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "first-time-login-success-modal",
-	          title: "Welcome " + this.props.auth.getIn(["user", "attributes", "email"]) + "!",
-	          closeBtnLabel: "Close",
-	          closeAction: _ui.hideFirstTimeLoginSuccessModal },
+	          closeAction: _ui.hideFirstTimeLoginSuccessModal,
+	          title: "Welcome " + this.props.auth.getIn(["user", "attributes", "email"]) + "!" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2242,10 +2364,12 @@
 	})(FirstTimeLoginSuccessModal);
 
 /***/ },
-/* 72 */
+/* 126 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2257,13 +2381,17 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _colors = __webpack_require__(32);
 
-	var _Modal = __webpack_require__(6);
-
-	var _Modal2 = _interopRequireDefault(_Modal);
+	var _colors2 = _interopRequireDefault(_colors);
 
 	var _ui = __webpack_require__(2);
+
+	var _svgIcons = __webpack_require__(12);
+
+	var _Modal = __webpack_require__(8);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2287,16 +2415,23 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "oauth-sign-in-error-modal",
 	          closeAction: _ui.hideOAuthSignInErrorModal,
-	          title: "OAuth Sign In Error" },
+	          title: "OAuth Sign In Error" }),
 	        _react2.default.createElement(
 	          "p",
-	          null,
-	          _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "exclamation-sign" }),
-	          " There was an error authenticating your account. Please try again."
+	          {
+	            className: "inline-error-item",
+	            style: { paddingLeft: "20px", position: "relative", marginBottom: "28px" } },
+	          _react2.default.createElement(_svgIcons.AlertError, {
+	            viewBox: "0 0 50 50",
+	            color: _colors2.default.red500,
+	            style: {
+	              position: "absolute",
+	              left: 0,
+	              top: 3 } }),
+	          "There was an error authenticating your account. Please try again."
 	        )
 	      );
 	    }
@@ -2308,10 +2443,12 @@
 	exports.default = OAuthSignInErrorModal;
 
 /***/ },
-/* 73 */
+/* 127 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2323,11 +2460,11 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _ui = __webpack_require__(2);
-
 	var _reactRedux = __webpack_require__(3);
 
-	var _Modal = __webpack_require__(6);
+	var _ui = __webpack_require__(2);
+
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2353,11 +2490,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "oauth-sign-in-success-modal",
-	          closeAction: _ui.hideOAuthSignInSuccessModal,
-	          title: "Welcome" },
+	          title: "Welcome",
+	          closeAction: _ui.hideOAuthSignInSuccessModal }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2378,7 +2514,7 @@
 	})(OAuthSignInSuccessModal);
 
 /***/ },
-/* 74 */
+/* 128 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2395,13 +2531,15 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactBootstrap = __webpack_require__(10);
+	var _svgIcons = __webpack_require__(12);
 
-	var _ButtonLoader = __webpack_require__(14);
+	var _materialUi = __webpack_require__(31);
+
+	var _ButtonLoader = __webpack_require__(16);
 
 	var _ButtonLoader2 = _interopRequireDefault(_ButtonLoader);
 
-	var _Input = __webpack_require__(21);
+	var _Input = __webpack_require__(23);
 
 	var _Input2 = _interopRequireDefault(_Input);
 
@@ -2441,82 +2579,68 @@
 	  }, {
 	    key: "handleSubmit",
 	    value: function handleSubmit() {
-	      console.log("@-->submitting");
 	      var formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
 	      this.props.dispatch((0, _updatePasswordModal.updatePasswordModal)(formData, this.getEndpoint()));
 	    }
 	  }, {
 	    key: "close",
 	    value: function close() {
-	      this.props.dispatch((0, _ui.hidePasswordResetSuccessModal)(this.getEndpoint()));
+	      this.props.dispatch((0, _ui.hidePasswordResetSuccessModal)());
 	    }
 	  }, {
 	    key: "render",
 	    value: function render() {
-	      var loading = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "loading"]),
-	          endpoint = this.getEndpoint();
+	      var endpoint = this.getEndpoint();
+	      var loading = this.props.auth.getIn(["updatePasswordModal", endpoint, "loading"]);
 
 	      return _react2.default.createElement(
-	        _reactBootstrap.Modal,
+	        _materialUi.Dialog,
 	        {
-	          show: this.props.show,
-	          className: "password-reset-success-modal",
-	          onHide: this.close.bind(this) },
-	        _react2.default.createElement(
-	          _reactBootstrap.Modal.Header,
-	          { closeButton: true },
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Title,
-	            null,
-	            "Reset Your Password"
-	          )
-	        ),
+	          open: this.props.show,
+	          contentClassName: "redux-auth-modal password-reset-success-modal",
+	          actions: [_react2.default.createElement(
+	            _materialUi.FlatButton,
+	            _extends({
+	              key: "cancel",
+	              className: "password-reset-success-modal-close",
+	              onClick: this.close.bind(this),
+	              secondary: true
+	            }, this.props.inputProps.cancel),
+	            "Cancel"
+	          ), _react2.default.createElement(_ButtonLoader2.default, _extends({
+	            key: "submit"
+	          }, this.props, {
+	            loading: loading,
+	            type: "submit",
+	            primary: true,
+	            className: "password-reset-success-modal-submit",
+	            icon: _svgIcons.ActionLock,
+	            onClick: this.handleSubmit.bind(this)
+	          }, this.props.inputProps.submit))],
+	          title: "Reset Your Password" },
 	        _react2.default.createElement(
 	          "form",
 	          null,
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Body,
-	            null,
-	            _react2.default.createElement(_Input2.default, _extends({
-	              type: "password",
-	              label: "Password",
-	              placeholder: "Password",
-	              disabled: loading,
-	              className: "password-reset-success-modal-password",
-	              value: this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"]),
-	              errors: this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"]),
-	              onChange: this.handleInput.bind(this, "password")
-	            }, this.props.inputProps.password)),
-	            _react2.default.createElement(_Input2.default, _extends({
-	              type: "password",
-	              label: "Password Confirmation",
-	              placeholder: "Password Confirmation",
-	              disabled: loading,
-	              className: "password-reset-success-modal-password-confirmation",
-	              value: this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"]),
-	              errors: this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"]),
-	              onChange: this.handleInput.bind(this, "password_confirmation")
-	            }, this.props.inputProps.passwordConfirmation))
-	          ),
-	          _react2.default.createElement(
-	            _reactBootstrap.Modal.Footer,
-	            null,
-	            _react2.default.createElement(
-	              _reactBootstrap.Button,
-	              _extends({
-	                className: "password-reset-success-modal-close",
-	                onClick: this.close.bind(this)
-	              }, this.props.inputProps.cancel),
-	              "Cancel"
-	            ),
-	            _react2.default.createElement(_ButtonLoader2.default, _extends({}, this.props, {
-	              loading: loading,
-	              type: "submit",
-	              className: "password-reset-success-modal-submit",
-	              icon: _react2.default.createElement(_reactBootstrap.Glyphicon, { glyph: "lock" }),
-	              onClick: this.handleSubmit.bind(this)
-	            }, this.props.inputProps.submit))
-	          )
+	          _react2.default.createElement(_Input2.default, _extends({
+	            type: "password",
+	            label: "Password",
+	            placeholder: "Password",
+	            disabled: loading,
+	            className: "password-reset-success-modal-password",
+	            value: this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"]),
+	            errors: this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"]),
+	            onChange: this.handleInput.bind(this, "password")
+	          }, this.props.inputProps.password)),
+	          _react2.default.createElement(_Input2.default, _extends({
+	            type: "password",
+	            label: "Password Confirmation",
+	            placeholder: "Password Confirmation",
+	            disabled: loading,
+	            className: "password-reset-success-modal-password-confirmation",
+	            value: this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"]),
+	            errors: this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"]),
+	            onChange: this.handleInput.bind(this, "password_confirmation")
+	          }, this.props.inputProps.passwordConfirmation))
 	        )
 	      );
 	    }
@@ -2526,6 +2650,7 @@
 	})(_react2.default.Component);
 
 	PasswordResetSuccessModal.propTypes = {
+	  endpoint: _react.PropTypes.string,
 	  show: _react.PropTypes.bool,
 	  inputProps: _react.PropTypes.object
 	};
@@ -2539,10 +2664,12 @@
 	})(PasswordResetSuccessModal);
 
 /***/ },
-/* 75 */
+/* 129 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2556,7 +2683,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2580,12 +2707,11 @@
 	  _createClass(RequestPasswordResetErrorModal, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(_Modal2.default, {
-	        show: this.props.show,
+	      return _react2.default.createElement(_Modal2.default, _extends({}, this.props, {
 	        containerClass: "request-password-reset-error-modal",
 	        closeAction: _ui.hidePasswordResetRequestErrorModal,
 	        title: "Error",
-	        errorAddr: ["requestPasswordReset", "errors"] });
+	        errorAddr: ["requestPassswordReset", "errors"] }));
 	    }
 	  }]);
 
@@ -2595,10 +2721,12 @@
 	exports.default = RequestPasswordResetErrorModal;
 
 /***/ },
-/* 76 */
+/* 130 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2614,7 +2742,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2640,11 +2768,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "request-password-reset-success-modal",
-	          title: "Password Reset Request Success",
-	          closeAction: _ui.hidePasswordResetRequestSuccessModal },
+	          closeAction: _ui.hidePasswordResetRequestSuccessModal,
+	          title: "Password Reset Request Success" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2663,10 +2790,12 @@
 	})(RequestPasswordResetSuccessModal);
 
 /***/ },
-/* 77 */
+/* 131 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2680,7 +2809,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2706,11 +2835,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "sign-out-error-modal",
-	          closeAction: _ui.hideSignOutErrorModal,
-	          title: "Sign Out Error" },
+	          title: "Sign Out Error",
+	          closeAction: _ui.hideSignOutErrorModal }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2726,10 +2854,12 @@
 	exports.default = SignOutErrorModal;
 
 /***/ },
-/* 78 */
+/* 132 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2743,7 +2873,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2769,16 +2899,11 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "sign-out-success-modal",
-	          title: "Goodbye!",
-	          closeAction: _ui.hideSignOutSuccessModal },
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          "You have been successfully signed out."
-	        )
+	          closeAction: _ui.hideSignOutSuccessModal,
+	          title: "Goodbye!" }),
+	        "You have been successfully signed out."
 	      );
 	    }
 	  }]);
@@ -2789,10 +2914,12 @@
 	exports.default = SignOutSuccessModal;
 
 /***/ },
-/* 79 */
+/* 133 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2806,7 +2933,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2830,12 +2957,11 @@
 	  _createClass(UpdatePasswordErrorModal, [{
 	    key: "render",
 	    value: function render() {
-	      return _react2.default.createElement(_Modal2.default, {
-	        show: this.props.show,
+	      return _react2.default.createElement(_Modal2.default, _extends({}, this.props, {
 	        containerClass: "update-password-error-modal",
-	        title: "Error",
 	        closeAction: _ui.hideUpdatePasswordErrorModal,
-	        errorAddr: ["updatePassword", "errors", "full_messages"] });
+	        title: "Error",
+	        errorAddr: ["updatePassword", "errors", "full_messages"] }));
 	    }
 	  }]);
 
@@ -2845,10 +2971,12 @@
 	exports.default = UpdatePasswordErrorModal;
 
 /***/ },
-/* 80 */
+/* 134 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2862,7 +2990,7 @@
 
 	var _ui = __webpack_require__(2);
 
-	var _Modal = __webpack_require__(6);
+	var _Modal = __webpack_require__(8);
 
 	var _Modal2 = _interopRequireDefault(_Modal);
 
@@ -2888,11 +3016,10 @@
 	    value: function render() {
 	      return _react2.default.createElement(
 	        _Modal2.default,
-	        {
-	          show: this.props.show,
+	        _extends({}, this.props, {
 	          containerClass: "update-password-success-modal",
 	          closeAction: _ui.hideUpdatePasswordSuccessModal,
-	          title: "Success" },
+	          title: "Success" }),
 	        _react2.default.createElement(
 	          "p",
 	          null,
@@ -2908,4 +3035,4 @@
 	exports.default = UpdatePasswordSuccessModal;
 
 /***/ }
-/******/ ]);
+/******/ ])));

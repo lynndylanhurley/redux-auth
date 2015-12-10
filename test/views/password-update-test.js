@@ -50,12 +50,12 @@ var requirePath,
 export default function() {
   describe("UpdatePasswordForm", () => {
     [
-      "bootstrap",
-      "material-ui",
-      "default"
+      "",
+      "/bootstrap",
+      "/material-ui"
     ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/UpdatePasswordForm`;
-      var UpdatePasswordForm = require(requirePath).default;
+      requirePath = `../../src${theme}`;
+      var {UpdatePasswordForm} = require(requirePath);
 
       describe(`${theme} theme`, () => {
         describe("params", () => {

@@ -7,7 +7,7 @@ import {createMemoryHistory} from "history";
 import {ReduxRouter, routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
 import thunk from "redux-thunk";
 import { reduxReactRouter as serverRouter } from "redux-router/server";
-import { configure, authStateReducer } from "../src/index";
+import { configure, authStateReducer } from "../src";
 import Immutable from "immutable";
 
 /* dummy components */

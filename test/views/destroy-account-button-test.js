@@ -26,14 +26,14 @@ var requirePath,
 export default function() {
   describe("DestroyAccountButton", () => {
     [
-      "material-ui",
-      "default",
-      "bootstrap"
+      "",
+      "/material-ui",
+      "/bootstrap"
     ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/DestroyAccountButton`;
-      var DestroyAccountButton = require(requirePath).default;
+      requirePath = `../../src${theme}`;
+      var {DestroyAccountButton} = require(requirePath);
 
-      describe(`${theme} theme`, () => {
+      describe(`${theme || "default"} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
 

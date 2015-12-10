@@ -42,12 +42,12 @@ export default function() {
   describe("EmailSignUpForm", () => {
 
     [
-      "material-ui",
-      "default",
-      "bootstrap"
+      "",
+      "/material-ui",
+      "/bootstrap"
     ].forEach((theme) => {
-      requirePath = `../../src/views/${theme}/EmailSignUpForm`;
-      var EmailSignUpForm = require(requirePath).default;
+      requirePath = `../../src${theme}`;
+      var {EmailSignUpForm} = require(requirePath);
 
       describe(`${theme} theme`, () => {
         describe(`params`, () => {

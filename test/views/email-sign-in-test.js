@@ -22,14 +22,14 @@ var successRespSpy,
 export default function() {
   describe("EmailSignInForm", () => {
     [
-      "material-ui",
-      "bootstrap",
-      "default"
+      "",
+      "/material-ui",
+      "/bootstrap",
     ].forEach((theme) => {
-      var requirePath = `../../src/views/${theme}/EmailSignInForm`;
-      var EmailSignInForm = require(requirePath).default;
+      var requirePath = `../../src${theme}`;
+      var {EmailSignInForm} = require(requirePath);
 
-      describe(`${theme} theme`, () => {
+      describe(`${theme || "default"} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
             let inputProps = {
