@@ -15,7 +15,7 @@ The email address of the user trying to sign in.
 ###### string
 The password of the user trying to sign in
 
-###### Request Body Example
+##### Request Body Example
 
 ~~~json
 {
@@ -44,7 +44,7 @@ The unique identifier for the user's account.
 ###### string
 The account provider type (email, github, facebook, etc.).
 
-###### Success Response Body Example
+##### Success Response Body Example
 
 ~~~json
 "data": {
@@ -74,7 +74,7 @@ The time at which the token will expire.
 ###### string
 The unique identifier for the current user.
 
-###### Success Response Headers Example
+##### Success Response Headers Example
 
 The response will need to contain each of the following headers
 
@@ -94,7 +94,7 @@ This will an array containing any errors that the server encountered in processi
 ##### errors
 ###### array of strings
 
-#### Error Response Body Example
+##### Error Response Body Example
 ~~~json
 {
   "errors": ["Invalid login credentials. Please try again."]
