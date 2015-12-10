@@ -31,10 +31,11 @@ module.exports = {
       { include: /\.json$/, loaders: ["json"] },
       { include: /\.js$/, loaders: ["babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"], exclude: /node_modules/ },
       { test: /\.scss$/, loaders: ["style", "css", "sass"] }
-      //{ test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader", {publicPath: "/dist/"}) }
     ],
-    postLoaders: [],
-    noParse: /\.min\.js/
+    postLoaders: [
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract("style-loader", "css-loader!sass-loader", {publicPath: "/dist/"}) }
+    ],
+    noParse: [/\.min\.js/, /autoit\.js/]
   },
   resolve: {
     alias: {
