@@ -49,7 +49,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.fetch = exports.TokenBridge = exports.DestroyAccountButton = exports.UpdatePasswordForm = exports.OAuthSignInButton = exports.RequestPasswordResetForm = exports.SignOutButton = exports.EmailSignUpForm = exports.EmailSignInForm = exports.AuthGlobals = exports.getApiUrl = exports.verifyAuth = exports.destroyAccount = exports.updatePasswordModal = exports.updatePassword = exports.requestPasswordReset = exports.oAuthSignIn = exports.emailSignUp = exports.signOut = exports.emailSignIn = exports.authenticate = exports.configure = exports.authStateReducer = undefined;
+	exports.fetch = exports.TokenBridge = exports.DestroyAccountButton = exports.UpdatePasswordForm = exports.OAuthSignInButton = exports.RequestPasswordResetForm = exports.SignOutButton = exports.EmailSignUpForm = exports.EmailSignInForm = exports.AuthGlobals = exports.hideDestroyAccountErrorModal = exports.hideDestroyAccountSuccessModal = exports.hideUpdatePasswordErrorModal = exports.hideUpdatePasswordSuccessModal = exports.hidePasswordResetRequestErrorModal = exports.hidePasswordResetRequestSuccessModal = exports.hidePasswordResetErrorModal = exports.hideFirstTimeLoginErrorModal = exports.showPasswordResetErrorModal = exports.showFirstTimeLoginErrorModal = exports.hidePasswordResetSuccessModal = exports.hideFirstTimeLoginSuccessModal = exports.showPasswordResetSuccessModal = exports.showFirstTimeLoginSuccessModal = exports.hideEmailSignUpErrorModal = exports.hideEmailSignUpSuccessModal = exports.hideSignOutErrorModal = exports.hideSignOutSuccessModal = exports.hideOAuthSignInErrorModal = exports.hideOAuthSignInSuccessModal = exports.hideEmailSignInErrorModal = exports.hideEmailSignInSuccessModal = exports.getApiUrl = exports.verifyAuth = exports.destroyAccount = exports.updatePasswordModal = exports.updatePassword = exports.requestPasswordReset = exports.oAuthSignIn = exports.emailSignUp = exports.signOut = exports.emailSignIn = exports.authenticate = exports.configure = exports.authStateReducer = undefined;
 
 	var _configure = __webpack_require__(5);
 
@@ -152,15 +152,138 @@
 
 	var _ui = __webpack_require__(35);
 
-	for (var _key in _ui) {
-	  if (_key === "default") continue;
-	  Object.defineProperty(exports, _key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _ui[_key];
-	    }
-	  });
-	}
+	Object.defineProperty(exports, "hideEmailSignInSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideEmailSignInSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideEmailSignInErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideEmailSignInErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideOAuthSignInSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideOAuthSignInSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideOAuthSignInErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideOAuthSignInErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideSignOutSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideSignOutSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideSignOutErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideSignOutErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideEmailSignUpSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideEmailSignUpSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideEmailSignUpErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideEmailSignUpErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "showFirstTimeLoginSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.showFirstTimeLoginSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "showPasswordResetSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.showPasswordResetSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideFirstTimeLoginSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideFirstTimeLoginSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hidePasswordResetSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hidePasswordResetSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "showFirstTimeLoginErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.showFirstTimeLoginErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "showPasswordResetErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.showPasswordResetErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideFirstTimeLoginErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideFirstTimeLoginErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hidePasswordResetErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hidePasswordResetErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hidePasswordResetRequestSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hidePasswordResetRequestSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hidePasswordResetRequestErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hidePasswordResetRequestErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideUpdatePasswordSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideUpdatePasswordSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideUpdatePasswordErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideUpdatePasswordErrorModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideDestroyAccountSuccessModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideDestroyAccountSuccessModal;
+	  }
+	});
+	Object.defineProperty(exports, "hideDestroyAccountErrorModal", {
+	  enumerable: true,
+	  get: function get() {
+	    return _ui.hideDestroyAccountErrorModal;
+	  }
+	});
 
 	var _default = __webpack_require__(91);
 
