@@ -25,6 +25,8 @@ The email address of the user trying to sign in.
 ###### string
 The password of the user trying to sign in
 
+--
+
 ##### Request Body Example
 
 ~~~json
@@ -53,6 +55,8 @@ The unique identifier for the user's account.
 ##### provider
 ###### string
 The account provider type (email, github, facebook, etc.).
+
+--
 
 ##### Success Response Body Example
 
@@ -84,6 +88,8 @@ The time at which the token will expire.
 ###### string
 The unique identifier for the current user.
 
+--
+
 ##### Success Response Headers Example
 
 ~~~
@@ -103,6 +109,8 @@ This will an array containing any errors that the server encountered in processi
 ###### array of strings
 
 A list of errors that will be displayed to the user.
+
+--
 
 ##### Error Response Body Example
 ~~~json
