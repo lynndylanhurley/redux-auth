@@ -23,8 +23,8 @@ export default function() {
   describe("EmailSignInForm", () => {
     [
       "",
-      "/material-ui",
-      "/bootstrap",
+      "/views/material-ui",
+      "/views/bootstrap",
     ].forEach((theme) => {
       var requirePath = `../../src${theme}`;
       var {EmailSignInForm} = require(requirePath);

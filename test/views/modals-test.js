@@ -27,8 +27,8 @@ export default function() {
   describe("Modal visibility", () => {
     [
       "",
-      "/bootstrap",
-      "/material-ui"
+      "/views/bootstrap",
+      "/views/material-ui"
     ].forEach((theme) => {
       describe(`${theme || "default"} theme`, () => {
         // we have to wait 1 sec to clear all the modals from the dom between

@@ -43,8 +43,8 @@ export default function() {
 
     [
       "",
-      "/material-ui",
-      "/bootstrap"
+      "/views/material-ui",
+      "/views/bootstrap"
     ].forEach((theme) => {
       requirePath = `../../src${theme}`;
       var {EmailSignUpForm} = require(requirePath);
