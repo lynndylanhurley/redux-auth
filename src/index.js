@@ -43,7 +43,30 @@ export {updatePasswordModal} from "./actions/update-password-modal";
 export {destroyAccount} from "./actions/destroy-account";
 export verifyAuth from "./utils/verify-auth";
 export {getApiUrl} from "./utils/session-storage";
-export * from "./actions/ui";
+export {
+  hideEmailSignInSuccessModal,
+  hideEmailSignInErrorModal,
+  hideOAuthSignInSuccessModal,
+  hideOAuthSignInErrorModal,
+  hideSignOutSuccessModal,
+  hideSignOutErrorModal,
+  hideEmailSignUpSuccessModal,
+  hideEmailSignUpErrorModal,
+  showFirstTimeLoginSuccessModal,
+  showPasswordResetSuccessModal,
+  hideFirstTimeLoginSuccessModal,
+  hidePasswordResetSuccessModal,
+  showFirstTimeLoginErrorModal,
+  showPasswordResetErrorModal,
+  hideFirstTimeLoginErrorModal,
+  hidePasswordResetErrorModal,
+  hidePasswordResetRequestSuccessModal,
+  hidePasswordResetRequestErrorModal,
+  hideUpdatePasswordSuccessModal,
+  hideUpdatePasswordErrorModal,
+  hideDestroyAccountSuccessModal,
+  hideDestroyAccountErrorModal
+} from "./actions/ui";
 
 /* UI */
 export {
