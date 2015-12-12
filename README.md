@@ -1,5 +1,7 @@
 # Redux Auth
 
+## THIS LIBRARY IS UNRELEASED!! DO NOT USE YET!!!
+
 ### Simple, secure user authentication for react + redux
 
 [![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
@@ -16,15 +18,15 @@ You can see a complete working example [here](http://redux-auth.herokuapp.com/).
 * Supports isomorphic / universal / server-side rendering
 * OAuth2 authentication components
 * Email authentication components, including:
-	* User registration
-	* Password resets
-	* Account updates
-	* Account deletion
+  * User registration
+  * Password resets
+  * Account updates
+  * Account deletion
 * Seamless integration with the [devise token auth][dta] Rails gem.
 * Includes the following themes:
-	* [React Bootstrap][react-bootstrap]
-	* [Material UI][material-ui]
-	* An ugly plain theme that you can style from scratch
+  * [React Bootstrap][react-bootstrap]
+  * [Material UI][material-ui]
+  * An ugly plain theme that you can style from scratch
 * Can be configured to work with any API *coming soon*
 * React Native support *coming soon*
 * I18n support *coming soon*
@@ -63,8 +65,6 @@ The demo uses [React][react], and the source can be found [here](https://github.
 * [Contributing](#contributing)
 * [Development](#development)
 * [Callouts](#credits)
-
-
 
 # About this plugin
 
@@ -141,7 +141,7 @@ export function renderApp({cookies, isServer, currentLocation} = {}) {
     {isServer, cookies, currentLocation}
   ).then({redirectPath, blank} = {}) => {
     if (blank) {
-      // if `blank` is true, this is an OAuth redirect and should not 
+      // if `blank` is true, this is an OAuth redirect and should not
       // be rendered
       return <noscript />;
     } else {
@@ -236,10 +236,10 @@ import { configure } from "redux-auth";
 store.dispatch(configure(
   {apiUrl: "https://api.graveflex.com"},
   {isServer: true, cookies, currentLocation}
-).then(({redirectPath, blank} = {}) => {    
-  // if `blank` is true, it is because this is an OAuth popup window 
+).then(({redirectPath, blank} = {}) => {
+  // if `blank` is true, it is because this is an OAuth popup window
   // that should be closed. in this case just render a blank page.
-  
+
   // use your server to render the page markup or redirect
   // to another location if the user is unauthorized.
   // see the demo app for a more complete example.

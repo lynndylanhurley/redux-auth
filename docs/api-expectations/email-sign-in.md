@@ -46,7 +46,7 @@ None. The API won't care about any headers for this request.
 
 ### Success Response Body
 
-This be an object containing the attributes that your API is configured to send regarding your user. The attributes will be nested within a `data` object. At a minimum, this should contain the following attributes.
+This be an object containing the attributes that your API is configured to send describing your user. The attributes will be nested within a `data` object. At a minimum, this should contain the following attributes.
 
 ##### uid
 ###### string

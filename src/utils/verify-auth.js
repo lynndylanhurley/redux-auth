@@ -80,6 +80,7 @@ export function fetchToken({rawEndpoints, cookies, currentLocation}) {
         return resp.json();
       })
       .then((json) => {
+        console.log("@-->resp", json);
         if (json.success) {
           return resolve({
             headers: newHeaders,

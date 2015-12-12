@@ -119,7 +119,7 @@ export function getEmailSignUpUrl (endpointKey) {
 }
 
 export function getPasswordResetRequestUrl (endpointKey) {
-  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordResetPath}`
+  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).passwordResetPath}?config_name=${endpointKey}`
 }
 
 export function getPasswordUpdateUrl (endpointKey) {
