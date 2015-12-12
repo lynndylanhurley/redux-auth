@@ -1,10 +1,14 @@
 # OAuth Sign In
 
+* [Overview](#overview)
 * [Popup](#request)
   * [Popup Params](#popup-params)
 * [Success Popup Redirect](#success-popup-redirect)
   * [Success Popup Redirect Params](#success-popup-redirect-params)
 * [Error](#error)
+
+## Overview
+![oauth sign in](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/diagram-oauth.jpg)
 
 ## Popup
 

@@ -1,5 +1,6 @@
 # Update Password
 
+* [Overview](#overview)
 * [Request](#request)
   * [Request Body](#request-body)
   * [Request Headers](#request-headers)
@@ -9,6 +10,10 @@
 * [Error Response](#error-response)
   * [Error Response Body](#error-response-body)
   * [Error Response Headers](#error-response-headers)
+
+## Overview
+
+![update password](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/diagram-update-password.jpg)
 
 ## Request
 

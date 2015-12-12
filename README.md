@@ -1,4 +1,4 @@
-# Redux Auth
+[![redux auth](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/redux-auth-logo.gif)](https://github.com/lynndylanhurley/redux-auth)
 
 ## THIS LIBRARY IS UNRELEASED!! DO NOT USE YET!!!
 
@@ -53,15 +53,8 @@ The demo uses [React][react], and the source can be found [here](https://github.
   * [RequestPasswordResetForm](#requestpasswordresetform)
   * [UpdatePasswordForm](#updatepasswordform)
   * [AuthGlobals](#authglobals)
-* [Using multiple user types](#multiple-user-types)
-* [Conceptual diagrams](#conceptual)
-  * [OAuth2 Authentication](#oauth2-signin)
-  * [Email Registration](#email-registration)
-  * [Email Sign In](#email-sign-in)
-  * [Password Reset Requests](#password-reset)
-* [Notes on Token Management](#token-management)
-* [Notes on Batch Requests](#batch-requests)
-* [Token Formatting](#identifying-users-on-the-server)
+* [Using Multiple User Types](#multiple-user-types)
+* [Conceptual Overview](#conceptual)
 * [Contributing](#contributing)
 * [Development](#development)
 * [Callouts](#credits)
@@ -791,109 +784,19 @@ Path (relative to `apiUrl`) for submitting new passwords for authenticated users
 
 --
 
-# Conceptual
+# Extended Documentation
 
-The following diagrams illustrate the authentication processes used by this plugin.
+Keep reading to learn more about what the API expects from this library, and to see diagrams on how it all fits together. All of this stuff happens automatically when using this library with the [devise token auth gem][dta], but this information will be useful if you need to implement your own API.
 
-## OAuth2 Sign In
-
-The following diagram illustrates the steps necessary to authenticate a client using an oauth2 provider.
-
-![OAuth2 Flow][o-auth-flow]
-
-When authenticating with a 3rd party provider, the following steps will take place.
-
-1. An popup window will be opened to the provider's authentication page.
-2. Once the user signs in, they will be redirected back to the API at the callback uri that was registered with the oauth2 provider.
-3. The API will redirect the user back to the client with the auth credentials appended to the URL. The original client window will read these credentials and close the popup.
-
-The popup redirect url must include the following querystring parameters:
-
-* `message` - this must contain the value "deliverCredentials"
-* `auth-token` - a unique token set by your server.
-* `uid` - the id that was returned by the provider. For example, the user's facebook id, twitter id, etc.
-
-## Email registration
-
-This plugin also provides support for email registration. The following diagram illustrates this process.
-
-![Email registration][email-registration-flow]
-
-## Email sign in
-
-![Email authentication][email-sign-in-flow]
-
-## Password reset
-
-The password reset flow is similar to the email registration flow.
-
-![Password reset][password-reset-flow]
-
-When the user visits the link contained in the resulting email, they will be authenticated for a single session. An event will be broadcast that can be used to prompt the user to update their password. See the `auth.passwordResetConfirm.success` event for details.
-
-## Token management
-
-Tokens should be invalidated after each request to the API. The following diagram illustrates this concept:
-
-![Token handling][token-handling-diagram]
-
-During each request, a new token is generated. The `access-token` header that should be used in the next request is returned in the `access-token` header of the response to the previous request. The last request in the diagram fails because it tries to use a token that was invalidated by the previous request.
-
-The benefit of this measure is that if a user's token is compromised, the user will immediately be forced to re-authenticate. This will invalidate the token that is now in use by the attacker.
-
-The only case where an expired token is allowed is during [batch requests](#batch-requests).
-
-Token management is handled by default when using this plugin with the [devise token auth][dta] gem.
-
-## Batch requests
-
-By default, the API should update the auth token for each request ([read more](#token-management). But sometimes it's neccessary to make several concurrent requests to the API, for example:
-
-##### Example batch request
-
-~~~javascript
-fetch('/api/restricted_resource_1').then(resp => {
-  // handle response
-});
-
-fetch('/api/restricted_resource_2').then(resp => {
-  // handle response
-});
-~~~
-
-In this case, it's impossible to update the `access-token` header for the second request with the `access-token` header of the first response because the second request will begin before the first one is complete. The server must allow these batches of concurrent requests to share the same auth token. This diagram illustrates how batch requests are identified by the server:
-
-![Batch request overview][batch-request-a]
-
-The "5 second" buffer in the diagram is the default used by the [devise token auth][dta] gem.
-
-The following diagram details the relationship between the client, server, and access tokens used over time when dealing with batch requests:
-
-![Batch request overview cont][batch-request-b]
-
-Note that when the server identifies that a request is part of a batch request, the user's auth token is not updated. The auth token will be updated for the first request in the batch, and then that same token will be returned in the responses for each subsequent request in the batch (as shown in the diagram).
-
-The [devise token auth][dta] gem automatically manages batch requests, and it provides settings to fine-tune how batch request groups are identified.
-
-## Identifying users on the server.
-
-The user's authentication information is included by the client in the `access-token` header of each request. If you're using the [devise token auth](https://github.com/lynndylanhurley/devise_token_auth) gem, the header must follow the [RFC 6750 Bearer Token](http://tools.ietf.org/html/rfc6750) format:
-
-~~~
-"access-token": "wwwww",
-"token-type":   "Bearer",
-"client":       "xxxxx",
-"expiry":       "yyyyy",
-"uid":          "zzzzz"
-~~~
-
-Replace `xxxxx` with the user's `auth_token` and `zzzzz` with the user's `uid`. The `client` field exists to allow for multiple simultaneous sessions per user. The `client` field defaults to `default` if omitted. `expiry` is used by the client to invalidate expired tokens without making an API request. A more in depth explanation of these values is [here](https://github.com/lynndylanhurley/devise_token_auth#identifying-users-in-controllers).
-
-This will all happen automatically when using this plugin.
-
-**Note**: You can customize the auth headers however you like. [Read more](#using-alternate-header-formats).
-
----
+* [Signing In With Email](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/email-sign-in.md)
+* [Signing In With OAuth](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/oauth-sign-in.md)
+* [Validating Returning Users](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/token-validation.md)
+* [Managing Session Tokens](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/token-management.md)
+* [Signing Out](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/sign-out.md)
+* [Registering With Email](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/email-sign-up.md)
+* [Requesting Password Resets](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/request-password-reset.md)
+* [Destroying Accounts](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/destroy-account.md)
+* [Updating Passwords](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/update-password.md)
 
 # Contributing
 
@@ -977,9 +880,6 @@ WTFPL © Lynn Dylan Hurley
 [email-registration-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/email-registration-flow.jpg
 [email-sign-in-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/email-sign-in-flow.jpg
 [password-reset-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/password-reset-flow.jpg
-[token-handling-diagram]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/token-update-detail.jpg
-[batch-request-a]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-overview.jpg
-[batch-request-b]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/batch-request-detail.jpg
 
 [bs-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-destroy-account.png
 [bs-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-email-sign-in.png

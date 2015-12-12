@@ -1,10 +1,6 @@
 # Token Validation
 
-This operation is performed by:
-1. The Node.js server that renders the initial content React.js application. This is not necessarily the same server as your API, but it may be depending on your setup.
-1. React Native applications upon opening the application.
-1. React web applications following successful OAuth authentication.
-
+* [Overview](#overview)
 * [Request](#request)
   * [Request Body](#request-body)
   * [Request Headers](#request-headers)
@@ -14,6 +10,16 @@ This operation is performed by:
 * [Error Response](#error-response)
   * [Error Response Body](#error-response-body)
   * [Error Response Headers](#error-response-headers)
+
+## Overview
+
+This operation is performed by:
+
+1. The Node.js server that renders the initial React.js application. This is not necessarily the same server as your API, but it may be depending on your setup.
+1. React Native applications upon opening the application.
+1. React web applications following successful OAuth authentication.
+
+![token validation](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/diagram-token-validation.jpg)
 
 ## Request
 

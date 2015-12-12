@@ -1,5 +1,6 @@
 # Sign Out
 
+* [Overview](#overview)
 * [Request](#request)
   * [Request Body](#request-body)
   * [Request Headers](#request-headers)
@@ -9,6 +10,10 @@
 * [Error Response](#error-response)
   * [Error Response Body](#error-response-body)
   * [Error Response Headers](#error-response-headers)
+
+## Overview
+
+![sign out](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/diagram-sign-out.jpg)
 
 ## Request
 
