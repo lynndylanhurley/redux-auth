@@ -42,8 +42,6 @@ The demo uses [React][react], and the source can be found [here](https://github.
 * [About this plugin](#about-this-plugin)
 * [Installation](#installation)
 * [Configuration](#configuration)
-* [Methods](#methods)
-  * [fetch](#fetch)
 * [Components](#components)
   * [EmailSignUpForm](#emailsignupform)
   * [EmailSignInForm](#emailsigninform)
@@ -53,6 +51,9 @@ The demo uses [React][react], and the source can be found [here](https://github.
   * [RequestPasswordResetForm](#requestpasswordresetform)
   * [UpdatePasswordForm](#updatepasswordform)
   * [AuthGlobals](#authglobals)
+* [Methods](#methods)
+  * [configure](#configure)
+  * [fetch](#fetch)
 * [Using Multiple User Types](#multiple-user-types)
 * [Conceptual Overview](#conceptual)
 * [Contributing](#contributing)
@@ -208,61 +209,6 @@ See below for the complete list of configuration options.
 
 # Usage
 
-## Methods
-
-### configure
-
-This must be run before your app is initialized. This should be run on both the server, and on the client. The server will need an additional argument containing information about the current request's cookies and location.
-
-##### configure arguments
-* **`endpoints`**: An object containing information about your API. This at least needs to contain the full path to your URL as the `apiUrl` property. See [here](#complete-config-options) for a complete list of endpoint config options.
-* **`settings`**: When rendering serverside, this will need to be an object that contains the following attributes:
-  * **`isServer`**: A boolean that must be set to `true` when rendering server-side.
-  * **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
-  * **`location`**: A string representation of the current request's URL.
-
-
-~~~js
-import { configure } from "redux-auth";
-
-// server-side usage
-store.dispatch(configure(
-  {apiUrl: "https://api.graveflex.com"},
-  {isServer: true, cookies, currentLocation}
-).then(({redirectPath, blank} = {}) => {
-  // if `blank` is true, it is because this is an OAuth popup window
-  // that should be closed. in this case just render a blank page.
-
-  // use your server to render the page markup or redirect
-  // to another location if the user is unauthorized.
-  // see the demo app for a more complete example.
-});
-
-// client-side usage
-store.dispatch(configure(
-  {apiUrl: "https://api.graveflex.com"}
-).then(() => {
-  // your store should now have the current user. now render your
-  // app to the DOM. see the demo app for a more complete example.
-});
-~~~
-
-### fetch
-A wrapper around the [whatwg fetch][whatwg-fetch] implementation that automatically sends and tracks authentication headers. See [here][fetch-spec] for the complete spec.
-
-Any requests to the API that rely on authentication will need to use the `fetch` function included in this library.
-
-###### Example
-
-~~~js
-import { fetch } from "redux-auth";
-
-// usage
-fetch("http://api.mysite.com").then(resp => {
-  alert(`Api response: `${resp}`);
-});
-~~~
-
 ## Components
 
 There are 3 Themes included in this module.
@@ -275,14 +221,7 @@ The default theme has no styling, and honestly it just looks really bad. But if 
 
 All components are already set up to make their own requests, handle errors, and display success messages.
 
-Here is an example error dialog using the Material UI theme:
-
-![Material UI error dialog][mui-error-dialog]
-
-Here is an example of inline form errors in the Material UI theme:
-
-![Material UI inline errors][mui-inline-errors]
-
+The examples below use the Material UI theme.
 
 ### EmailSignUpForm
 
@@ -317,17 +256,7 @@ render: () {
 
 ##### EmailSignUpForm example
 
-Material Ui:
-
 ![Material UI email sign up][mui-email-sign-up]
-
-Bootstrap:
-
-![Bootstrap email sign up][bs-email-sign-up]
-
-Default:
-
-![Default email sign up][default-email-sign-up]
 
 ### EmailSignInForm
 
@@ -359,17 +288,8 @@ render: () {
 
 ##### EmailSignInForm example
 
-Material Ui:
-
 ![Material UI email sign in][mui-email-sign-in]
 
-Bootstrap:
-
-![Bootstrap email sign in][bs-email-sign-in]
-
-Default:
-
-![Default email sign in][default-email-sign-in]
 
 ### OAuthSignInButton
 
@@ -404,17 +324,7 @@ render: () {
 
 ##### OAuthSignInButton example
 
-Material Ui:
-
 ![Material UI OAuth sign in][mui-oauth-sign-in]
-
-Bootstrap:
-
-![Bootstrap OAuth sign in][bs-oauth-sign-in]
-
-Default:
-
-![Default OAuth sign in][default-oauth-sign-in]
 
 ### SignOutButton
 
@@ -448,17 +358,7 @@ render: () {
 
 ##### SignOutButton example
 
-Material Ui:
-
 ![Material UI sign out][mui-sign-out]
-
-Bootstrap:
-
-![Bootstrap OAuth sign in][bs-oauth-sign-in]
-
-Default:
-
-![Default OAuth sign in][default-sign-out]
 
 ### DestroyAccountButton
 
@@ -492,17 +392,7 @@ render: () {
 
 ##### DestroyAccountButton example
 
-Material Ui:
-
 ![Material UI destroy account][mui-destroy-account]
-
-Bootstrap:
-
-![Bootstrap destroy account][bs-destroy-account]
-
-Default:
-
-![Default destroy account][default-destroy-account]
 
 ### RequestPasswordResetForm
 
@@ -512,8 +402,8 @@ A form used to send password reset emails to users that forgot their password. W
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block.
 * **`inputProps`**: An object containing the following attributes:
-	* **`email`**: An object that will override the email input component's default props.
-	* **`submit`**: An object that will override the submit button component's default props.
+  * **`email`**: An object that will override the email input component's default props.
+  * **`submit`**: An object that will override the submit button component's default props.
 
 ~~~js
 // default theme
@@ -533,17 +423,7 @@ render: () {
 
 ##### RequestPasswordResetForm example
 
-Material Ui:
-
 ![Material UI request password reset][mui-password-reset]
-
-Bootstrap:
-
-![Bootstrap request password reset][bs-password-reset]
-
-Default:
-
-![Default request password reset][default-password-reset]
 
 ### UpdatePasswordForm
 
@@ -553,9 +433,9 @@ A form that can be used to change the current user's password.
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block. If this value is not provided, the current user's password will be updated regardless of their user type.
 * **`inputProps`**: An object containing the following attributes:
-	* **`password`**: An object that will override the password input component's default props.
-	* **`passwordConfirmation`**: An object that will override the password confirmation input component's default props.
-	* **`submit`**: An object that will override the submit button component's default props.
+  * **`password`**: An object that will override the password input component's default props.
+  * **`passwordConfirmation`**: An object that will override the password confirmation input component's default props.
+  * **`submit`**: An object that will override the submit button component's default props.
 
 ~~~js
 // default theme
@@ -575,17 +455,7 @@ render: () {
 
 ##### UpdatePasswordForm example
 
-Material Ui:
-
 ![Material UI update password][mui-update-password]
-
-Bootstrap:
-
-![Bootstrap update password][bs-update-password]
-
-Default:
-
-![Default update-password][default-update-password]
 
 ### AuthGlobals
 
@@ -633,6 +503,70 @@ var routes = (
 ~~~
 
 --
+
+## Methods
+
+### configure
+
+This must be run before your app is initialized. This should be run on both the server, and on the client. The server will need an additional argument containing information about the current request's cookies and location.
+
+##### configure arguments
+* **`endpoints`**: An object containing information about your API. This at least needs to contain the full path to your URL as the `apiUrl` property. See [here](#complete-config-options) for a complete list of endpoint config options.
+* **`settings`**: When rendering serverside, this will need to be an object that contains the following attributes:
+* **`isServer`**: A boolean that must be set to `true` when rendering server-side.
+* **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
+* **`location`**: A string representation of the current request's URL.
+
+--
+
+##### configure example
+
+~~~js
+import { configure } from "redux-auth";
+
+// server-side usage
+store.dispatch(configure(
+  {apiUrl: "https://api.graveflex.com"},
+  {isServer: true, cookies, currentLocation}
+).then(({redirectPath, blank} = {}) => {
+  // if `blank` is true, it is because this is an OAuth popup window
+  // that should be closed. in this case just render a blank page.
+
+  // use your server to render the page markup or redirect
+  // to another location if the user is unauthorized.
+  // see the demo app for a more complete example.
+});
+
+// client-side usage
+store.dispatch(configure(
+  {apiUrl: "https://api.graveflex.com"}
+).then(() => {
+  // your store should now have the current user. now render your
+  // app to the DOM. see the demo app for a more complete example.
+});
+~~~
+
+--
+
+### fetch
+A wrapper around the [whatwg fetch][whatwg-fetch] implementation that automatically sends and tracks authentication headers. See [here][fetch-spec] for the complete spec.
+
+Any requests to the API that rely on authentication will need to use the `fetch` function included in this library.
+
+--
+###### fetch example
+
+~~~js
+import { fetch } from "redux-auth";
+
+// usage
+fetch("http://api.mysite.com").then(resp => {
+  alert(`Api response: `${resp}`);
+});
+~~~
+
+--
+
 
 # Multiple user types
 
@@ -881,29 +815,13 @@ WTFPL © Lynn Dylan Hurley
 [email-sign-in-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/email-sign-in-flow.jpg
 [password-reset-flow]: https://github.com/lynndylanhurley/ng-token-auth/raw/master/test/app/images/flow/password-reset-flow.jpg
 
-[bs-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-destroy-account.png
-[bs-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-email-sign-in.png
-[bs-email-sign-up]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-email-sign-up.png
-[bs-oauth-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-oauth-sign-in.png
-[bs-password-reset]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-password-reset.png
-[bs-update-password]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-update-password.png
-[bs-sign-out]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/bs-sign-out.png
-
-[mui-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-destroy-account.png
-[mui-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-email-sign-in.png
-[mui-email-sign-up]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-email-sign-up.png
-[mui-oauth-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-oauth-sign-in.png
-[mui-password-reset]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-password-reset.png
-[mui-update-password]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-update-password.png
-[mui-sign-out]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-sign-out.png
-
-[default-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-destroy-account.png
-[default-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-email-sign-in.png
-[default-email-sign-up]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-email-sign-up.png
-[default-oauth-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-oauth-sign-in.png
-[default-password-reset]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-password-reset.png
-[default-update-password]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-update-password.png
-[default-sign-out]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/default-sign-out.png
+[mui-destroy-account]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/destroy-account.gif
+[mui-email-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/email-sign-in.gif
+[mui-email-sign-up]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/email-sign-up.gif
+[mui-oauth-sign-in]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/oauth-sign-in.gif
+[mui-password-reset]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/request-password-reset.gif
+[mui-update-password]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/update-password.gif
+[mui-sign-out]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/gifs/sign-out.gif
 
 [mui-error-dialog]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-error-dialog.png
 [mui-inline-errors]: https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/mui-inline-errors.png

@@ -24,7 +24,7 @@ class Main extends React.Component {
   render () {
     console.log("page endpoint", this.props.pageEndpoint);
     let Theme = MUITheme;
-    let themePath = "/views/material-ui";
+    let themePath = "/material-ui-theme";
     let endpointAttr = (this.props.pageEndpoint === "default")
       ? ""
       : "endpoint=\"evilUser\"";
@@ -36,7 +36,7 @@ class Main extends React.Component {
         break;
       case "bootstrap":
         Theme = BSTheme;
-        themePath = "/views/bootstrap";
+        themePath = "/bootstrap-theme";
         break;
     }
 
