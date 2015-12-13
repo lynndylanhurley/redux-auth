@@ -63,7 +63,7 @@ The demo uses [React][react], and the source can be found [here](https://github.
 
 # About this plugin
 
-This plugin relies on [token based authentication][token-auth-wiki]. This requires coordination between the client and the server. [Diagrams](#conceptual) are included to illustrate this relationship.
+This plugin relies on [token based authentication][token-auth-wiki]. This requires coordination between the client and the server. [Diagrams](#extended-documentation) are included to illustrate this relationship.
 
 This plugin was designed to work out of the box with the wonderful [devise token auth][dta] gem, but it's flexible enough to be used in just about any environment.
 
