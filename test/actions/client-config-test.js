@@ -148,50 +148,58 @@ export default function() {
 
       });
 
-      it("should show success modal for account confirmations", done => {
-        createTokenBridge({
-          user,
-          headers,
-          currentEndpointKey: "default",
-          defaultEndpointKey: "default",
-          firstTimeLogin: true
+      describe("confirmation modals", () => {
+        ["default", "alt"].forEach(endpoint => {
+          describe(`${endpoint} endpoint config`, () => {
+            it("should show success modal for account confirmations", done => {
+              createTokenBridge({
+                user,
+                headers,
+                currentEndpointKey: endpoint,
+                defaultEndpointKey: "default",
+                firstTimeLogin: true
+              });
+
+              initialize()
+                .then(({store}) => {
+                  let user = store.getState().auth.get("user");
+                  let config = store.getState().auth.get("configure");
+                  let ui = store.getState().auth.get("ui");
+                  expect(user.get("isSignedIn")).to.equal(true);
+                  expect(config.get("currentEndpointKey")).to.equal(endpoint);
+                  expect(config.get("defaultEndpointKey")).to.equal("default");
+                  expect(getCurrentEndpointKey()).to.equal(endpoint);
+                  expect(user.getIn(["attributes", "uid"])).to.equal("test@test.com");
+                  expect(ui.get("firstTimeLoginSuccessModalVisible")).to.equal(true);
+                  done();
+                }).catch(e => console.log("error:", e.stack));
+            });
+
+            it("should show success modal for password resets", done => {
+              createTokenBridge({
+                user,
+                headers,
+                currentEndpointKey: endpoint,
+                defaultEndpointKey: "default",
+                mustResetPassword: true
+              });
+
+              initialize()
+                .then(({store}) => {
+                  let user = store.getState().auth.get("user");
+                  let ui = store.getState().auth.get("ui");
+                  let config = store.getState().auth.get("configure");
+                  expect(config.get("currentEndpointKey")).to.equal(endpoint);
+                  expect(config.get("defaultEndpointKey")).to.equal("default");
+                  expect(getCurrentEndpointKey()).to.equal(endpoint);
+                  expect(user.get("isSignedIn")).to.equal(true);
+                  expect(user.getIn(["attributes", "uid"])).to.equal("test@test.com");
+                  expect(ui.get("passwordResetSuccessModalVisible")).to.equal(true);
+                  done();
+                }).catch(e => console.log("error:", e.stack));
+            });
+          });
         });
-
-        initialize()
-          .then(({store}) => {
-            let user = store.getState().auth.get("user");
-            let config = store.getState().auth.get("configure");
-            let ui = store.getState().auth.get("ui");
-            expect(user.get("isSignedIn")).to.equal(true);
-            expect(config.get("currentEndpointKey")).to.equal("default");
-            expect(config.get("defaultEndpointKey")).to.equal("default");
-            expect(getCurrentEndpointKey()).to.equal("default");
-            expect(user.getIn(["attributes", "uid"])).to.equal("test@test.com");
-            expect(ui.get("firstTimeLoginSuccessModalVisible")).to.equal(true);
-            done();
-          }).catch(e => console.log("error:", e.stack));
-      });
-
-      it("should show success modal for password resets", done => {
-        createTokenBridge({
-          user,
-          headers,
-          mustResetPassword: true
-        });
-
-        initialize()
-          .then(({store}) => {
-            let user = store.getState().auth.get("user");
-            let ui = store.getState().auth.get("ui");
-            let config = store.getState().auth.get("configure");
-            expect(config.get("currentEndpointKey")).to.equal("default");
-            expect(config.get("defaultEndpointKey")).to.equal("default");
-            expect(getCurrentEndpointKey()).to.equal("default");
-            expect(user.get("isSignedIn")).to.equal(true);
-            expect(user.getIn(["attributes", "uid"])).to.equal("test@test.com");
-            expect(ui.get("passwordResetSuccessModalVisible")).to.equal(true);
-            done();
-          }).catch(e => console.log("error:", e.stack));
       });
     });
   });

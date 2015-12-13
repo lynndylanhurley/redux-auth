@@ -15,7 +15,7 @@ function parseHeaders (headers) {
 
   // set header key + val for each key in `tokenFormat` config
   // TODO: get actual config value
-  for (var key of ["access-token", "token-type", "client", "expiry", "uid"]) {
+  for (var key of ["access-token", "token-type", "client", "expiry", "uid", "config", "endpointKey"]) {
     newHeaders[key] = headers[key];
 
     if (newHeaders[key]) {
@@ -47,10 +47,9 @@ export function fetchToken({rawEndpoints, cookies, currentLocation}) {
           currentEndpointKey,
           headers;
 
-
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
         headers            = parseHeaders(authRedirectHeaders);
-        currentEndpointKey = JSON.parse(authRedirectHeaders.config || "null");
+        currentEndpointKey = authRedirectHeaders.endpointKey || null;
         mustResetPassword  = JSON.parse(authRedirectHeaders.reset_password || "false");
         firstTimeLogin     = JSON.parse(authRedirectHeaders.account_confirmation_success || "false");
       } else if (rawCookies && parsedCookies) {
@@ -80,7 +79,6 @@ export function fetchToken({rawEndpoints, cookies, currentLocation}) {
         return resp.json();
       })
       .then((json) => {
-        console.log("@-->resp", json);
         if (json.success) {
           return resolve({
             headers: newHeaders,

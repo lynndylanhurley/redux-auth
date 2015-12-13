@@ -9,6 +9,7 @@ var testUid        = "test@test.com",
     testToken      = "xyz",
     testClient     = "123",
     apiUrl         = "http://api.site.com",
+    altApiUrl      = "http://api.alt.com",
     testExpiry     = new Date().getTime() + 500,
     errRespSpy,
     successRespSpy,
@@ -62,75 +63,86 @@ export default function() {
         .catch(err => console.log("error:", err.stack));
       });
 
-      it("handles failed first time logins and password resets", done => {
-        let authRedirectUrl = `${apiUrl}/?account_confirmation_success=true&client_id=oxyA2fe4WI016-i4HtiUMg&config=default&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
+      describe("confirmation modals", () => {
+        ["default", "alt"].forEach(endpoint => {
+          var targetEndpointUrl = (endpoint === "default") ? apiUrl : altApiUrl;
 
-        let spy = sinon.spy(fakeErrorResponse);
-        nock(apiUrl)
-          .get("/auth/validate_token?unbatch=true")
-          .reply(401, spy);
+          describe(`${endpoint} endpoint config`, () => {
+            it("handles failed first time logins and password resets", done => {
+              let authRedirectUrl = `${targetEndpointUrl}/?account_confirmation_success=true&client_id=oxyA2fe4WI016-i4HtiUMg&config=${endpoint}&expiry=&reset_password=true&token=DzPJc6NRLrSPD9HBCYZeVA&uid=test%40test.com`;
+              let spy = sinon.spy(fakeErrorResponse);
+              nock(targetEndpointUrl)
+                .get("/auth/validate_token?unbatch=true")
+                .reply(401, spy);
 
-        initialize({
-          apiUrl
-        }, {
-          isServer: true,
-          cookies: "",
-          currentLocation: authRedirectUrl
-        }).then(({store}) => {
-          let user = store.getState().auth.get("user");
-          let server = store.getState().auth.get("server");
+              initialize([
+                {default: {apiUrl}},
+                {alt: {apiUrl: altApiUrl}}
+              ], {
+                isServer: true,
+                cookies: "",
+                currentLocation: authRedirectUrl
+              }).then(({store}) => {
+                let user = store.getState().auth.get("user");
+                let server = store.getState().auth.get("server");
 
-          // user should not be signed in
-          expect(user.get("isSignedIn")).to.equal(false);
-          expect(user.get("attributes")).to.equal(undefined);
+                // user should not be signed in
+                expect(user.get("isSignedIn")).to.equal(false);
+                expect(user.get("attributes")).to.equal(undefined);
 
-          // should still flag first time logins + password resets
-          expect(server.get("mustResetPassword")).to.equal(true);
-          expect(server.get("firstTimeLogin")).to.equal(true);
+                // should still flag first time logins + password resets
+                expect(server.get("mustResetPassword")).to.equal(true);
+                expect(server.get("firstTimeLogin")).to.equal(true);
 
-          // ensure that the call to the API was made
-          expect(spy.calledOnce).to.be.ok;
-          done();
-        }).catch(err => console.log("error", err.stack));
-      });
+                // ensure that the call to the API was made
+                expect(spy.calledOnce).to.be.ok;
+                done();
+              }).catch(err => console.log("error", err.stack));
+            });
 
-      it("should handle failed validations from the API", done => {
-        let reqHeaders;
-        let spy = sinon.spy(function() {
-          reqHeaders = this.req.headers;
-          return fakeErrorResponse();
+            it("should handle failed validations from the API", done => {
+              let reqHeaders;
+              let spy = sinon.spy(function() {
+                reqHeaders = this.req.headers;
+                return fakeErrorResponse();
+              });
+
+              nock(apiUrl)
+              .get("/auth/validate_token?unbatch=true")
+              .reply(401, spy);
+
+              initialize({
+                apiUrl
+              }, {
+                isServer: true,
+                currentLocation: "/",
+                cookies: rawTestCookies
+              }).then(({store}) => {
+                let user = store.getState().auth.get("user");
+
+                // user should not be signed in
+                expect(user.get("isSignedIn")).to.equal(false);
+                expect(user.get("attributes")).to.equal(undefined);
+
+                // one call should have been made to API
+                expect(spy.calledOnce).to.be.ok;
+
+                // ensure that API call has credentials as defined in cookies
+                expect(reqHeaders["access-token"]).to.include(testToken);
+                expect(reqHeaders["token-type"]).to.include("Bearer");
+                expect(reqHeaders["client"]).to.include(testClient);
+                expect(reqHeaders["uid"]).to.include(testUid);
+                expect(reqHeaders["expiry"]).to.include(`${testExpiry}`);
+
+                done();
+              }).catch(e => console.log("error", e.stack));
+            });
+
+          });
         });
 
-        nock(apiUrl)
-          .get("/auth/validate_token?unbatch=true")
-          .reply(401, spy);
-
-        initialize({
-          apiUrl
-        }, {
-          isServer: true,
-          currentLocation: "/",
-          cookies: rawTestCookies
-        }).then(({store}) => {
-          let user = store.getState().auth.get("user");
-
-          // user should not be signed in
-          expect(user.get("isSignedIn")).to.equal(false);
-          expect(user.get("attributes")).to.equal(undefined);
-
-          // one call should have been made to API
-          expect(spy.calledOnce).to.be.ok;
-
-          // ensure that API call has credentials as defined in cookies
-          expect(reqHeaders["access-token"]).to.include(testToken);
-          expect(reqHeaders["token-type"]).to.include("Bearer");
-          expect(reqHeaders["client"]).to.include(testClient);
-          expect(reqHeaders["uid"]).to.include(testUid);
-          expect(reqHeaders["expiry"]).to.include(`${testExpiry}`);
-
-          done();
-        }).catch(e => console.log("error", e.stack));
       });
+
 
       it("should redirect unauthenticated users trying to access restricted pages", done => {
         let spy = sinon.spy(fakeErrorResponse);
