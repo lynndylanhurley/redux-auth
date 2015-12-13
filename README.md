@@ -41,7 +41,6 @@ The demo uses [React][react], and the source can be found [here](https://github.
 
 * [About this plugin](#about-this-plugin)
 * [Installation](#installation)
-* [Configuration](#configuration)
 * [Components](#components)
   * [EmailSignUpForm](#emailsignupform)
   * [EmailSignInForm](#emailsigninform)
@@ -54,6 +53,7 @@ The demo uses [React][react], and the source can be found [here](https://github.
 * [Methods](#methods)
   * [configure](#configure)
   * [fetch](#fetch)
+* [Configuration](#configuration)
 * [Using Multiple User Types](#multiple-user-types)
 * [Conceptual Overview](#conceptual)
 * [Contributing](#contributing)
@@ -75,137 +75,6 @@ Only npm is currently supported.
 ~~~sh
 npm install redux-auth --save
 ~~~
-
-# Configuration
-
-This is the most difficult step, but only because configuring a [redux][redux] app is inherently difficult.
-
-The following example assumes that you are familiar with redux, and that you know how to [create a store][redux-create-store]. Also keep in mind that this is a really basic example that does not even include routing. See the [demo app][redux-auth-demo] for a more complete example.
-
-This example assumes a directory structure that looks like this:
-
-~~~
-src/
-  app.js
-  client.js
-  server.js
-~~~
-
-##### config shared by both client and server
-~~~js
-// app.js
-import React from "react";
-import {Provider} from "react-redux";
-import {configure, authStateReducer, AuthGlobals} from "redux-auth";
-import {createStore, compose, applyMiddleware, combineReducers} from "redux";
-import {AuthGlobals} from "redux-auth"
-
-class App extends React.Component {
-  render() {
-    return (
-      <div>
-        <AuthGlobals />
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-// create your main reducer
-const reducer = combineReducers({
-  auth: authStateReducer,
-  // ... add your own reducers here
-});
-
-// create your app's store.
-// note that thunk is required to use redux-auth
-const store = compose(
-  applyMiddleware(thunk),
-  // ... add additional middleware here (router, etc.)
-)(createStore)(reducer);
-
-// a single function can be used for both client and server-side rendering.
-// when run from the server, this function will need to know the cookies and
-// url of the current request. also be sure to set `isServer` to true.
-export function renderApp({cookies, isServer, currentLocation} = {}) {
-  // configure redux-auth BEFORE rendering the page
-  store.dispatch(configure(
-    // use the FULL PATH to your API
-    {apiUrl: "http://api.catfancy.com"},
-    {isServer, cookies, currentLocation}
-  ).then({redirectPath, blank} = {}) => {
-    if (blank) {
-      // if `blank` is true, this is an OAuth redirect and should not
-      // be rendered
-      return <noscript />;
-    } else {
-      return (
-        <Provider store={store} key="provider">
-          <App />
-        </Provider>
-      );
-    }
-  });
-}
-~~~
-
-##### server-side rendering configuration
-~~~js
-// server.js
-import qs from "query-string";
-import {renderToString} from "react-dom/server";
-import { renderApp } from "./app";
-
-// render the main app component into an html page
-function getMarkup(appComponent) {
-  var markup = renderToString(appComponent)
-
-  return `<!doctype html>
-          <html>
-            <head>
-              <title>Redux Auth – Isomorphic Example</title>
-            </head>
-            <body>
-              <div id="react-root">${markup}</div>
-              <script src="/path/to/my/scripts.js"></script>
-            </body>
-          </html>`;
-}
-
-// this function will differ depending on the serverside framework that
-// you decide to use (express, hapi, etc.). The following example uses hapi
-server.ext("onPreResponse", (request, reply) => {
-  var query = qs.stringify(request.query);
-  var currentLocation = request.path + (query.length ? "?" + query : "");
-  var cookies = request.headers.cookies;
-
-  renderApp({
-    isServer: true,
-    cookies,
-    currentLocation
-  }).then(appComponent => {
-    reply(getMarkup(appComponent));
-  });
-}
-~~~
-
-##### client side rendering configuration
-
-~~~js
-// client.js
-import React from "react";
-import ReactDOM from "react-dom";
-import { renderApp } from "./app";
-
-const reactRoot = window.document.getElementById("react-root");
-renderApp().then(appComponent => {
-  ReactDOM.render(appComponent, reactRoot);
-});
-~~~
-
-**Note:** be sure to include the [`AuthGlobals`](#authglobals) component at the top level of your application. This means **outside** of your `Routes` if you're using something like [react-router][react-router].
-
-See below for the complete list of configuration options.
 
 # Usage
 
@@ -567,6 +436,136 @@ fetch("http://api.mysite.com").then(resp => {
 
 --
 
+# Configuration
+
+This is the most difficult step, but only because configuring a [redux][redux] app is inherently difficult.
+
+The following example assumes that you are familiar with redux, and that you know how to [create a store][redux-create-store]. Also keep in mind that this is a really basic example that does not even include routing. See the [demo app][redux-auth-demo] for a more complete example.
+
+This example assumes a directory structure that looks like this:
+
+~~~
+src/
+  app.js
+  client.js
+  server.js
+~~~
+
+##### config shared by both client and server
+~~~js
+// app.js
+import React from "react";
+import {Provider} from "react-redux";
+import {configure, authStateReducer, AuthGlobals} from "redux-auth";
+import {createStore, compose, applyMiddleware, combineReducers} from "redux";
+import {AuthGlobals} from "redux-auth"
+
+class App extends React.Component {
+  render() {
+    return (
+      <div>
+        <AuthGlobals />
+        {this.props.children}
+        </div>
+      );
+  }
+}
+
+// create your main reducer
+const reducer = combineReducers({
+  auth: authStateReducer,
+  // ... add your own reducers here
+});
+
+// create your app's store.
+// note that thunk is required to use redux-auth
+const store = compose(
+  applyMiddleware(thunk),
+  // ... add additional middleware here (router, etc.)
+)(createStore)(reducer);
+
+// a single function can be used for both client and server-side rendering.
+// when run from the server, this function will need to know the cookies and
+// url of the current request. also be sure to set `isServer` to true.
+export function renderApp({cookies, isServer, currentLocation} = {}) {
+  // configure redux-auth BEFORE rendering the page
+  store.dispatch(configure(
+    // use the FULL PATH to your API
+    {apiUrl: "http://api.catfancy.com"},
+    {isServer, cookies, currentLocation}
+  ).then({redirectPath, blank} = {}) => {
+    if (blank) {
+      // if `blank` is true, this is an OAuth redirect and should not
+      // be rendered
+      return <noscript />;
+    } else {
+      return (
+        <Provider store={store} key="provider">
+          <App />
+        </Provider>
+      );
+    }
+  });
+}
+~~~
+
+##### server-side rendering configuration
+~~~js
+// server.js
+import qs from "query-string";
+import {renderToString} from "react-dom/server";
+import { renderApp } from "./app";
+
+// render the main app component into an html page
+function getMarkup(appComponent) {
+  var markup = renderToString(appComponent)
+
+  return `<!doctype html>
+    <html>
+      <head>
+        <title>Redux Auth – Isomorphic Example</title>
+      </head>
+    <body>
+      <div id="react-root">${markup}</div>
+      <script src="/path/to/my/scripts.js"></script>
+    </body>
+  </html>`;
+}
+
+// this function will differ depending on the serverside framework that
+// you decide to use (express, hapi, etc.). The following example uses hapi
+server.ext("onPreResponse", (request, reply) => {
+  var query = qs.stringify(request.query);
+  var currentLocation = request.path + (query.length ? "?" + query : "");
+  var cookies = request.headers.cookies;
+
+  renderApp({
+    isServer: true,
+    cookies,
+    currentLocation
+  }).then(appComponent => {
+    reply(getMarkup(appComponent));
+  });
+}
+~~~
+
+##### client side rendering configuration
+
+~~~js
+// client.js
+import React from "react";
+import ReactDOM from "react-dom";
+import { renderApp } from "./app";
+
+const reactRoot = window.document.getElementById("react-root");
+renderApp().then(appComponent => {
+  ReactDOM.render(appComponent, reactRoot);
+});
+~~~
+
+**Note:** be sure to include the [`AuthGlobals`](#authglobals) component at the top level of your application. This means **outside** of your `Routes` if you're using something like [react-router][react-router].
+
+See below for the complete list of configuration options.
 
 # Multiple user types
 
