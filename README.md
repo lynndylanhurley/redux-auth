@@ -400,11 +400,11 @@ var routes = (
 This must be run before your app is initialized. This should be run on both the server, and on the client. The server will need an additional argument containing information about the current request's cookies and location.
 
 ##### configure arguments
-* **`endpoints`**: An object containing information about your API. This at least needs to contain the full path to your URL as the `apiUrl` property. See [here](#complete-config-options) for a complete list of endpoint config options.
+* **`endpoints`**: An object containing information about your API. This at least needs to contain the full path to your URL as the `apiUrl` property. See [here](#endpoint-config-options) for a complete list of endpoint config options.
 * **`settings`**: When rendering serverside, this will need to be an object that contains the following attributes:
-* **`isServer`**: A boolean that must be set to `true` when rendering server-side.
-* **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
-* **`location`**: A string representation of the current request's URL.
+  * **`isServer`**: A boolean that must be set to `true` when rendering server-side.
+  * **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
+  * **`location`**: A string representation of the current request's URL.
 
 --
 
@@ -739,7 +739,7 @@ Path (relative to `apiUrl`) for submitting new passwords for authenticated users
 
 # Extended Documentation
 
-Keep reading to learn more about what the API expects from this library, and to see diagrams on how it all fits together. All of this stuff happens automatically when using this library with the [devise token auth gem][dta], but this information will be useful if you need to implement your own API.
+Follow these links to learn more about what the API expects from this library, and to see diagrams on how it all fits together. All of this stuff happens automatically when using this library with the [devise token auth gem][dta], but this information will be useful if you need to implement your own API.
 
 * [Signing In With Email](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/email-sign-in.md)
 * [Signing In With OAuth](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/oauth-sign-in.md)
