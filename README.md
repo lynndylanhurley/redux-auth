@@ -1,9 +1,10 @@
 [![redux auth](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/redux-auth-logo.gif)](https://github.com/lynndylanhurley/redux-auth)
 
-## THIS LIBRARY IS UNRELEASED!! DO NOT USE YET!!!
+## THIS LIBRARY IS UNRELEASED!! DO NOT USE IT YET!!!
 
 ### Simple, secure user authentication for react + redux
 
+[![npm version](https://badge.fury.io/js/redux-auth.svg)](https://badge.fury.io/js/redux-auth)
 [![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
 [![Coverage Status](https://coveralls.io/repos/lynndylanhurley/redux-auth/badge.svg?branch=master&service=github)](https://coveralls.io/github/lynndylanhurley/redux-auth?branch=master)
 
@@ -35,7 +36,7 @@ This project comes bundled with a test app. You can run the demo locally by foll
 
 The demo uses [React][react], and the source can be found [here](https://github.com/lynndylanhurley/redux-auth/tree/master/dummy).
 
----
+--
 
 # Table of Contents
 
@@ -68,6 +69,8 @@ This plugin was designed to work out of the box with the wonderful [devise token
 
 **About security**: [read here][so-post] for more information on securing your token auth system. The [devise token auth][dta] gem has adequate security measures in place, and this plugin was built to work seamlessly with that gem.
 
+--
+
 # Installation
 
 Only npm is currently supported.
@@ -75,6 +78,8 @@ Only npm is currently supported.
 ~~~sh
 npm install redux-auth --save
 ~~~
+
+--
 
 # Usage
 
@@ -92,9 +97,13 @@ All components are already set up to make their own requests, handle errors, and
 
 The examples below use the Material UI theme.
 
+--
+
 ### EmailSignUpForm
 
 A form used for email based registration.
+
+![Material UI email sign up][mui-email-sign-up]
 
 ##### EmailSignUpForm props:
 
@@ -123,13 +132,15 @@ render: () {
 }
 ~~~
 
-##### EmailSignUpForm example
+[View EmailSignUpForm API Expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/email-sign-up.md)
 
-![Material UI email sign up][mui-email-sign-up]
+--
 
 ### EmailSignInForm
 
 A form used to sign in using accounts that were registered by email.
+
+![Material UI email sign in][mui-email-sign-in]
 
 ##### EmailSignInForm props:
 
@@ -155,14 +166,15 @@ render: () {
 }
 ~~~
 
-##### EmailSignInForm example
+[View EmailSignInForm API expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/email-sign-in.md)
 
-![Material UI email sign in][mui-email-sign-in]
-
+--
 
 ### OAuthSignInButton
 
 A button used to authenticate using an OAuth provider (facebook, github, etc.).
+
+![Material UI OAuth sign in][mui-oauth-sign-in]
 
 ##### OAuthSignInButton props:
 
@@ -191,13 +203,15 @@ render: () {
 }
 ~~~
 
-##### OAuthSignInButton example
+[View OAuthSignInButton API expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/oauth-sign-in.md)
 
-![Material UI OAuth sign in][mui-oauth-sign-in]
+--
 
 ### SignOutButton
 
 A button used to end the current user's session.
+
+![Material UI sign out][mui-sign-out]
 
 ##### SignOutButton props:
 
@@ -225,13 +239,15 @@ render: () {
 }
 ~~~
 
-##### SignOutButton example
+[View SignOutButton API expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/sign-out.md)
 
-![Material UI sign out][mui-sign-out]
+--
 
 ### DestroyAccountButton
 
 A button used to destroy the account of the current user. This will also end the destroyed user's session.
+
+![Material UI destroy account][mui-destroy-account]
 
 ##### DestroyAccountButton props:
 
@@ -259,13 +275,15 @@ render: () {
 }
 ~~~
 
-##### DestroyAccountButton example
+[View DestroyAccountButton API Expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/destroy-account.md)
 
-![Material UI destroy account][mui-destroy-account]
+--
 
 ### RequestPasswordResetForm
 
 A form used to send password reset emails to users that forgot their password. When users click the link included in the email, they will be redirected to the site that the request was made from. A modal will appear that contains a form allowing the user to create a new password.
+
+![Material UI request password reset][mui-password-reset]
 
 ##### RequestPasswordResetForm props:
 
@@ -290,13 +308,15 @@ render: () {
 }
 ~~~
 
-##### RequestPasswordResetForm example
+[View RequestPasswordResetForm API Expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/request-password-reset.md)
 
-![Material UI request password reset][mui-password-reset]
+--
 
 ### UpdatePasswordForm
 
 A form that can be used to change the current user's password.
+
+![Material UI update password][mui-update-password]
 
 ##### UpdatePasswordForm props:
 
@@ -322,9 +342,9 @@ render: () {
 }
 ~~~
 
-##### UpdatePasswordForm example
+[View UpdatePasswordForm API Expectations](https://github.com/lynndylanhurley/redux-auth/blob/master/docs/api-expectations/update-password.md)
 
-![Material UI update password][mui-update-password]
+--
 
 ### AuthGlobals
 
