@@ -13,24 +13,24 @@
 
 You can see a complete working example [here](http://redux-auth.herokuapp.com/). The code for the demo is [here](https://github.com/lynndylanhurley/redux-auth-demo).
 
+--
 
 # Features:
 
 * Supports isomorphic / universal / server-side rendering
-* OAuth2 authentication components
+* [OAuth2 authentication components](#oauthsigninbutton)
 * Email authentication components, including:
-  * User registration
-  * Password resets
-  * Account updates
-  * Account deletion
+  * [User registration](#emailsignupform)
+  * [Password resets](#requestpasswordresetform)
+  * [Email sign in](#emailsigninform)
 * Seamless integration with the [devise token auth][dta] Rails gem.
 * Includes the following themes:
   * [React Bootstrap][react-bootstrap]
   * [Material UI][material-ui]
   * An ugly plain theme that you can style from scratch
-* Can be configured to work with any API *coming soon*
-* React Native support *coming soon*
-* I18n support *coming soon*
+* **coming soon** Can be configured to work with any API
+* **coming soon** React Native support
+* **coming soon** I18n support
 
 This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][redux-auth-demo] in production.
 
@@ -45,7 +45,7 @@ The demo uses [React][react], and the source can be found [here](https://github.
 * [Components](#components)
   * [EmailSignUpForm](#emailsignupform)
   * [EmailSignInForm](#emailsigninform)
-  * [OAuthSignInForm](#oauthsigninform)
+  * [OAuthSignInButton](#oauthsigninbutton)
   * [SignOutButton](#signoutbutton)
   * [DestroyAccountButton](#destroyaccountbutton)
   * [RequestPasswordResetForm](#requestpasswordresetform)
@@ -91,7 +91,7 @@ There are 3 Themes included in this module.
 2. [Bootstrap][react-bootstrap]
 3. A default theme
 
-The default theme has no styling, and honestly it just looks really bad. But if you don't like heavy UI frameworks and you like to style everything yourself, then you will enjoy the default theme.
+The default theme has no styling, and honestly it just looks really bad. But if you hate heavy UI frameworks and you like to style everything yourself, then you will enjoy the default theme.
 
 All components are already set up to make their own requests, handle errors, and display success messages.
 
