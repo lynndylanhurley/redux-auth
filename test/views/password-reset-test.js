@@ -57,7 +57,7 @@ export default function() {
             successRespSpy = spy(() => [200, successResp]);
 
             nock(testUrl)
-              .post("/auth/password")
+              .post("/auth/password?config_name=alt")
               .reply(successRespSpy);
 
             let endpointConfig = [
@@ -99,7 +99,7 @@ export default function() {
             successRespSpy = spy(() => [200, successResp]);
 
             nock(apiUrl)
-              .post("/auth/password")
+              .post("/auth/password?config_name=default")
               .reply(successRespSpy);
 
             renderConnectedComponent((
@@ -145,7 +145,7 @@ export default function() {
             errorRespSpy = spy(() => [401, errorResp]);
 
             nock(apiUrl)
-              .post("/auth/password")
+              .post("/auth/password?config_name=default")
               .reply(errorRespSpy);
 
             renderConnectedComponent(

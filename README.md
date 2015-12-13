@@ -2,7 +2,7 @@
 
 ## THIS LIBRARY IS UNRELEASED!! DO NOT USE IT YET!!!
 
-### Simple, secure user authentication for react + redux
+### Simple, secure authentication for react + redux
 
 [![npm version](https://badge.fury.io/js/redux-auth.svg)](https://badge.fury.io/js/redux-auth)
 [![Build Status](https://travis-ci.org/lynndylanhurley/redux-auth.svg)](https://travis-ci.org/lynndylanhurley/redux-auth)
@@ -25,12 +25,12 @@ You can see a complete working example [here](http://redux-auth.herokuapp.com/).
   * [Email sign in](#emailsigninform)
 * Seamless integration with the [devise token auth][dta] Rails gem.
 * Includes the following themes:
-  * [React Bootstrap][react-bootstrap]
   * [Material UI][material-ui]
-  * An ugly plain theme that you can style from scratch
-* **coming soon** Can be configured to work with any API
+  * [React Bootstrap][react-bootstrap]
+  * A skank theme that you can style from scratch
 * **coming soon** React Native support
 * **coming soon** I18n support
+* **coming soon** Can be configured to work with any API
 
 This project comes bundled with a test app. You can run the demo locally by following these instructions, or you can use it [here][redux-auth-demo] in production.
 
@@ -91,11 +91,11 @@ There are 3 Themes included in this module.
 2. [Bootstrap][react-bootstrap]
 3. A default theme
 
-The default theme has no styling, and honestly it just looks really bad. But if you hate heavy UI frameworks and you like to style everything yourself, then you will enjoy the default theme.
+The default theme has no styling, and honestly it just looks really bad. But if you hate heavy UI frameworks and you like to style everything yourself, then you will love the default theme.
 
-All components are already set up to make their own requests, handle errors, and display success messages.
+All components can make their own API requests, display errors, and display success messages out of the box.
 
-The examples below use the Material UI theme.
+The examples shown below use the Material UI theme.
 
 --
 
