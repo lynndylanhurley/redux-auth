@@ -65,7 +65,7 @@ class RequestPasswordResetForm extends React.Component {
         <ButtonLoader
           loading={loading}
           type="submit"
-          icon={<Glyphicon glyph="lock" />}
+          icon={<Glyphicon glyph="send" />}
           className="pull-right request-password-reset-submit"
           disabled={inputDisabled || submitDisabled}
           onClick={this.handleSubmit.bind(this)}

@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
+import { Glyphicon } from "react-bootstrap";
 import { updatePassword, updatePasswordFormUpdate } from "../../actions/update-password";
 import { connect } from "react-redux";
 
@@ -75,6 +76,7 @@ class UpdatePasswordForm extends React.Component {
                       icon={this.props.icon}
                       disabled={disabled}
                       className="update-password-submit"
+                      icon={<Glyphicon glyph="lock" />}
                       onClick={this.handleSubmit.bind(this)}
                       {...this.props.inputProps.submit}>
           Update Password

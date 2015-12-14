@@ -55,6 +55,7 @@ class RequestPasswordResetForm extends React.Component {
 
         <Input
           type="text"
+          label="Email Address"
           placeholder="Email Address"
           className="request-password-reset-email"
           disabled={loading || inputDisabled}
