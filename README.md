@@ -1,7 +1,5 @@
 [![redux auth](https://github.com/lynndylanhurley/redux-auth/raw/master/docs/images/redux-auth-logo.gif)](https://github.com/lynndylanhurley/redux-auth)
 
-## THIS LIBRARY IS UNRELEASED!! DO NOT USE IT YET!!!
-
 ### Simple, secure authentication for react + redux
 
 [![npm version](https://badge.fury.io/js/redux-auth.svg)](https://badge.fury.io/js/redux-auth)
@@ -12,6 +10,10 @@
 # TL;DR - View the [Live Demo](http://redux-auth.herokuapp.com/)
 
 You can see a complete working example [here](http://redux-auth.herokuapp.com/). The code for the demo is [here](https://github.com/lynndylanhurley/redux-auth-demo).
+
+Click this button to deploy the demo app to your own server:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/lynndylanhurley/redux-auth-demo)
 
 --
 
@@ -809,8 +811,6 @@ Code and ideas were stolen from the following sources:
 * [this SO post on token-auth security][so-post]
 * [this SO post on string templating](http://stackoverflow.com/questions/14879866/javascript-templating-function-replace-string-and-dont-take-care-of-whitespace)
 * [this brilliant AngularJS module][ng-token-auth]
-
-
 
 # License
 
