@@ -2,7 +2,7 @@
   "name": "redux-auth",
   "description": "Complete token authentication system for react + redux.",
   "version": "0.0.2",
-  "license": "BSD-3-Clause",
+  "license": "WTFPL",
   "repository": {
     "type": "git",
     "url": "https://github.com/lynndylanhurley/redux-auth.git"
