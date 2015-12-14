@@ -58,7 +58,7 @@ The demo uses [React][react], and the source can be found [here](https://github.
   * [fetch](#fetch)
 * [Configuration](#configuration)
 * [Using Multiple User Types](#multiple-user-types)
-* [Conceptual Overview](#conceptual)
+* [API Expectations](#extended-documentation)
 * [Contributing](#contributing)
 * [Development](#development)
 * [Callouts](#credits)
@@ -135,10 +135,10 @@ A form used for email based registration.
 import { EmailSignUpForm } from "redux-auth";
 
 // material ui theme
-import { EmailSignUpForm } from "redux-auth/views/material-ui";
+import { EmailSignUpForm } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { EmailSignUpForm } from "redux-auth/views/bootstrap";
+import { EmailSignUpForm } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -169,10 +169,10 @@ A form used to sign in using accounts that were registered by email.
 import { EmailSignInForm } from "redux-auth";
 
 // material ui theme
-import { EmailSignInForm } from "redux-auth/views/material-ui";
+import { EmailSignInForm } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { EmailSignInForm } from "redux-auth/views/bootstrap";
+import { EmailSignInForm } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -202,10 +202,10 @@ Any additional properties will be passed on the button component of the given th
 import { OAuthSignInButton } from "redux-auth";
 
 // material ui theme
-import { OAuthSignInButton } from "redux-auth/views/material-ui";
+import { OAuthSignInButton } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { OAuthSignInButton } from "redux-auth/views/bootstrap";
+import { OAuthSignInButton } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -238,10 +238,10 @@ Any additional properties will be passed on the button component of the given th
 import { SignOutButton } from "redux-auth";
 
 // material ui theme
-import { SignOutButton } from "redux-auth/views/material-ui";
+import { SignOutButton } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { SignOutButton } from "redux-auth/views/bootstrap";
+import { SignOutButton } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -274,10 +274,10 @@ Any additional properties will be passed on the button component of the given th
 import { DestroyAccountButton } from "redux-auth";
 
 // material ui theme
-import { DestroyAccountButton } from "redux-auth/views/material-ui";
+import { DestroyAccountButton } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { DestroyAccountButton } from "redux-auth/views/bootstrap";
+import { DestroyAccountButton } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -311,10 +311,10 @@ A form used to send password reset emails to users that forgot their password. W
 import { RequestPasswordResetForm } from "redux-auth";
 
 // material ui theme
-import { RequestPasswordResetForm } from "redux-auth/views/material-ui";
+import { RequestPasswordResetForm } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { RequestPasswordResetForm } from "redux-auth/views/bootstrap";
+import { RequestPasswordResetForm } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -345,10 +345,10 @@ A form that can be used to change the current user's password.
 import { UpdatePasswordForm } from "redux-auth";
 
 // material ui theme
-import { UpdatePasswordForm } from "redux-auth/views/material-ui";
+import { UpdatePasswordForm } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { UpdatePasswordForm } from "redux-auth/views/bootstrap";
+import { UpdatePasswordForm } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
@@ -375,10 +375,10 @@ The following example shows the relevant router configuration. Note that this is
 import { AuthGlobals } from "redux-auth";
 
 // material ui theme
-import { AuthGlobals } from "redux-auth/views/material-ui";
+import { AuthGlobals } from "redux-auth/material-ui-theme";
 
 // bootstrap theme
-import { AuthGlobals } from "redux-auth/views/bootstrap";
+import { AuthGlobals } from "redux-auth/bootstrap-theme";
 
 // your main app component. notice that AuthGlobals lives at the same level
 // as the app's children.
