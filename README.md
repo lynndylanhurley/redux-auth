@@ -29,7 +29,7 @@ Click this button to deploy the demo app to your own server:
 * Includes the following themes:
   * [Material UI][material-ui]
   * [React Bootstrap][react-bootstrap]
-  * A skank theme that you can style from scratch
+  * A plain theme that you can style from scratch
 * Support for [multiple user types](#multiple-user-types)
 * **coming soon** React Native support
 * **coming soon** I18n support
