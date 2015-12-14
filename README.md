@@ -30,6 +30,7 @@ Click this button to deploy the demo app to your own server:
   * [Material UI][material-ui]
   * [React Bootstrap][react-bootstrap]
   * A skank theme that you can style from scratch
+* Support for [multiple user types](#multiple-user-types)
 * **coming soon** React Native support
 * **coming soon** I18n support
 * **coming soon** Can be configured to work with any API
