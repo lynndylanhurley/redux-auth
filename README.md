@@ -529,7 +529,7 @@ export function renderApp({cookies, isServer, currentLocation} = {}) {
     // use the FULL PATH to your API
     {apiUrl: "http://api.catfancy.com"},
     {isServer, cookies, currentLocation}
-  ).then({redirectPath, blank} = {}) => {
+  )).then(({redirectPath, blank} = {}) => {
     if (blank) {
       // if `blank` is true, this is an OAuth redirect and should not
       // be rendered
