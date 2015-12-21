@@ -806,6 +806,7 @@ This plugin was built against [this API](https://github.com/lynndylanhurley/devi
 Thanks to the following contributors:
 
 * [@transedward](https://github.com/transedward) for letting me use the name `redux-auth`.
+* [@bruz](https://github.com/bruz)
 
 Code and ideas were stolen from the following sources:
 
