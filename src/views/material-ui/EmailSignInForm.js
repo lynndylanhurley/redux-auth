@@ -35,7 +35,8 @@ class EmailSignInForm extends React.Component {
     this.props.dispatch(emailSignInFormUpdate(this.getEndpoint(), key, val));
   }
 
-  handleSubmit () {
+  handleSubmit (event) {
+    event.preventDefault();
     let formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(emailSignIn(formData, this.getEndpoint()));
   }

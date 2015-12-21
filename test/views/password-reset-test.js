@@ -77,8 +77,8 @@ export default function() {
               emailEl.value = "whatever";
               TestUtils.Simulate.change(emailEl);
 
-              let submitEl = findClass(instance, "request-password-reset-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "request-password-reset-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
@@ -117,8 +117,8 @@ export default function() {
               expect(store.getState().auth.getIn(["requestPasswordReset", "default", "form", "email"])).to.equal(testEmail);
 
               // submit the form
-              let submitEl = findClass(instance, "request-password-reset-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "request-password-reset-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // ensure default url was used
@@ -158,8 +158,8 @@ export default function() {
               TestUtils.Simulate.change(emailEl);
 
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "request-password-reset-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl =TestUtils.findRenderedDOMComponentWithClass(instance, "request-password-reset-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // ensure endpoint was hit
