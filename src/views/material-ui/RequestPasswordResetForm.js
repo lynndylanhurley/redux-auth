@@ -36,7 +36,8 @@ class RequestPasswordResetForm extends React.Component {
     this.props.dispatch(requestPasswordResetFormUpdate(this.getEndpoint(), key, val));
   }
 
-  handleSubmit () {
+  handleSubmit (event) {
+    event.preventDefault();
     let formData = this.props.auth.getIn(["requestPasswordReset", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(requestPasswordReset(formData, this.getEndpoint()));
   }
