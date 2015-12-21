@@ -93,8 +93,8 @@ export default function() {
             renderConnectedComponent((
               <EmailSignUpForm endpoint="alt" />
             ), endpointConfig).then(({instance}) => {
-              let submitEl = findClass(instance, "email-sign-up-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "email-sign-up-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: sinon.spy()});
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
@@ -149,8 +149,8 @@ export default function() {
               expect(store.getState().auth.getIn(["emailSignUp", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
               // submit the form
-              let submitEl = findClass(instance, "email-sign-up-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "email-sign-up-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: sinon.spy()});
 
               setTimeout(() => {
                 // ensure user was set
@@ -186,8 +186,8 @@ export default function() {
               <EmailSignUpForm />, {apiUrl}
             ).then(({instance, store}) => {
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "email-sign-up-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "email-sign-up-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: sinon.spy()});
 
               setTimeout(() => {
                 // ensure auth headers were updated

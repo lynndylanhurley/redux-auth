@@ -67,8 +67,8 @@ export default function() {
             renderConnectedComponent((
               <EmailSignInForm endpoint="alt" />
             ), endpointConfig).then(({instance, store}) => {
-              let submitEl = findClass(instance, "email-sign-in-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "email-sign-in-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // ensure endpoint was hit
@@ -130,8 +130,8 @@ export default function() {
               expect(store.getState().auth.getIn(["emailSignIn", "default", "form", "password"])).to.equal(testPassword);
 
               // submit the form
-              let submitEl = findClass(instance, "email-sign-in-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "email-sign-in-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // was endpoint hit?
@@ -174,8 +174,8 @@ export default function() {
               <EmailSignInForm />, {apiUrl}
             ).then(({instance, store}) => {
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "email-sign-in-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = TestUtils.findRenderedDOMComponentWithClass(instance, "email-sign-in-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // was endpoint hit?

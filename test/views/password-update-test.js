@@ -109,8 +109,8 @@ export default function() {
               TestUtils.Simulate.change(passwordConfirmationEl);
 
               // submit changed password
-              let submitEl = findClass(instance, "update-password-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "update-password-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // expect response to have been made to alt endpoint url
@@ -152,8 +152,8 @@ export default function() {
               expect(store.getState().auth.getIn(["updatePassword", "default", "form", "password_confirmation"])).to.equal(testPassword);
 
               // submit the form
-              let submitEl = findClass(instance, "update-password-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl = findClass(instance, "update-password-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // ensure auth headers were updated
@@ -192,8 +192,8 @@ export default function() {
               TestUtils.Simulate.change(passwordEl);
 
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "update-password-submit");
-              TestUtils.Simulate.click(submitEl);
+              let formEl =TestUtils.findRenderedDOMComponentWithClass(instance, "update-password-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: spy()});
 
               setTimeout(() => {
                 // ensure endpoint was hit
