@@ -12,14 +12,14 @@ class UpdatePasswordForm extends React.Component {
       password: PropTypes.object,
       passwordConfirmation: PropTypes.object
     })
-  }
+  };
 
   static defaultProps = {
     inputProps: {
       password: {},
       passwordConfirmation: {}
     }
-  }
+  };
 
   getEndpoint () {
     return (

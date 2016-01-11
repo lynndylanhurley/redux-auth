@@ -12,7 +12,7 @@ class ButtonLoader extends React.Component {
     children: PropTypes.node,
     onClick: PropTypes.func.isRequired,
     style: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     icon: <Glyphicon glyph="heart" />,
@@ -27,7 +27,7 @@ class ButtonLoader extends React.Component {
     spinColorLight: "#fff",
     children: <span>Submit</span>,
     style: {}
-  }
+  };
 
   renderIcon () {
     let icon;

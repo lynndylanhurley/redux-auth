@@ -7,13 +7,13 @@ class AuthInput extends React.Component {
     label: PropTypes.string,
     value: PropTypes.string,
     errors: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     label: "",
     value: null,
     errors: Immutable.fromJS([])
-  }
+  };
 
   handleInput (ev) {
     this.props.onChange(ev.target.value);

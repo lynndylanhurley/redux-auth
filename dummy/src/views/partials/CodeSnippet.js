@@ -6,15 +6,15 @@ class CodeSnippet extends React.Component {
   static propTypes = {
     language: PropTypes.string,
     children: PropTypes.node.isRequired
-  }
+  };
 
   static defaultProps = {
     language: "javascript"
-  }
+  };
 
   state = {
     code: <span />
-  }
+  };
 
   highlight ($target, rawCode) {
     let code = rawCode

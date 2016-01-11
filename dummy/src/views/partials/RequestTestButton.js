@@ -9,11 +9,11 @@ class RequestTestButton extends React.Component {
   static propTypes = {
     path: PropTypes.string.isRequired,
     endpointKey: PropTypes.string.isRequired
-  }
+  };
 
   static defaultProps = {
     endpointKey: "default"
-  }
+  };
 
   handleClick () {
     let url = getApiUrl() + this.props.path;

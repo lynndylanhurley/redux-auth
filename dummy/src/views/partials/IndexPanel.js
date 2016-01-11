@@ -6,12 +6,12 @@ class IndexPanel extends React.Component {
     bsStyle: PropTypes.string,
     header: PropTypes.string,
     children: PropTypes.node
-  }
+  };
 
   static defaultProps = {
     bsStyle: "info",
     children: <span />
-  }
+  };
 
   render () {
     return (

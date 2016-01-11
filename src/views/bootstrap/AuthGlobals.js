@@ -39,7 +39,7 @@ class AuthGlobals extends React.Component {
     destroyAccountSuccessEnabled: PropTypes.bool,
     passwordResetSuccessEnabled: PropTypes.bool,
     passwordResetErrorEnabled: PropTypes.bool
-  }
+  };
 
   static defaultProps = {
     signOutSuccessEnabled: true,
@@ -60,7 +60,7 @@ class AuthGlobals extends React.Component {
     destroyAccountSuccessEnabled: true,
     passwordResetSuccessEnabled: true,
     passwordResetErrorEnabled: true
-  }
+  };
 
   render () {
     let showEmailSignInSuccess = (

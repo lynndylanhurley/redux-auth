@@ -10,14 +10,14 @@ class BaseModal extends React.Component {
     closeBtnLabel: PropTypes.string,
     actions: PropTypes.array,
     closeAction: PropTypes.func
-  }
+  };
 
   static defaultProps = {
     show: false,
     errorAddr: null,
     closeBtnLabel: "Ok",
     actions: []
-  }
+  };
 
   close () {
     this.props.dispatch(this.props.closeAction());

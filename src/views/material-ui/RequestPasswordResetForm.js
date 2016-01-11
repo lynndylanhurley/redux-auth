@@ -15,14 +15,14 @@ class RequestPasswordResetForm extends React.Component {
       email: PropTypes.object,
       submit: PropTypes.object
     })
-  }
+  };
 
   static defaultProps = {
     inputProps: {
       email: {},
       submit: {}
     }
-  }
+  };
 
   getEndpoint () {
     return (

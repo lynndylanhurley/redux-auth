@@ -14,13 +14,13 @@ class OAuthSignInButton extends React.Component {
     signInParams: PropTypes.object,
     children: PropTypes.node,
     icon: PropTypes.func
-  }
+  };
 
   static defaultProps = {
     signInParams: {},
     children: <span>OAuth Sign In</span>,
     icon: ActionExitToApp
-  }
+  };
 
   getEndpoint () {
     return (

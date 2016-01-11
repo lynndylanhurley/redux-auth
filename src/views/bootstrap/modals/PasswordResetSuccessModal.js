@@ -13,12 +13,12 @@ class PasswordResetSuccessModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool,
     inputProps: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     show: false,
     inputProps: {}
-  }
+  };
 
   getEndpoint () {
     return (

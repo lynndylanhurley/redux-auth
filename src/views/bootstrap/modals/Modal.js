@@ -8,13 +8,13 @@ class BaseModal extends React.Component {
     show: PropTypes.bool,
     errorAddr: PropTypes.array,
     closeBtnLabel: PropTypes.string
-  }
+  };
 
   static defaultProps = {
     show: false,
     errorAddr: null,
     closeBtnLabel: "Ok"
-  }
+  };
 
   close () {
     this.props.dispatch(this.props.closeAction());

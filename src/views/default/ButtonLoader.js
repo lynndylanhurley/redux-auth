@@ -13,7 +13,7 @@ class ButtonLoader extends React.Component {
     children: PropTypes.node,
     onClick: PropTypes.func.isRequired,
     style: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     icon: "▸",
@@ -29,7 +29,7 @@ class ButtonLoader extends React.Component {
     spinColorDisabled: "#999",
     children: <span>Submit</span>,
     style: {}
-  }
+  };
 
   getColor () {
     if (this.props.disabled) {
