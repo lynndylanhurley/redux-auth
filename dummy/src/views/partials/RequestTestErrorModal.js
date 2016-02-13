@@ -7,11 +7,11 @@ class RequestTestErrorModal extends React.Component {
   static propTypes = {
     show: PropTypes.bool,
     url: PropTypes.string
-  }
+  };
 
   static defaultProps = {
     show: false
-  }
+  };
 
   close () {
     this.props.dispatch(dismissRequestTestErrorModal());

@@ -8,12 +8,12 @@ class DestroyAccountButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     icon: PropTypes.func
-  }
+  };
 
   static defaultProps = {
     children: <span>Destroy Account</span>,
     icon: ActionDelete
-  }
+  };
 
   getEndpoint () {
     return (

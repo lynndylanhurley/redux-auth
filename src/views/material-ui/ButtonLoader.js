@@ -15,7 +15,7 @@ class ButtonLoader extends React.Component {
     children: PropTypes.node,
     onClick: PropTypes.func.isRequired,
     style: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     icon: ActionFavorite,
@@ -31,7 +31,7 @@ class ButtonLoader extends React.Component {
     spinColorDisabled: Colors.minBlack,
     children: <span>Submit</span>,
     style: {}
-  }
+  };
 
   handleClick (ev) {
     ev.preventDefault();

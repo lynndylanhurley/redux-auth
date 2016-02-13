@@ -13,7 +13,7 @@ class UpdatePasswordForm extends React.Component {
       passwordConfirmation: PropTypes.object,
       submit: PropTypes.object
     })
-  }
+  };
 
   static defaultProps = {
     inputProps: {
@@ -21,7 +21,7 @@ class UpdatePasswordForm extends React.Component {
       passwordConfirmation: {},
       submit: {}
     }
-  }
+  };
 
   getEndpoint () {
     return (

@@ -4,7 +4,7 @@ import { Panel } from "react-bootstrap";
 class ExampleWell extends React.Component {
   static propTypes = {
     children: PropTypes.node.isRequired
-  }
+  };
 
   render () {
     return (
@@ -19,4 +19,3 @@ class ExampleWell extends React.Component {
 }
 
 export default ExampleWell;
-

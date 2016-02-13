@@ -5,11 +5,11 @@ import Immutable from "immutable";
 class ErrorList extends React.Component {
   static propTypes = {
     errors: PropTypes.object
-  }
+  };
 
   static defaultProps = {
     errors: Immutable.fromJS([])
-  }
+  };
 
   renderErrorList () {
     let errorCount = (this.props.errors || Immutable.fromJS([])).size;

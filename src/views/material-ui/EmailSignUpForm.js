@@ -14,7 +14,7 @@ class EmailSignUpForm extends React.Component {
       passwordConfirmation: PropTypes.object,
       submit: PropTypes.object
     })
-  }
+  };
 
   static defaultProps = {
     inputProps: {
@@ -22,7 +22,7 @@ class EmailSignUpForm extends React.Component {
       password: {},
       submit: {}
     }
-  }
+  };
 
   getEndpoint () {
     return (

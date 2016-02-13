@@ -9,7 +9,7 @@ if (!global.__SERVER__ && !global.__TEST__) {
 class Container extends React.Component {
   static propTypes = {
     children: PropTypes.node
-  }
+  };
 
   render () {
     return (

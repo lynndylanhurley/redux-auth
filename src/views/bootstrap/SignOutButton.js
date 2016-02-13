@@ -8,12 +8,12 @@ class SignOutButton extends React.Component {
   static propTypes = {
     children: PropTypes.node,
     icon: PropTypes.node
-  }
+  };
 
   static defaultProps = {
     children: <span>Sign Out</span>,
     icon: <Glyphicon glyph="log-out" />
-  }
+  };
 
   getEndpoint () {
     return (
