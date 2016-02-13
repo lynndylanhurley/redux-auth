@@ -1,10 +1,8 @@
-import React from "react";
 import {Server} from "hapi";
 import h2o2 from "h2o2";
 import inert from "inert";
 import {renderToString} from "react-dom/server";
-import {match} from "redux-router/server";
-import url from "url";
+import {match} from "react-router";
 import qs from "query-string";
 import {initialize} from "./app";
 import config from "config";
@@ -90,8 +88,8 @@ server.ext("onPreResponse", (request, reply) => {
     currentLocation: location,
     userAgent: request.headers["user-agent"]
   })
-    .then(({store, provider, blank}) => {
-      store.dispatch(match(location, (error, redirectLocation, renderProps) => {
+    .then(({provider, blank, routes, history, location}) => {
+      match({routes, history}, (error, redirectLocation, renderProps) => {
         if (redirectLocation) {
           reply.redirect(redirectLocation.pathname + redirectLocation.search);
         } else if (error || !renderProps) {
@@ -102,6 +100,6 @@ server.ext("onPreResponse", (request, reply) => {
 
           reply(output);
         }
-      }));
+      });
     }).catch(e => console.log("@-->server error", e, e.stack));
 });

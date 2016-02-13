@@ -1,6 +1,7 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
-import {pushState} from "redux-router";
+import {push} from "react-router-redux";
 import {expect} from "chai";
 import {fetch} from "../../src";
 import nock from "nock";
@@ -8,7 +9,8 @@ import nock from "nock";
 var testUid        = "test@test.com",
     apiUrl         = "http://api.default.com",
     altApiUrl      = "http://api.alt.com",
-    tokenBridge;
+      tokenBridge,
+      app;
 
 function createTokenBridge(creds) {
   let credStr = JSON.stringify(creds);
@@ -20,6 +22,20 @@ function createTokenBridge(creds) {
 
 function destroyTokenBridge() {
   document.body.removeChild(tokenBridge);
+}
+
+function renderApp(provider) {
+  if (app) {
+    destroyApp();
+  }
+  app = document.createElement("DIV");
+  app.setAttribute("id", "app");
+  document.body.appendChild(app);
+  ReactDOM.render(provider, app);
+}
+
+function destroyApp() {
+  document.body.removeChild(app);
 }
 
 export default function() {
@@ -40,10 +56,12 @@ export default function() {
 
       it("should redirect unauthenticated users to login page", done => {
         initialize()
-          .then(({store}) => {
-            store.dispatch(pushState(null, "/account"));
+          .then(({provider, store}) => {
+            renderApp(provider);
+            store.dispatch(push({pathname: "/account"}));
             setTimeout(() => {
-              expect(store.getState().router.location.pathname).to.equal("/login");
+              destroyApp()
+              expect(store.getState().routing.location.pathname).to.equal("/login");
               done();
             }, 0)
           })
