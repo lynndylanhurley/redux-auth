@@ -40,7 +40,7 @@ module.exports = {
       "redux": "commonjs redux",
       "redux-immutablejs": "commonjs redux-immutablejs",
       "react-router": "commonjs react-router",
-      "redux-router": "commonjs redux-router",
+      "react-router-redux": "commonjs react-router-redux",
       "redux-thunk": "commonjs redux-thunk",
       "thunk": "commonjs thunk",
       "rc-dialog": "commonjs rc-dialog",

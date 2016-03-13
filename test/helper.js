@@ -1,17 +1,17 @@
 import React from "react";
 import TestUtils from "react-addons-test-utils";
 import {Provider} from "react-redux";
-import {Route, IndexRoute} from "react-router";
+import {Router, Route, IndexRoute} from "react-router";
 import {combineReducers, createStore, compose, applyMiddleware} from "redux";
-import {createMemoryHistory} from "history";
-import {ReduxRouter, routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
+import {createMemoryHistory} from "react-router";
+import {routeReducer, syncHistory} from "react-router-redux";
 import thunk from "redux-thunk";
-import { reduxReactRouter as serverRouter } from "redux-router/server";
 import { configure, authStateReducer } from "../src";
 import Immutable from "immutable";
 
 /* dummy components */
 import demoButtons from "../dummy/src/reducers/request-test-buttons";
+import demoUi from "../dummy/src/reducers/demo-ui";
 import Container from "../dummy/src/views/partials/Container";
 import Main from "../dummy/src/views/Main";
 import Account from "../dummy/src/views/Account";
@@ -36,8 +36,9 @@ export function initialize(
 ) {
   var reducer = combineReducers({
     auth:   authStateReducer,
-    router: routerStateReducer,
-    demoButtons
+    routing: routeReducer,
+    demoButtons,
+    demoUi
   });
 
   var store;
@@ -49,9 +50,9 @@ export function initialize(
     // this will result in a bunch of warnings, but it's not a show stopper
     setTimeout(() => {
       if (!store.getState().auth.getIn(["user", "isSignedIn"])) {
-        transition(null, "/login");
+        transition({pathname: "/login"});
       }
-      cb();
+      if (cb) cb();
     }, 0);
   };
 
@@ -64,19 +65,17 @@ export function initialize(
     </Route>
   );
 
-  // these methods will differ from server to client
-  var reduxReactRouter    = clientRouter;
-  if (isServer) {
-    reduxReactRouter    = serverRouter;
-  }
+  var history = createMemoryHistory('');
+
+  // Sync dispatched route actions to the history
+  var reduxRouterMiddleware = syncHistory(history)
 
   // create the redux store
   store = compose(
-    applyMiddleware(thunk),
-    reduxReactRouter({
-      createHistory: createMemoryHistory,
-      routes
-    })
+    applyMiddleware(
+      thunk,
+      reduxRouterMiddleware
+    )
   )(createStore)(reducer);
 
   /**
@@ -89,10 +88,12 @@ export function initialize(
   })).then(({redirectPath} = {}) => {
     return {
       store,
+      history,
+      routes,
       redirectPath,
       provider: (
         <Provider store={store} key="provider">
-          <ReduxRouter children={routes} />
+          <Router children={routes} history={history} />
         </Provider>
       )
     };

@@ -16,7 +16,7 @@ import {applyConfig} from "../utils/client-settings";
 import {destroySession} from "../utils/session-storage";
 import verifyAuth from "../utils/verify-auth";
 import getRedirectInfo from "../utils/parse-url";
-import {pushState} from "redux-router";
+import {push} from "react-router-redux";
 
 export const SET_ENDPOINT_KEYS = "SET_ENDPOINT_KEYS";
 export const STORE_CURRENT_ENDPOINT_KEY = "STORE_CURRENT_ENDPOINT_KEY";
@@ -107,7 +107,7 @@ export function configure(endpoint={}, settings={}) {
       let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
 
       if (authRedirectPath) {
-        dispatch(pushState(null, authRedirectPath));
+        dispatch(push({pathname: authRedirectPath}));
       }
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
