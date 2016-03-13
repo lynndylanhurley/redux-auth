@@ -116,13 +116,7 @@
     "webpack-dev-server": "1.14.0"
   },
   "peerDependencies": {
-    "react": "*",
-    "react-dom": "*",
-    "react-router": "*",
-    "react-router-bootstrap": "*",
-    "react-router-redux": "*",
-    "redux": "*",
-    "redux-thunk": "*"
+    "react-router-bootstrap": "*"
   },
   "engines": {
     "node": ">=0.10.32"
