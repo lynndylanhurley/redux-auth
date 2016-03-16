@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import fetch from "isomorphic-fetch";
 import cookie from "cookie";
 import getRedirectInfo from "../utils/parse-url";
 import * as C from "../utils/constants";

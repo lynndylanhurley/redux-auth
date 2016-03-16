@@ -32,7 +32,7 @@ module.exports = {
       "history": "commonjs history",
       "immutable": "commonjs immutable",
       "isomorphic-fetch": "commonjs isomorphic-fetch",
-      "node-fetch": "commonjs node-fetch",
+      "isomorphic-fetch": "commonjs isomorphic-fetch",
       "query-string": "commonjs query-string",
       "querystring": "commonjs querystring",
       "react-dom": "commonjs react-dom",
