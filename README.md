@@ -432,7 +432,7 @@ import { configure } from "redux-auth";
 store.dispatch(configure(
   {apiUrl: "https://api.graveflex.com"},
   {isServer: true, cookies, currentLocation}
-).then(({redirectPath, blank} = {}) => {
+)).then(({redirectPath, blank} = {}) => {
   // if `blank` is true, this is an OAuth redirect and should not
   // be rendered
 
@@ -445,7 +445,7 @@ store.dispatch(configure(
 // client-side usage
 store.dispatch(configure(
   {apiUrl: "https://api.graveflex.com"}
-).then(() => {
+)).then(() => {
   // your store should now have the current user. now render your
   // app to the DOM. see the demo app for a more complete example.
 });
@@ -671,7 +671,7 @@ import { EmailSignInForm } from "redux-auth";
 This is the complete list of options that can be passed to the endpoint config.
 
 ~~~js
-import { config } from "redux-auth";
+import { configure } from "redux-auth";
 
 // ... configure store, routes, etc... //
 
