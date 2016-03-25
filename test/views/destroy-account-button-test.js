@@ -26,7 +26,7 @@ var requirePath,
 export default function() {
   describe("DestroyAccountButton", () => {
     [
-      "",
+      "/views/default",
       "/views/material-ui",
       "/views/bootstrap"
     ].forEach((theme) => {

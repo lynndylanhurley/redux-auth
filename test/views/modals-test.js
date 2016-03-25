@@ -26,7 +26,7 @@ function findClass (className) {
 export default function() {
   describe("Modal visibility", () => {
     [
-      "",
+      "/views/default",
       "/views/bootstrap",
       "/views/material-ui"
     ].forEach((theme) => {

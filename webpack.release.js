@@ -9,6 +9,7 @@ module.exports = {
   entry:   {
     "index":             "./src/index",
     "bootstrap-theme":   "./src/views/bootstrap/index",
+    "default-theme":     "./src/views/default/index",
     "material-ui-theme": "./src/views/material-ui/index"
   },
   output:  {
@@ -31,7 +32,6 @@ module.exports = {
       "extend": "commonjs extend",
       "history": "commonjs history",
       "immutable": "commonjs immutable",
-      "isomorphic-fetch": "commonjs isomorphic-fetch",
       "isomorphic-fetch": "commonjs isomorphic-fetch",
       "query-string": "commonjs query-string",
       "querystring": "commonjs querystring",

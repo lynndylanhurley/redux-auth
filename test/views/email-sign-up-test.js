@@ -42,7 +42,7 @@ export default function() {
   describe("EmailSignUpForm", () => {
 
     [
-      "",
+      "/views/default",
       "/views/material-ui",
       "/views/bootstrap"
     ].forEach((theme) => {

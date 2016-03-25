@@ -26,9 +26,9 @@ var requirePath,
 export default function() {
   describe("RequestPasswordResetForm", () => {
     [
-      "",
+      "/views/default",
       "/views/bootstrap",
-      "/views/material-ui",
+      "/views/material-ui"
     ].forEach((theme) => {
       requirePath = `../../src${theme}`;
       var {RequestPasswordResetForm} = require(requirePath);
