@@ -1,5 +1,5 @@
 import React from "react";
-import { hideOAuthSignInSuccessModal } from "../../../actions/ui";
+import { hideOAuthSignInSuccessModal } from "redux-auth/actions/ui";
 import { connect } from "react-redux";
 import Modal from "./Modal"
 

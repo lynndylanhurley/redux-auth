@@ -3,11 +3,11 @@ import { Modal, Button, Glyphicon } from "react-bootstrap";
 import ButtonLoader from "../ButtonLoader";
 import Input from "../Input";
 import { connect } from "react-redux";
-import { hidePasswordResetSuccessModal } from "../../../actions/ui";
+import { hidePasswordResetSuccessModal } from "redux-auth/actions/ui";
 import {
   updatePasswordModal,
   updatePasswordModalFormUpdate
-} from "../../../actions/update-password-modal";
+} from "redux-auth/actions/update-password-modal";
 
 class PasswordResetSuccessModal extends React.Component {
   static propTypes = {

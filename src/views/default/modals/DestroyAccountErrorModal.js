@@ -1,5 +1,5 @@
 import React from "react";
-import { hideDestroyAccountErrorModal } from "../../../actions/ui";
+import { hideDestroyAccountErrorModal } from "redux-auth/actions/ui";
 import Modal from "./Modal";
 
 class DestroyAccountErrorModal extends React.Component {

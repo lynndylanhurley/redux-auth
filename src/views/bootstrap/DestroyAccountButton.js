@@ -1,6 +1,6 @@
 import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
-import { destroyAccount } from "../../actions/destroy-account";
+import { destroyAccount } from "redux-auth/actions/destroy-account";
 import { connect } from "react-redux";
 import { Glyphicon } from "react-bootstrap";
 

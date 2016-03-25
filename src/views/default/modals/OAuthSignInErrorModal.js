@@ -1,7 +1,7 @@
 import React from "react";
 import { Glyphicon } from "react-bootstrap";
 import Modal from "./Modal";
-import { hideOAuthSignInErrorModal } from "../../../actions/ui";
+import { hideOAuthSignInErrorModal } from "redux-auth/actions/ui";
 
 class OAuthSignInErrorModal extends React.Component {
   render () {
