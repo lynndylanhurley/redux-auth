@@ -68,18 +68,5 @@ export {
   hideDestroyAccountErrorModal
 } from "./actions/ui";
 
-/* UI */
-export {
-  AuthGlobals,
-  EmailSignInForm,
-  EmailSignUpForm,
-  SignOutButton,
-  RequestPasswordResetForm,
-  OAuthSignInButton,
-  UpdatePasswordForm,
-  DestroyAccountButton,
-  TokenBridge
-} from "./views/default";
-
 /* utils */
 export {default as fetch} from "./utils/fetch";

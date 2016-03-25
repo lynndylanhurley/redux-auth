@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
 import { connect } from "react-redux";
 import ButtonLoader from "./ButtonLoader";
-import { oAuthSignIn as _oAuthSignIn } from "../../actions/oauth-sign-in";
+import { oAuthSignIn as _oAuthSignIn } from "redux-auth/actions/oauth-sign-in";
 
 // hook for rewire
 var oAuthSignIn = _oAuthSignIn;

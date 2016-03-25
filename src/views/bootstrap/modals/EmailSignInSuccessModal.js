@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { hideEmailSignInSuccessModal } from "../../../actions/ui";
+import { hideEmailSignInSuccessModal } from "redux-auth/actions/ui";
 import Modal from "./Modal";
 
 class EmailSignInSuccessModal extends React.Component {

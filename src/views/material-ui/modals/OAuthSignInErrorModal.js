@@ -1,6 +1,6 @@
 import React from "react";
 import Colors from "material-ui/lib/styles/colors";
-import { hideOAuthSignInErrorModal } from "../../../actions/ui";
+import { hideOAuthSignInErrorModal } from "redux-auth/actions/ui";
 import {AlertError} from "material-ui/lib/svg-icons";
 import Modal from "./Modal";
 

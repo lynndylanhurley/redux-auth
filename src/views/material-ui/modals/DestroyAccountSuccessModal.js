@@ -1,7 +1,7 @@
 import React from "react";
 import Modal from "./Modal";
 import { connect } from "react-redux";
-import { hideDestroyAccountSuccessModal } from "../../../actions/ui";
+import { hideDestroyAccountSuccessModal } from "redux-auth/actions/ui";
 
 class DestroyAccountSuccessModal extends React.Component {
   render () {

@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import {
   requestPasswordResetFormUpdate,
   requestPasswordReset
-} from "../../actions/request-password-reset";
+} from "redux-auth/actions/request-password-reset";
 
 class RequestPasswordResetForm extends React.Component {
   static propTypes = {
