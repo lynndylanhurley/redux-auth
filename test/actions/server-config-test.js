@@ -1,6 +1,6 @@
 import React from "react";
 import sinon from "sinon";
-import {match} from "redux-router/server";
+import {match} from "react-router";
 import {expect} from "chai";
 import {initialize} from "../helper";
 import nock from "nock";
@@ -157,8 +157,8 @@ export default function() {
           currentLocation: "/account",
           cookies: rawTestCookies
         })
-          .then(({store}) => {
-            store.dispatch(match("/account", (error, {pathname, action}) => {
+          .then(({history, routes, store}) => {
+            match({routes, location: "/account"}, (error, {pathname, action}) => {
               // one call should have been made to API
               expect(spy.calledOnce).to.be.ok;
 
@@ -167,7 +167,7 @@ export default function() {
               expect(action).to.equal("REPLACE");
 
               done();
-            }));
+            });
           })
           .catch(err => console.log("error:", err.stack));
       });
@@ -263,7 +263,7 @@ export default function() {
           currentLocation: "/account",
           cookies: rawTestCookies
         })
-          .then(({store}) => {
+          .then(({history, routes, store}) => {
             // user should be signed in
             let user = store.getState().auth.get("user");
             expect(user.get("isSignedIn")).to.equal(true);
@@ -278,11 +278,11 @@ export default function() {
             expect(reqHeaders["uid"]).to.include(testUid);
             expect(reqHeaders["expiry"]).to.include(`${testExpiry}`);
 
-            store.dispatch(match("/account", (error, redirect) => {
+            match({routes, location: "/account"}, (error, redirect) => {
               // authorized user should not be redirected
               expect(redirect).to.equal(null);
               done();
-            }));
+            });
           }).catch(e => console.log("error", e.stack));
       });
     });

@@ -1,12 +1,10 @@
 import React from "react";
 import {Provider} from "react-redux";
-import {ReduxRouter} from "redux-router";
 import {Route, IndexRoute} from "react-router";
 import {configure, authStateReducer} from "../../src";
 import {createStore, compose, applyMiddleware} from "redux";
-import {createHistory, createMemoryHistory} from "history";
-import {routerStateReducer, reduxReactRouter as clientRouter} from "redux-router";
-import { reduxReactRouter as serverRouter } from "redux-router/server";
+import {Router, createMemoryHistory, browserHistory} from "react-router";
+import {routeReducer, syncHistory} from "react-router-redux";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
 import demoUi from "./reducers/demo-ui";
@@ -31,7 +29,7 @@ class App extends React.Component {
 export function initialize({cookies, isServer, currentLocation, userAgent} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
-    router: routerStateReducer,
+    routing: routeReducer,
     demoButtons,
     demoUi
   });
@@ -61,21 +59,29 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
   );
 
   // these methods will differ from server to client
-  var reduxReactRouter    = clientRouter;
-  var createHistoryMethod = createHistory;
+  var history = browserHistory;
   if (isServer) {
-    reduxReactRouter    = serverRouter;
-    createHistoryMethod = createMemoryHistory;
+    history = createMemoryHistory(currentLocation);
   }
 
+  var reduxRouterMiddleware = syncHistory(history)
+
   // create the redux store
-  store = compose(
-    applyMiddleware(thunk),
-    reduxReactRouter({
-      createHistory: createHistoryMethod,
-      routes
-    })
-  )(createStore)(reducer);
+  store = createStore(
+    reducer,
+    compose(
+      applyMiddleware(
+        thunk,
+        reduxRouterMiddleware
+      ),
+      typeof(window) !== "undefined" && window.devToolsExtension
+        ? window.devToolsExtension()
+        : f => f
+    )
+  );
+
+  // Required for replaying actions from devtools to work
+  reduxRouterMiddleware.listenForReplays(store);
 
 
   /**
@@ -118,10 +124,12 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
     return ({
       blank,
       store,
+      history,
+      routes,
       redirectPath,
       provider: (
         <Provider store={store} key="provider">
-          <ReduxRouter children={routes} />
+          <Router routes={routes} history={history} />
         </Provider>
       )
     });
