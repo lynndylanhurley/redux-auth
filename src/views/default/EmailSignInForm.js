@@ -45,6 +45,7 @@ class EmailSignInForm extends React.Component {
       this.props.auth.getIn(["user", "isSignedIn"]) ||
       this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
     );
+    let loading = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"]);
 
     return (
       <form className='redux-auth email-sign-in-form'
@@ -68,17 +69,17 @@ class EmailSignInForm extends React.Component {
                onChange={this.handleInput.bind(this, "password")}
                {...this.props.inputProps.password} />
 
-        <ButtonLoader loading={this.props.auth.getIn(["emailSignIn", "loading"])}
-                      type="submit"
-                      style={{float: "right"}}
-                      icon={this.props.icon}
-                      className='email-sign-in-submit'
-                      disabled={disabled}
-                      onClick={this.handleSubmit.bind(this)}
-                      primary={true}
-                      {...this.props.inputProps.submit}>
-          Sign In
-        </ButtonLoader>
+        <button
+          disabled={disabled}
+          className='email-sign-in-submit btn btn-login'
+          onClick={this.handleSubmit.bind(this)}>
+          <span class="button-content">
+            { loading ? <div class="button-spinner small simple"/> : null }
+            <span class="button-text">Login</span>
+          </span>
+        </button>
+
+
       </form>
     );
   }
