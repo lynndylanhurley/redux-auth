@@ -94,6 +94,8 @@ npm install react-bootstrap --save
 
 Material UI uses inline styles so no further configuration is needed. But with the bootstrap theme, the CSS will also need to be included. Read more at the [React Bootstrap][react-bootstrap] project page.
 
+You must also install and use a json loader
+
 --
 
 # Usage
