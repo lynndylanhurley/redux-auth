@@ -35,7 +35,7 @@ class ButtonLoader extends React.Component {
 
   handleClick (ev) {
     ev.preventDefault();
-    this.props.onClick();
+    this.props.onClick(ev);
   }
 
   getColor () {
