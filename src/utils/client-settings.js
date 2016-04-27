@@ -11,8 +11,10 @@ import {
   setCurrentEndpoint,
   setCurrentEndpointKey,
   retrieveData,
-  persistData
+  persistData,
+  getTokenValidationPath
 } from "./session-storage";
+import {parseResponse} from "./handle-fetch-response";
 
 // can't use "window" with node app
 var root = Function("return this")() || (42, eval)("this");
@@ -21,7 +23,7 @@ const defaultSettings = {
   proxyIf:            function() { return false; },
   proxyUrl:           "/proxy",
   forceHardRedirect:  false,
-  storage:            "cookies",
+  storage:            "localStorage",
   cookieExpiry:       14,
   cookiePath:         "/",
   initialCredentials: null,
@@ -90,12 +92,18 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
   setCurrentEndpointKey(currentEndpointKey);
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
-
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
+    ////
     let {user, headers, config} = getCurrentSettings().initialCredentials;
     persistData(C.SAVED_CREDS_KEY, headers);
-    return Promise.resolve(user);
+    return fetch(getTokenValidationPath('default'))
+      .then(parseResponse)
+      .then(({data}) => Promise.resolve(data))
+      .catch(({errors}) => Promise.reject({errors}));
+    ////
+    // persistData(C.SAVED_CREDS_KEY, headers);
+    // return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
     return fetch(savedCreds)
