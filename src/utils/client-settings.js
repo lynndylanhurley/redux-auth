@@ -4,6 +4,7 @@ import fetch from "./fetch";
 import parseEndpointConfig from "./parse-endpoint-config";
 import {setEndpointKeys} from "../actions/configure";
 import {
+  getApiUrl,
   getCurrentSettings,
   setCurrentSettings,
   getInitialEndpointKey,
@@ -93,12 +94,12 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
 
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
-    let {user, headers, config} = getCurrentSettings().initialCredentials;
+    let {user, headers} = getCurrentSettings().initialCredentials;
     persistData(C.SAVED_CREDS_KEY, headers);
     return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
-    return fetch(savedCreds)
+    return fetch(getApiUrl(currentEndpointKey))
   } else {
     return Promise.reject({reason: "No credentials."})
   }
