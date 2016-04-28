@@ -161,9 +161,9 @@ A form used to sign in using accounts that were registered by email.
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block.
 * **`inputProps`**: An object containing the following attributes:
-	* **`email`**: An object that will override the email input component's default props.
-	* **`password`**: An object that will override the password input component's default props.
-	* **`submit`**: An object that will override the submit button component's default props.
+  * **`email`**: An object that will override the email input component's default props.
+  * **`password`**: An object that will override the password input component's default props.
+  * **`submit`**: An object that will override the submit button component's default props.
 
 ~~~js
 // default theme
@@ -421,6 +421,9 @@ This must be run before your app is initialized. This should be run on both the 
   * **`cookies`**: A string representation of the cookies from the current request. This will be parsed for any auth credentials.
   * **`location`**: A string representation of the current request's URL.
 
+Additionaly when rendering on client side some additional settings can be passed in  **`settings`** object.
+  * **`cleanSession`**: A boolean that tells if all locally stored credentials will be flushed.
+  * **`serverSideRendering`**: A boolean that tells if serverside rendering is used, defaults to `true`. Enables the persist of credentials between sessions.
 --
 
 ##### configure example
@@ -444,7 +447,8 @@ store.dispatch(configure(
 
 // client-side usage
 store.dispatch(configure(
-  {apiUrl: "https://api.graveflex.com"}
+  {apiUrl: "https://api.graveflex.com"},
+  {serverSideRendering: true, cleanSession: true}
 )).then(() => {
   // your store should now have the current user. now render your
   // app to the DOM. see the demo app for a more complete example.
