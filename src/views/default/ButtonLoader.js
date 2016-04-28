@@ -43,7 +43,7 @@ class ButtonLoader extends React.Component {
 
   handleClick (ev) {
     ev.preventDefault();
-    this.props.onClick(ev);
+    this.props.onClick();
   }
 
   renderIcon () {
