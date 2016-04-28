@@ -423,7 +423,7 @@ This must be run before your app is initialized. This should be run on both the 
 
 Additionaly when rendering on client side some additional settings can be passed in  **`settings`** object.
   * **`cleanSession`**: A boolean that tells if all locally stored credentials will be flushed.
-  * **`serverSideRendering`**: A boolean that tells if serverside rendering is used, defaults to `true`. Enables the persist of credentials between sessions.
+  * **`clientOnly`**: A boolean that tells if code is run only on client side. Should be set `true` with only client-side usage.
 --
 
 ##### configure example
