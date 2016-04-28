@@ -114,9 +114,10 @@ export function configure(endpoint={}, settings={}) {
         settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
       }
 
-      // if tokens were invalidated by server, make sure to clear browser
-      // credentials
-      if (!settings.initialCredentials) {
+      let serverSideRendering = settings.serverSideRendering === undefined || settings.serverSideRendering;
+      // if tokens were invalidated by server or from the settings, make sure
+      // to clear browser credentials
+      if (serverSideRendering && !settings.initialCredentials || settings.cleanSession) {
         destroySession();
       }
 
