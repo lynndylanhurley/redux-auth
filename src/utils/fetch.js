@@ -22,6 +22,9 @@ function getAuthHeaders(url) {
     // bust IE cache
     nextHeaders["If-Modified-Since"] = "Mon, 26 Jul 1997 05:00:00 GMT";
 
+    // transport access token as a bearer token in accordance to RFC 6750
+    nextHeaders["Authorization"] = `Bearer ${currentHeaders['access-token']}`;
+
     // set header for each key in `tokenFormat` config
     for (var key in getTokenFormat()) {
       nextHeaders[key] = currentHeaders[key];
