@@ -164,6 +164,17 @@ export function getTokenFormat() {
   return root.authState.currentSettings.tokenFormat;
 }
 
+export function removeData(key) {
+
+  switch(root.authState.currentSettings.storage) {
+    case "localStorage":
+      root.localStorage.removeItem(key);
+      break;
+    default:
+      Cookies.remove(key);
+  }
+}
+
 export function persistData (key, val) {
   val = JSON.stringify(val);
 
@@ -182,10 +193,10 @@ export function persistData (key, val) {
 };
 
 
-export function retrieveData (key) {
+export function retrieveData (key, storage) {
   var val = null;
 
-  switch (root.authState.currentSettings.storage) {
+  switch (storage || root.authState.currentSettings.storage) {
     case "localStorage":
       val = root.localStorage && root.localStorage.getItem(key);
       break;

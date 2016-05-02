@@ -11,6 +11,7 @@ import {
   setDefaultEndpointKey,
   setCurrentEndpoint,
   setCurrentEndpointKey,
+  removeData,
   retrieveData,
   persistData
 } from "./session-storage";
@@ -99,7 +100,14 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
     return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
-    return fetch(getApiUrl(currentEndpointKey))
+    return fetch(`${getApiUrl(currentEndpointKey)}${currentEndpoint[currentEndpointKey].tokenValidationPath}`)
+    .then(response => {
+          if (response.status >= 200 && response.status < 300) {
+            return response.json().then(({ data }) => (data));
+          }
+          removeData(C.SAVED_CREDS_KEY);
+          return Promise.reject({reason: "No credentials."});
+    });
   } else {
     return Promise.reject({reason: "No credentials."})
   }
