@@ -2,6 +2,7 @@ import fetch from "isomorphic-fetch";
 import cookie from "cookie";
 import getRedirectInfo from "../utils/parse-url";
 import * as C from "../utils/constants";
+import { addAuthorizationHeader } from "../utils/fetch";
 import parseEndpointConfig from "./parse-endpoint-config";
 import url from "url";
 
@@ -73,7 +74,7 @@ export function fetchToken({rawEndpoints, cookies, currentLocation}) {
           validationUrl = `${apiUrl}${tokenValidationPath}?unbatch=true`;
 
       return fetch(validationUrl, {
-        headers
+        headers: addAuthorizationHeader(headers['access-token'], headers)
       }).then((resp) => {
         newHeaders = parseHeaders(resp.headers.raw());
         return resp.json();
