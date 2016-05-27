@@ -74,6 +74,7 @@ export {
   EmailSignInForm,
   EmailSignUpForm,
   SignOutButton,
+  SignOutLink,
   RequestPasswordResetForm,
   OAuthSignInButton,
   UpdatePasswordForm,
