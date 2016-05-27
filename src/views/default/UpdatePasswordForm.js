@@ -52,7 +52,7 @@ class UpdatePasswordForm extends React.Component {
     return (
       <form
         className="redux-auth update-password-form clearfix"
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={(e)=>this.handleSubmit(event)}>
         <Input
           type="password"
           label="Password"
@@ -83,7 +83,7 @@ class UpdatePasswordForm extends React.Component {
           primary={true}
           disabled={disabled}
           style={{float: "right"}}
-          onClick={this.handleSubmit.bind(this)}
+          onClick={(e)=>this.handleSubmit(event)}
           {...this.props.inputProps.submit}>
           Update Password
         </ButtonLoader>
