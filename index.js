@@ -947,7 +947,8 @@
 	function getSessionEndpointKey(k) {
 	  var key = k || getCurrentEndpointKey();
 	  if (!key) {
-	    throw "You must configure redux-auth before use.";
+	    // throw "You must configure redux-auth before use.";
+	    return 'default';
 	  } else {
 	    return key;
 	  }
