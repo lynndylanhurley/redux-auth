@@ -4367,7 +4367,9 @@
 	    key: "handleSubmit",
 	    value: function handleSubmit(event) {
 	      event.preventDefault();
-	      var formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
+	      var defaultState = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]);
+	      var nullState = this.props.auth.getIn(["emailSignIn", 'null', "form"]);
+	      var formData = (defaultState || nullState).toJS();
 	      this.props.dispatch((0, _emailSignIn.emailSignIn)(formData, this.getEndpoint()));
 	    }
 	  }, {
