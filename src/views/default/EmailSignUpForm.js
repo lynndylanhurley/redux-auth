@@ -26,9 +26,9 @@ class EmailSignUpForm extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Hello??::::::::', nextProps)
     if (nextProps.email && this.state.default){
       this.setState({ email: nextProps.email, default:false })
+      this.props.dispatch(emailSignUpFormUpdate(this.getEndpoint(), 'email', nextProps.email));
     }
   }
 
