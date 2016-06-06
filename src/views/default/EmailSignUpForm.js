@@ -4,6 +4,8 @@ import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "../../actions/email-sign-up";
 import { connect } from "react-redux";
 
+const isEmpty = value => value === undefined || value === null || value === '';
+
 class EmailSignUpForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
@@ -21,6 +23,8 @@ class EmailSignUpForm extends React.Component {
   componentWillMount() {
     this.state = {
       email: '',
+      emailError: null,
+      passwordError: null,
       default: true
     }
   }
@@ -50,9 +54,33 @@ class EmailSignUpForm extends React.Component {
     );
   }
 
+  validatePassword(value){
+    if (isEmpty(value)) {
+      return "Must enter password"
+    }else if (value.length < 6){
+      return "Must be at least 6 characters"
+    }else{
+      return null
+    }
+  }
+
+  validateEmail(value){
+    if (isEmpty(value)) {
+      return "Email Required"
+    }else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)){
+      return "Must be a valid email address"
+    }else{
+      return null
+    }
+  }
+
   handleInput (key, val) {
     if(key === 'email') {
       this.setState({email: val})
+      this.setState({emailError: this.validateEmail(val)})
+    }
+    if(key==='password'){
+      this.setState({passwordError: this.validatePassword(val)})
     }
     this.props.dispatch(emailSignUpFormUpdate(this.getEndpoint(), key, val));
   }
@@ -60,7 +88,11 @@ class EmailSignUpForm extends React.Component {
   handleSubmit (event) {
     event.preventDefault();
     let formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
-    this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
+    this.setState({emailError: this.validateEmail(formData.email), passwordError: this.validatePassword(formData.password)}, function(previousState, currentProps){
+      if(!this.state.emailError && !this.state.passwordError){
+        this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
+      }
+    });
   }
 
   render () {
@@ -109,6 +141,9 @@ class EmailSignUpForm extends React.Component {
                    onChange={this.handleInput.bind(this, "email")}
                    {...this.props.inputProps.email} />
           </div>
+          <div className="error-container">
+            <small className="error">{this.state.emailError}</small>
+          </div>
         </div>
       </div>
 
@@ -124,10 +159,13 @@ class EmailSignUpForm extends React.Component {
                    onChange={this.handleInput.bind(this, "password")}
                    {...this.props.inputProps.password} />
           </div>
+          <div className="error-container">
+            <small className="error">{this.state.passwordError}</small>
+          </div>
         </div>
       </div>
         <button
-          disabled={disabled}
+          disabled={disabled || this.state.emailError || this.state.passwordError}
           className='btn btn-skylark btn-fill btn-sharp'
           onClick={this.handleSubmit.bind(this)}>
           <span class="button-content">
