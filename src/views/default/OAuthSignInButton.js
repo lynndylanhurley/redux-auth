@@ -29,7 +29,7 @@ class OAuthSignInButton extends React.Component {
   }
 
   handleClick () {
-    this.props.dispatch(oAuthSignIn({
+    this.props.dispatch(_oAuthSignIn({
       provider: this.props.provider,
       params: this.props.signInParams,
       endpointKey: this.getEndpoint()
@@ -49,7 +49,7 @@ class OAuthSignInButton extends React.Component {
         icon={this.props.icon}
         className="oauth-sign-in-submit"
         disabled={disabled}
-        onClick={this.handleClick.bind(this)}
+        onClick={()=>this.handleClick()}
         {...this.props} />
     );
   }
