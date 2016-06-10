@@ -52,7 +52,7 @@ class RequestPasswordResetForm extends React.Component {
       <form
         className='redux-auth request-password-reset-form clearfix'
         style={{clear: "both", overflow: "hidden"}}
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={(e) => this.handleSubmit(event)}>
 
         <Input
           type="text"
@@ -65,17 +65,15 @@ class RequestPasswordResetForm extends React.Component {
           onChange={this.handleInput.bind(this, "email")}
           {...this.props.inputProps.email} />
 
-        <ButtonLoader
-          loading={loading}
-          type="submit"
-          primary={true}
-          style={{float: "right"}}
-          className="request-password-reset-submit"
-          disabled={inputDisabled || submitDisabled}
-          onClick={this.handleSubmit.bind(this)}
-          {...this.props.inputProps.submit}>
-          Request Password Reset
-        </ButtonLoader>
+        <button
+          disabled={inputDisabled || submitDisabled || loading}
+          className='request-password-reset-submit btn btn-login'
+          onClick={this.handleSubmit.bind(this)}>
+          <span class="button-content">
+            { loading ? <div class="button-spinner small simple"/> : null }
+            <span class="button-text">Reset</span>
+          </span>
+        </button>
       </form>
     );
   }
