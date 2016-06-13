@@ -110,7 +110,7 @@ export function configure(endpoint={}, settings={}) {
         dispatch(push({pathname: authRedirectPath}));
       }
 
-      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
+      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["sky_token"]) {
         settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
       }
 
@@ -120,6 +120,12 @@ export function configure(endpoint={}, settings={}) {
         destroySession();
       }
 
+      if (localStorage.skyToken) {
+        settings.initialCredentials = {headers: {}};
+        settings.initialCredentials.headers["X-Sky-Token"] = localStorage.skyToken
+        settings.initialCredentials.headers["X-Sky-Email"] = localStorage.skyEmail
+        settings.initialCredentials.currentEndpointKey = localStorage.currentConfigName
+      }
       promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
     }
 

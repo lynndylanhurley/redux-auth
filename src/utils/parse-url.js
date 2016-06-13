@@ -117,7 +117,9 @@ export default function getRedirectInfo(currentLocation) {
       "expiry",
       "uid",
       "reset_password",
-      "account_confirmation_success"
+      "account_confirmation_success",
+      "sky_token",
+      "sky_email"
     ];
 
     var authRedirectHeaders = buildCredentials(currentLocation, authKeys);

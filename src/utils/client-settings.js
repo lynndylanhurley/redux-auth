@@ -33,7 +33,8 @@ const defaultSettings = {
   },
 
   confirmationSuccessUrl:  function() {
-    return root.location.href;
+    console.log(':::::::::::::root.location::::::', root.location)
+    return root.location.origin+'/#/account/reset-password';
   },
 
   tokenFormat: {
@@ -41,7 +42,9 @@ const defaultSettings = {
     "token-type":   "Bearer",
     client:         "{{ client }}",
     expiry:         "{{ expiry }}",
-    uid:            "{{ uid }}"
+    uid:            "{{ uid }}",
+    "X-Sky-Email":  "{{ X-Sky-Email }}",
+    "X-Sky-Token":  "{{ X-Sky-Token }}"
   },
 
   parseExpiry: function(headers){
@@ -64,6 +67,7 @@ const defaultSettings = {
 
 // save session configuration
 export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}) {
+
   let currentEndpointKey;
 
   if (reset) {
@@ -92,10 +96,17 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
   setCurrentEndpointKey(currentEndpointKey);
 
   let savedCreds = retrieveData(C.SAVED_CREDS_KEY);
+
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
     ////
     let {user, headers, config} = getCurrentSettings().initialCredentials;
+    if (!headers) { headers = {} }
+    headers["X-Sky-Token"] = getCurrentSettings().initialCredentials["sky_token"]
+    headers["X-Sky-Email"] = getCurrentSettings().initialCredentials.uid
+    headers["access-token"] = getCurrentSettings().initialCredentials["access-token"]
+    headers["client"] = getCurrentSettings().initialCredentials["client"]
+    headers["uid"] = getCurrentSettings().initialCredentials.uid
     persistData(C.SAVED_CREDS_KEY, headers);
     return fetch(getTokenValidationPath('default'))
       .then(parseResponse)
