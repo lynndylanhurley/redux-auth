@@ -73,11 +73,9 @@ class UpdatePasswordForm extends React.Component {
 
         <ButtonLoader loading={loading}
                       type="submit"
-                      className="pull-right"
-                      icon={this.props.icon}
+                      className="pull-right update-password-submit"
+                      icon={this.props.icon || <Glyphicon glyph="lock"/>}
                       disabled={disabled}
-                      className="update-password-submit"
-                      icon={<Glyphicon glyph="lock" />}
                       onClick={this.handleSubmit.bind(this)}
                       {...this.props.inputProps.submit}>
           Update Password
