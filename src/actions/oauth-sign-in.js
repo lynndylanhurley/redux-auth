@@ -21,6 +21,7 @@ var openPopup = _openPopup;
 
 function listenForCredentials (endpointKey, popup, provider, resolve, reject) {
   if (!resolve) {
+    console.log('nooooo resolve =(')
     return new Promise((resolve, reject) => {
       listenForCredentials(endpointKey, popup, provider, resolve, reject);
     });
@@ -33,12 +34,14 @@ function listenForCredentials (endpointKey, popup, provider, resolve, reject) {
     } catch (err) {}
 
     if (creds && creds.uid) {
+      console.log('inside the IF_BLOCK i wanna be in*********>>>>>', creds)
       popup.close();
       persistData(C.SAVED_CREDS_KEY, normalizeTokenKeys(creds));
-      fetch(getTokenValidationPath(endpointKey))
-        .then(parseResponse)
-        .then(({data}) => resolve(data))
-        .catch(({errors}) => reject({errors}));
+      // fetch((getTokenValidationPath(endpointKey)))
+      Promise.resolve(parseCreds(creds))
+        // .then(parseResponse)
+        .then((data) => resolve(data))
+        .catch((errors) => reject({errors}));
     } else if (popup.closed) {
       reject({errors: "Authentication was cancelled."})
     } else {
@@ -49,6 +52,9 @@ function listenForCredentials (endpointKey, popup, provider, resolve, reject) {
   }
 }
 
+function parseCreds(creds){
+  return creds;
+}
 
 function authenticate({endpointKey, provider, url, tab=false}) {
   let name = (tab) ? "_blank" : provider;
