@@ -11,6 +11,7 @@ class EmailSignUpForm extends React.Component {
     endpoint: PropTypes.string,
     icon: PropTypes.string,
     email: PropTypes.string,
+    origin: PropTypes.string,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       first_name: PropTypes.object,
@@ -55,6 +56,7 @@ class EmailSignUpForm extends React.Component {
   }
 
   validatePassword(value){
+    if(this.props.origin) return null
     if (isEmpty(value)) {
       return "Must enter password"
     }else if (value.length < 6){
@@ -88,6 +90,9 @@ class EmailSignUpForm extends React.Component {
   handleSubmit (event) {
     event.preventDefault();
     let formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
+    if (this.props.origin){
+      formData.origin = this.props.origin
+    }
     this.setState({emailError: this.validateEmail(formData.email), passwordError: this.validatePassword(formData.password)}, function(previousState, currentProps){
       if(!this.state.emailError && !this.state.passwordError){
         this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
