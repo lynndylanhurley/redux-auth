@@ -5,16 +5,8 @@ import {
   authenticateComplete,
   authenticateError
 } from "./authenticate";
-import {
-  showFirstTimeLoginSuccessModal,
-  showFirstTimeLoginErrorModal,
-  showPasswordResetSuccessModal,
-  showPasswordResetErrorModal
-} from "./ui";
-import {ssAuthTokenUpdate} from "./server";
 import {applyConfig} from "../utils/client-settings";
 import {destroySession} from "../utils/session-storage";
-import verifyAuth from "../utils/verify-auth";
 import getRedirectInfo from "../utils/parse-url";
 import {push} from "react-router-redux";
 
@@ -42,117 +34,38 @@ export function configure(endpoint={}, settings={}) {
         user,
         headers;
 
-    if (settings.isServer) {
-      promise = verifyAuth(endpoint, settings)
-        .then(({
-          user,
-          headers,
-          firstTimeLogin,
-          mustResetPassword,
-          currentEndpoint,
-          currentEndpointKey,
-          defaultEndpointKey
-        }) => {
-          dispatch(ssAuthTokenUpdate({
-            headers,
-            user,
-            firstTimeLogin,
-            mustResetPassword
-          }));
+    let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
 
-          dispatch(setEndpointKeys(Object.keys(currentEndpoint), currentEndpointKey, defaultEndpointKey));
-
-          return user;
-        }).catch(({
-          reason,
-          firstTimeLogin,
-          mustResetPassword,
-          currentEndpoint,
-          defaultEndpointKey
-        }) => {
-          dispatch(ssAuthTokenUpdate({firstTimeLogin, mustResetPassword}));
-          dispatch(setEndpointKeys(Object.keys(currentEndpoint || {}), null, defaultEndpointKey));
-          return Promise.reject({reason});
-        });
-    } else {
-      // if the authentication happened server-side, find the resulting auth
-      // credentials that were injected into the dom.
-      let tokenBridge = document.getElementById("token-bridge");
-
-      if (tokenBridge) {
-        let rawServerCreds = tokenBridge.innerHTML;
-        if (rawServerCreds) {
-          let serverCreds = JSON.parse(rawServerCreds);
-
-          ({headers, user, firstTimeLogin, mustResetPassword} = serverCreds);
-
-          if (user) {
-            dispatch(authenticateComplete(user));
-
-            // do NOT send initial validation request.
-            // instead use the credentials that were sent back by the server.
-            settings.initialCredentials = serverCreds;
-          }
-
-          // sync client dom to prevent React "out of sync" error
-          dispatch(ssAuthTokenUpdate({
-            user,
-            headers,
-            mustResetPassword,
-            firstTimeLogin
-          }));
-        }
-      }
-
-      let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
-
-      if (authRedirectPath) {
-        dispatch(push({pathname: authRedirectPath}));
-      }
-
-      if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["sky_token"]) {
-        settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
-      }
-
-      // if tokens were invalidated by server, make sure to clear browser
-      // credentials
-      if (!settings.initialCredentials) {
-        destroySession();
-      }
-
-      if (localStorage.skyToken) {
-        settings.initialCredentials = {headers: {}};
-        settings.initialCredentials.headers["X-Sky-Token"] = localStorage.skyToken
-        settings.initialCredentials.headers["X-Sky-Email"] = localStorage.skyEmail
-        settings.initialCredentials.currentEndpointKey = localStorage.currentConfigName
-      }
-      promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
+    if (authRedirectPath) {
+      dispatch(push({pathname: authRedirectPath}));
     }
+
+    if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["sky_token"]) {
+      settings.initialCredentials = extend({}, settings.initialCredentials, authRedirectHeaders);
+    }
+
+    // if tokens were invalidated by server, make sure to clear browser
+    // credentials
+    if (!settings.initialCredentials) {
+      destroySession();
+    }
+
+    if (localStorage.skyToken) {
+      settings.initialCredentials = {headers: {}};
+      settings.initialCredentials.headers["X-Sky-Token"] = localStorage.skyToken
+      settings.initialCredentials.headers["X-Sky-Email"] = localStorage.skyEmail
+      settings.initialCredentials.currentEndpointKey = localStorage.currentConfigName
+    }
+    promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
 
     return promise
       .then(user => {
         dispatch(authenticateComplete(user));
 
-        if (firstTimeLogin) {
-          dispatch(showFirstTimeLoginSuccessModal());
-        }
-
-        if (mustResetPassword) {
-          dispatch(showPasswordResetSuccessModal());
-        }
-
         return user;
       })
       .catch(({reason} = {}) => {
         dispatch(authenticateError([reason]));
-
-        if (firstTimeLogin) {
-          dispatch(showFirstTimeLoginErrorModal());
-        }
-
-        if (mustResetPassword) {
-          dispatch(showPasswordResetErrorModal());
-        }
 
         return Promise.resolve({reason});
       });

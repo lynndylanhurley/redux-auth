@@ -7,9 +7,7 @@ module.exports = {
   context: __dirname,
   devtool: false,
   entry:   {
-    "index":             "./src/index",
-    "bootstrap-theme":   "./src/views/bootstrap/index",
-    "material-ui-theme": "./src/views/material-ui/index"
+    "index":             "./src/index"
   },
   output:  {
     path:          path.join(__dirname),

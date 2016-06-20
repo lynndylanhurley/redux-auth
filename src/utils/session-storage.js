@@ -102,9 +102,9 @@ export function getSessionEndpoint (k) {
 }
 
 // only should work for current session
-export function getDestroyAccountUrl (endpointKey) {
-  return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).accountDeletePath}`
-}
+// export function getDestroyAccountUrl (endpointKey) {
+//   return `${getApiUrl(endpointKey)}${getSessionEndpoint(endpointKey).accountDeletePath}`
+// }
 
 // only should work for current session
 export function getSignOutUrl (endpointKey) {

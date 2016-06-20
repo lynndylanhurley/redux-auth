@@ -33,14 +33,13 @@ const defaultSettings = {
   },
 
   confirmationSuccessUrl:  function() {
-    console.log(':::::::::::::root.location::::::', root.location)
     return root.location.origin+'/#/account/reset-password';
   },
 
   tokenFormat: {
-    "access-token": "{{ access-token }}",
-    "token-type":   "Bearer",
-    client:         "{{ client }}",
+    // "access-token": "{{ access-token }}",
+    // "token-type":   "Bearer",
+    // client:         "{{ client }}",
     expiry:         "{{ expiry }}",
     uid:            "{{ uid }}",
     "X-Sky-Email":  "{{ X-Sky-Email }}",
@@ -104,8 +103,8 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
     if (!headers) { headers = {} }
     headers["X-Sky-Token"] = getCurrentSettings().initialCredentials["sky_token"]
     headers["X-Sky-Email"] = getCurrentSettings().initialCredentials.uid
-    headers["access-token"] = getCurrentSettings().initialCredentials["access-token"]
-    headers["client"] = getCurrentSettings().initialCredentials["client"]
+    // headers["access-token"] = getCurrentSettings().initialCredentials["access-token"]
+    // headers["client"] = getCurrentSettings().initialCredentials["client"]
     headers["uid"] = getCurrentSettings().initialCredentials.uid
     persistData(C.SAVED_CREDS_KEY, headers);
     return fetch(getTokenValidationPath('default'))
