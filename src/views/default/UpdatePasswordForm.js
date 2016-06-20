@@ -8,6 +8,7 @@ class UpdatePasswordForm extends React.Component {
   static propTypes = {
     icon: PropTypes.string,
     endpoint: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       password: PropTypes.object,
       passwordConfirmation: PropTypes.object,
@@ -85,7 +86,7 @@ class UpdatePasswordForm extends React.Component {
           style={{float: "right"}}
           onClick={(e)=>this.handleSubmit(event)}
           {...this.props.inputProps.submit}>
-          Update Password
+          { this.props.buttonText || 'Update Password' }
         </ButtonLoader>
       </form>
     );
