@@ -27,12 +27,12 @@ function getAuthHeaders(url) {
       nextHeaders[key] = currentHeaders[key];
     }
 
-
     if(!nextHeaders["X-Sky-Email"] && !nextHeaders["X-Sky-Token"]){
-      nextHeaders["X-Sky-Email"] = localStorage.getItem('skyEmail');
-      nextHeaders["X-Sky-Token"] = localStorage.getItem('skyToken');
+      // nextHeaders["X-Sky-Email"] = localStorage.getItem('skyEmail');
+      // nextHeaders["X-Sky-Token"] = localStorage.getItem('skyToken');
+      nextHeaders["X-Sky-Email"] = retrieveData('skyEmail');
+      nextHeaders["X-Sky-Token"] = retrieveData('skyToken');
     }
-
     return nextHeaders;
   } else {
     return {};

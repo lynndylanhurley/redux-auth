@@ -50,11 +50,17 @@ export function configure(endpoint={}, settings={}) {
       destroySession();
     }
 
-    if (localStorage.skyToken) {
+    // if (localStorage.skyToken) {
+    //   settings.initialCredentials = {headers: {}};
+    //   settings.initialCredentials.headers["X-Sky-Token"] = localStorage.skyToken
+    //   settings.initialCredentials.headers["X-Sky-Email"] = localStorage.skyEmail
+    //   settings.initialCredentials.currentEndpointKey = localStorage.currentConfigName
+    // }
+    if (settings.storage.skyToken) {
       settings.initialCredentials = {headers: {}};
-      settings.initialCredentials.headers["X-Sky-Token"] = localStorage.skyToken
-      settings.initialCredentials.headers["X-Sky-Email"] = localStorage.skyEmail
-      settings.initialCredentials.currentEndpointKey = localStorage.currentConfigName
+      settings.initialCredentials.headers["X-Sky-Token"] = settings.storage.skyToken
+      settings.initialCredentials.headers["X-Sky-Email"] = settings.storage.skyEmail
+      settings.initialCredentials.currentEndpointKey = settings.storage.currentConfigName
     }
     promise = Promise.resolve(applyConfig({dispatch, endpoint, settings}));
 

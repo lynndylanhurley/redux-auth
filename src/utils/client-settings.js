@@ -23,7 +23,7 @@ const defaultSettings = {
   proxyIf:            function() { return false; },
   proxyUrl:           "/proxy",
   forceHardRedirect:  false,
-  storage:            "localStorage",
+  storageType:            "authStorage",
   cookieExpiry:       14,
   cookiePath:         "/",
   initialCredentials: null,
@@ -103,8 +103,9 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
     if (!headers) { headers = {} }
     headers["X-Sky-Token"] = getCurrentSettings().initialCredentials["sky_token"]
     headers["X-Sky-Email"] = getCurrentSettings().initialCredentials.uid
-    // headers["access-token"] = getCurrentSettings().initialCredentials["access-token"]
-    // headers["client"] = getCurrentSettings().initialCredentials["client"]
+    // need to persist on localStorage
+    // settings.storage.setItem('skyToken', )
+    // settings.storage.setItem('skyEmail', )
     headers["uid"] = getCurrentSettings().initialCredentials.uid
     persistData(C.SAVED_CREDS_KEY, headers);
     return fetch(getTokenValidationPath('default'))

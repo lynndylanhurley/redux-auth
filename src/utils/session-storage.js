@@ -168,9 +168,10 @@ export function getTokenFormat() {
 export function persistData (key, val) {
   val = JSON.stringify(val);
 
-  switch (root.authState.currentSettings.storage) {
-    case "localStorage":
-      root.localStorage.setItem(key, val);
+  switch (root.authState.currentSettings.storageType) {
+    case "authStorage":
+      // root.localStorage.setItem(key, val);
+      root.authState.currentSettings.storage.setItem(key, val);
       break;
 
     default:
@@ -186,9 +187,9 @@ export function persistData (key, val) {
 export function retrieveData (key) {
   var val = null;
 
-  switch (root.authState.currentSettings.storage) {
-    case "localStorage":
-      val = root.localStorage && root.localStorage.getItem(key);
+  switch (root.authState.currentSettings.storageType) {
+    case "authStorage":
+      val = root.authState.currentSettings.storage && root.authState.currentSettings.storage.getItem(key);
       break;
 
     default:
