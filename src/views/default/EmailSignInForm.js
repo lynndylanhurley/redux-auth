@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 class EmailSignInForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       password: PropTypes.object,
@@ -77,7 +78,7 @@ class EmailSignInForm extends React.Component {
           onClick={this.handleSubmit.bind(this)}>
           <span class="button-content">
             { loading ? <div class="button-spinner small simple"/> : null }
-            <span class="button-text">Login</span>
+            <span class="button-text">{ this.props.buttonText || 'Login' }</span>
           </span>
         </button>
 

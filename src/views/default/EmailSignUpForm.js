@@ -12,6 +12,7 @@ class EmailSignUpForm extends React.Component {
     icon: PropTypes.string,
     email: PropTypes.string,
     origin: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       first_name: PropTypes.object,
@@ -174,7 +175,7 @@ class EmailSignUpForm extends React.Component {
           className='btn btn-skylark btn-fill btn-sharp'
           onClick={this.handleSubmit.bind(this)}>
           <span class="button-content">
-            <span class="button-text">Accept Invitation</span>
+            <span class="button-text">{ this.props.buttonText || 'Accept Invitation' }</span>
           </span>
         </button>
       </form>

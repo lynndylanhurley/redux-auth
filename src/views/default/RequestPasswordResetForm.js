@@ -11,6 +11,7 @@ class RequestPasswordResetForm extends React.Component {
   static propTypes = {
     icon: PropTypes.string,
     endpoint: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       submit: PropTypes.object
@@ -71,7 +72,7 @@ class RequestPasswordResetForm extends React.Component {
           onClick={this.handleSubmit.bind(this)}>
           <span class="button-content">
             { loading ? <div class="button-spinner small simple"/> : null }
-            <span class="button-text">Reset</span>
+            <span class="button-text">{ this.props.buttonText || 'Reset' }</span>
           </span>
         </button>
       </form>

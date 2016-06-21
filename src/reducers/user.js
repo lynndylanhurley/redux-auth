@@ -6,8 +6,6 @@ import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
 import { EMAIL_SIGN_UP_COMPLETE } from "../actions/email-sign-up";
 import { SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "../actions/sign-out";
 import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
-import { DESTROY_ACCOUNT_COMPLETE } from "../actions/destroy-account";
-import * as ssActions from "../actions/server";
 import { STORE_CURRENT_ENDPOINT_KEY, SET_ENDPOINT_KEYS } from "../actions/configure";
 
 const initialState = Immutable.fromJS({
@@ -24,15 +22,6 @@ export default createReducer(initialState, {
     isSignedIn: true,
     endpointKey: getCurrentEndpointKey()
   }),
-
-  [ssActions.SS_TOKEN_VALIDATION_COMPLETE]: (state, { user, mustResetPassword, firstTimeLogin }) => {
-    return state.merge({
-      attributes: user,
-      isSignedIn: true,
-      firstTimeLogin,
-      mustResetPassword
-    });
-  },
 
   [STORE_CURRENT_ENDPOINT_KEY]: (state, {currentEndpointKey}) => state.set("endpointKey", currentEndpointKey),
   [SET_ENDPOINT_KEYS]: (state, {currentEndpointKey}) => state.set("endpointKey", currentEndpointKey),
@@ -55,18 +44,7 @@ export default createReducer(initialState, {
     endpointKey: endpoint
   }),
 
-  [ssActions.SS_AUTH_TOKEN_UPDATE]: (state, {user, mustResetPassword, firstTimeLogin}) => {
-    return state.merge({
-      mustResetPassword,
-      firstTimeLogin,
-      isSignedIn: !!user,
-      attributes: user
-    });
-  },
-
   [authActions.AUTHENTICATE_FAILURE]:    state => state.merge(initialState),
-  [ssActions.SS_TOKEN_VALIDATION_ERROR]: state => state.merge(initialState),
   [SIGN_OUT_COMPLETE]:                   state => state.merge(initialState),
-  [SIGN_OUT_ERROR]:                      state => state.merge(initialState),
-  [DESTROY_ACCOUNT_COMPLETE]:            state => state.merge(initialState)
+  [SIGN_OUT_ERROR]:                      state => state.merge(initialState)
 });
