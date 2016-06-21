@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 class EmailSignInForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       password: PropTypes.object,
@@ -36,7 +37,9 @@ class EmailSignInForm extends React.Component {
 
   handleSubmit (event) {
     event.preventDefault();
-    let formData = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"]).toJS();
+    const defaultState = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "form"])
+    const nullState    = this.props.auth.getIn(["emailSignIn", 'null', "form"])
+    let formData       = (defaultState || nullState).toJS();
     this.props.dispatch(emailSignIn(formData, this.getEndpoint()));
   }
 
@@ -45,6 +48,7 @@ class EmailSignInForm extends React.Component {
       this.props.auth.getIn(["user", "isSignedIn"]) ||
       this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"])
     );
+    let loading = this.props.auth.getIn(["emailSignIn", this.getEndpoint(), "loading"]);
 
     return (
       <form className='redux-auth email-sign-in-form'
@@ -68,17 +72,17 @@ class EmailSignInForm extends React.Component {
                onChange={this.handleInput.bind(this, "password")}
                {...this.props.inputProps.password} />
 
-        <ButtonLoader loading={this.props.auth.getIn(["emailSignIn", "loading"])}
-                      type="submit"
-                      style={{float: "right"}}
-                      icon={this.props.icon}
-                      className='email-sign-in-submit'
-                      disabled={disabled}
-                      onClick={this.handleSubmit.bind(this)}
-                      primary={true}
-                      {...this.props.inputProps.submit}>
-          Sign In
-        </ButtonLoader>
+        <button
+          disabled={disabled}
+          className='email-sign-in-submit btn btn-login'
+          onClick={this.handleSubmit.bind(this)}>
+          <span class="button-content">
+            { loading ? <div class="button-spinner small simple"/> : null }
+            <span class="button-text">{ this.props.buttonText || 'Login' }</span>
+          </span>
+        </button>
+
+
       </form>
     );
   }

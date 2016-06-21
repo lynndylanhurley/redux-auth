@@ -108,16 +108,18 @@ export default function getRedirectInfo(currentLocation) {
     return {};
   } else {
     let authKeys = [
-      "access-token",
-      "token",
-      "auth_token",
+      // "access-token",
+      // "token",
+      // "auth_token",
       "config",
-      "client",
-      "client_id",
+      // "client",
+      // "client_id",
       "expiry",
       "uid",
       "reset_password",
-      "account_confirmation_success"
+      "account_confirmation_success",
+      "sky_token",
+      "sky_email"
     ];
 
     var authRedirectHeaders = buildCredentials(currentLocation, authKeys);

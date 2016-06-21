@@ -8,6 +8,7 @@ class UpdatePasswordForm extends React.Component {
   static propTypes = {
     icon: PropTypes.string,
     endpoint: PropTypes.string,
+    buttonText: PropTypes.string,
     inputProps: PropTypes.shape({
       password: PropTypes.object,
       passwordConfirmation: PropTypes.object,
@@ -45,14 +46,14 @@ class UpdatePasswordForm extends React.Component {
     let endpoint = this.getEndpoint();
     let loading = this.props.auth.getIn(["updatePassword", "loading"]);
     let disabled = (
-      !this.props.auth.getIn(["user", "isSignedIn"]) || loading ||
-      (this.props.auth.getIn(["user", "attributes", "provider"]) !== "email")
+      !this.props.auth.getIn(["user", "isSignedIn"]) || loading /*||
+      (this.props.auth.getIn(["user", "attributes", "provider"]) !== "email")*/
     );
 
     return (
       <form
         className="redux-auth update-password-form clearfix"
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={(e)=>this.handleSubmit(event)}>
         <Input
           type="password"
           label="Password"
@@ -83,9 +84,9 @@ class UpdatePasswordForm extends React.Component {
           primary={true}
           disabled={disabled}
           style={{float: "right"}}
-          onClick={this.handleSubmit.bind(this)}
+          onClick={(e)=>this.handleSubmit(event)}
           {...this.props.inputProps.submit}>
-          Update Password
+          { this.props.buttonText || 'Update Password' }
         </ButtonLoader>
       </form>
     );

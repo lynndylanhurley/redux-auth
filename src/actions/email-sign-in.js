@@ -13,15 +13,19 @@ export const EMAIL_SIGN_IN_ERROR       = "EMAIL_SIGN_IN_ERROR";
 export const EMAIL_SIGN_IN_FORM_UPDATE = "EMAIL_SIGN_IN_FORM_UPDATE";
 
 export function emailSignInFormUpdate(endpoint, key, value) {
+  endpoint = 'default'
   return { type: EMAIL_SIGN_IN_FORM_UPDATE, endpoint, key, value };
 }
 export function emailSignInStart(endpoint) {
+  endpoint = 'default'
   return { type: EMAIL_SIGN_IN_START, endpoint };
 }
 export function emailSignInComplete(endpoint, user) {
+  endpoint = 'default'
   return { type: EMAIL_SIGN_IN_COMPLETE, user, endpoint };
 }
 export function emailSignInError(endpoint, errors) {
+  endpoint = 'default'
   return { type: EMAIL_SIGN_IN_ERROR, errors, endpoint };
 }
 export function emailSignIn(body, endpointKey) {

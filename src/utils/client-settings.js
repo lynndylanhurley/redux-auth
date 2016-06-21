@@ -11,8 +11,10 @@ import {
   setCurrentEndpoint,
   setCurrentEndpointKey,
   retrieveData,
-  persistData
+  persistData,
+  getTokenValidationPath
 } from "./session-storage";
+import {parseResponse} from "./handle-fetch-response";
 
 // can't use "window" with node app
 var root = Function("return this")() || (42, eval)("this");
@@ -21,7 +23,7 @@ const defaultSettings = {
   proxyIf:            function() { return false; },
   proxyUrl:           "/proxy",
   forceHardRedirect:  false,
-  storage:            "cookies",
+  storageType:            "authStorage",
   cookieExpiry:       14,
   cookiePath:         "/",
   initialCredentials: null,
@@ -31,15 +33,17 @@ const defaultSettings = {
   },
 
   confirmationSuccessUrl:  function() {
-    return root.location.href;
+    return root.location.origin+'/#/account/reset-password';
   },
 
   tokenFormat: {
-    "access-token": "{{ access-token }}",
-    "token-type":   "Bearer",
-    client:         "{{ client }}",
+    // "access-token": "{{ access-token }}",
+    // "token-type":   "Bearer",
+    // client:         "{{ client }}",
     expiry:         "{{ expiry }}",
-    uid:            "{{ uid }}"
+    uid:            "{{ uid }}",
+    "X-Sky-Email":  "{{ X-Sky-Email }}",
+    "X-Sky-Token":  "{{ X-Sky-Token }}"
   },
 
   parseExpiry: function(headers){
@@ -62,6 +66,7 @@ const defaultSettings = {
 
 // save session configuration
 export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}) {
+
   let currentEndpointKey;
 
   if (reset) {
@@ -93,9 +98,23 @@ export function applyConfig({dispatch, endpoint={}, settings={}, reset=false}={}
 
   if (getCurrentSettings().initialCredentials) {
     // skip initial headers check (i.e. check was already done server-side)
+    ////
     let {user, headers, config} = getCurrentSettings().initialCredentials;
+    if (!headers) { headers = {} }
+    headers["X-Sky-Token"] = getCurrentSettings().initialCredentials["sky_token"]
+    headers["X-Sky-Email"] = getCurrentSettings().initialCredentials.uid
+    // need to persist on localStorage
+    // settings.storage.setItem('skyToken', )
+    // settings.storage.setItem('skyEmail', )
+    headers["uid"] = getCurrentSettings().initialCredentials.uid
     persistData(C.SAVED_CREDS_KEY, headers);
-    return Promise.resolve(user);
+    return fetch(getTokenValidationPath('default'))
+      .then(parseResponse)
+      .then(({data}) => Promise.resolve(data))
+      .catch(({errors}) => Promise.reject({errors}));
+    ////
+    // persistData(C.SAVED_CREDS_KEY, headers);
+    // return Promise.resolve(user);
   } else if (savedCreds) {
     // verify session credentials with API
     return fetch(savedCreds)
