@@ -13,6 +13,19 @@ var isApiRequest = function(url) {
   return (url.match(getApiUrl(getSessionEndpointKey())));
 };
 
+/**
+ * Add access token as a bearer token in accordance to RFC 6750
+ *
+ * @param {string} accessToken
+ * @param {object} headers
+ * @returns {object} New extended headers object, with Authorization property
+ */
+export function addAuthorizationHeader(accessToken, headers) {
+  return Object.assign({}, headers, {
+    Authorization: `Bearer ${accessToken}`
+  });
+}
+
 function getAuthHeaders(url) {
   if (isApiRequest(url)) {
     // fetch current auth headers from storage
@@ -27,7 +40,7 @@ function getAuthHeaders(url) {
       nextHeaders[key] = currentHeaders[key];
     }
 
-    return nextHeaders;
+    return addAuthorizationHeader(currentHeaders['access-token'], nextHeaders);
   } else {
     return {};
   }
