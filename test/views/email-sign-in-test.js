@@ -22,9 +22,9 @@ var successRespSpy,
 export default function() {
   describe("EmailSignInForm", () => {
     [
-      "",
+      "/views/default",
       "/views/material-ui",
-      "/views/bootstrap",
+      "/views/bootstrap"
     ].forEach((theme) => {
       var requirePath = `../../src${theme}`;
       var {EmailSignInForm} = require(requirePath);
