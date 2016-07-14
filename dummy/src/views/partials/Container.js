@@ -1,5 +1,5 @@
 import React, { PropTypes } from "react";
-import { Grid, Navbar, NavItem, Nav, NavBrand } from "react-bootstrap";
+import { Grid, Navbar, NavItem, Nav, Brand } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 if (!global.__SERVER__ && !global.__TEST__) {
@@ -16,7 +16,7 @@ class Container extends React.Component {
       <div className="wrapper">
         <Navbar className="main-nav">
           <LinkContainer to="/">
-            <NavBrand>Redux Auth</NavBrand>
+            <Navbar.Brand>Redux Auth</Navbar.Brand>
           </LinkContainer>
           <Nav>
             <LinkContainer to="/" onlyActiveOnIndex={true}>

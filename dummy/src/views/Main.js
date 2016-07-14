@@ -13,12 +13,12 @@ import Select from "react-select";
 
 
 class Main extends React.Component {
-  updateTheme (theme) {
-    this.props.dispatch(updateDemoTheme(theme));
+  updateTheme ({value}) {
+    this.props.dispatch(updateDemoTheme(value));
   }
 
-  updateEndpoint (endpoint) {
-    this.props.dispatch(updateDemoEndpoint(endpoint));
+  updateEndpoint ({value}) {
+    this.props.dispatch(updateDemoEndpoint(value));
   }
 
   render () {
@@ -60,7 +60,7 @@ class Main extends React.Component {
                 {value: "default", label: "Default"},
                 {value: "bootstrap", label: "Bootstrap"},
                 {value: "materialUi", label: "Material UI"}
-                ]}
+              ]}
               onChange={this.updateTheme.bind(this)} />
 
             <label>currently selected endpoint</label>

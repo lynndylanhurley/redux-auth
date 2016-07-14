@@ -8,6 +8,9 @@ const initialState = Immutable.fromJS({
 });
 
 export default createReducer(initialState, {
-  [A.UPDATE_DEMO_THEME]: (state, {theme}) => state.merge({theme}),
+  [A.UPDATE_DEMO_THEME]: (state, {theme}) => {
+    console.log('theme', theme);
+    return state.merge({theme})
+  },
   [A.UPDATE_DEMO_ENDPOINT]: (state, {endpoint}) => state.merge({endpoint})
 });
