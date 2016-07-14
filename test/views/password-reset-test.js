@@ -46,7 +46,7 @@ export default function() {
             ).then(({instance}) => {
               let emailEl = findClass(instance, "email-class-override")
               findClass(instance, "submit-class-override")
-              expect(emailEl.getAttribute("style")).to.match(/color:red/)
+              expect(emailEl.getAttribute("style")).to.match(/color:\s?red/)
               done();
             }).catch(e => console.log("error:", e));
           });
