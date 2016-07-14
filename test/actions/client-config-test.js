@@ -54,7 +54,7 @@ export default function() {
           .catch(e => console.log("caught error:", e));
       });
 
-      iit("should redirect unauthenticated users to login page", done => {
+      it("should redirect unauthenticated users to login page", done => {
         initialize()
           .then(({provider, store}) => {
             renderApp(provider);
