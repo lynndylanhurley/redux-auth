@@ -1,8 +1,9 @@
 import React, { PropTypes } from "react";
 import RaisedButton from "material-ui/RaisedButton";
-import {ActionFavorite} from "material-ui/svg-icons";
+import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import * as Colors from "material-ui/styles/colors";
 import Spinner from "react-loader";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class ButtonLoader extends React.Component {
   static propTypes = {
@@ -68,7 +69,7 @@ class ButtonLoader extends React.Component {
         height: 15,
         position: "absolute",
         left: 10,
-        top: 10
+        top: 3
       }}>
         {icon}
       </span>
@@ -78,16 +79,33 @@ class ButtonLoader extends React.Component {
   render () {
     let color = this.getColor();
 
-    return (
-      <RaisedButton
-        onClick={this.handleClick.bind(this)}
-        label={<span style={{paddingLeft: 15, color}}>{this.props.children}</span>}
-        labelPosition="after"
-        labelColor={color}
-        {...this.props}
-        disabled={this.props.disabled || this.props.loading}>
-        {this.renderIcon()}
-      </RaisedButton>
+    const props = {
+      backgroundColor: this.props.backgroundColor,
+      children: this.props.children,
+      className: this.props.className,
+      disabled: this.props.disabled || this.props.loading,
+      disabledBackgroundColor: this.props.disabledBackgroundColor,
+      disabledLabelColor: this.props.disabledLabelColor,
+      fullWidth: this.props.fullWidth,
+      href: this.props.href,
+      label: this.props.label || <span style={{paddingLeft: 15, color}}>{this.props.children}</span>,
+      labelColor: this.props.labelColor || color,
+      labelPosition: this.props.labelPosition || "after",
+      labelStyle: this.props.labelStyle,
+      primary: this.props.primary,
+      rippleStyle: this.props.rippleStyle,
+      secondary: this.props.secondary,
+      style: this.props.style
+    };
+
+   return (
+      <MuiThemeProvider>
+        <RaisedButton
+          {...props}
+          onClick={this.handleClick.bind(this)}>
+          {this.renderIcon()}
+        </RaisedButton>
+      </MuiThemeProvider>
     );
   }
 }

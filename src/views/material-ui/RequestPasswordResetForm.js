@@ -2,7 +2,7 @@ import React, { PropTypes } from "react";
 import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
 import { connect } from "react-redux";
-import {ContentSend} from "material-ui/svg-icons";
+import ContentSend from "material-ui/svg-icons/content/send";
 import {
   requestPasswordResetFormUpdate,
   requestPasswordReset

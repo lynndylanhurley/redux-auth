@@ -1,7 +1,7 @@
 import React from "react";
 import * as Colors from "material-ui/styles/colors";
 import { hideOAuthSignInErrorModal } from "../../../actions/ui";
-import {AlertError} from "material-ui/svg-icons";
+import AlertError from "material-ui/svg-icons/alert/error";
 import Modal from "./Modal";
 
 class OAuthSignInErrorModal extends React.Component {

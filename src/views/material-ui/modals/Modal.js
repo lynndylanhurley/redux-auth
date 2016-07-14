@@ -3,6 +3,7 @@ import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import ErrorList from "../ErrorList";
 import { connect } from "react-redux";
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class BaseModal extends React.Component {
   static propTypes = {
@@ -45,21 +46,23 @@ class BaseModal extends React.Component {
       : this.props.children;
 
     return (
-      <Dialog
-        open={this.props.show}
-        contentClassName={`redux-auth-modal ${this.props.containerClass}`}
-        title={this.props.title}
-        actions={[
-          <FlatButton
-            key="close"
-            className={`${this.props.containerClass}-close`}
-            onClick={this.close.bind(this)}>
-            {this.props.closeBtnLabel}
-          </FlatButton>,
-          ...this.props.actions
-        ]}>
-        {body}
-      </Dialog>
+      <MuiThemeProvider>
+        <Dialog
+          open={this.props.show}
+          contentClassName={`redux-auth-modal ${this.props.containerClass}`}
+          title={this.props.title}
+          actions={[
+            <FlatButton
+              key="close"
+              className={`${this.props.containerClass}-close`}
+              onClick={this.close.bind(this)}>
+              {this.props.closeBtnLabel}
+            </FlatButton>,
+            ...this.props.actions
+          ]}>
+          {body}
+        </Dialog>
+      </MuiThemeProvider>
     );
   }
 }

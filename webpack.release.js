@@ -49,7 +49,12 @@ module.exports = {
       "react-bootstrap": "commonjs react-bootstrap",
       "material-ui": "commonjs material-ui",
       "material-ui/styles/colors": "commonjs material-ui/styles/colors",
-      "material-ui/svg-icons": "commonjs material-ui/svg-icons"
+      "material-ui/svg-icons/action/exit-to-app": "commonjs material-ui/svg-icons/action/exit-to-app",
+      "material-ui/svg-icons/action/favorite": "commonjs material-ui/svg-icons/action/favorite",
+      "material-ui/svg-icons/action/delete": "commonjs material-ui/svg-icons/action/delete",
+      "material-ui/svg-icons/content/send": "commonjs material-ui/svg-icons/content/send",
+      "material-ui/svg-icons/action/lock": "commonjs material-ui/svg-icons/action/lock",
+      "material-ui/svg-icons/alert/error": "commonjs material-ui/svg-icons/alert/error"
     }
   ],
   plugins: [

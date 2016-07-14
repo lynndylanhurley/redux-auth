@@ -2,7 +2,7 @@ import React, { PropTypes } from "react";
 import ButtonLoader from "./ButtonLoader";
 import Input from "./Input";
 import { emailSignInFormUpdate, emailSignIn } from "../../actions/email-sign-in";
-import {ActionExitToApp} from "material-ui/svg-icons";
+import ActionExitToApp from "material-ui/svg-icons/action/exit-to-app";
 import { connect } from "react-redux";
 
 class EmailSignInForm extends React.Component {
