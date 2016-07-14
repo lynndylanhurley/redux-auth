@@ -82,7 +82,7 @@
     "jsdom": "^7.0.1",
     "jsdomify": "^1.0.2",
     "json-loader": "0.5.4",
-    "material-ui": "0.14.0-rc1",
+    "material-ui": "0.15.2",
     "mocha": "^2.3.4",
     "mockery": "^1.4.0",
     "nock": "^3.3.2",

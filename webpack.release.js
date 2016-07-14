@@ -48,8 +48,8 @@ module.exports = {
       "url": "commonjs url",
       "react-bootstrap": "commonjs react-bootstrap",
       "material-ui": "commonjs material-ui",
-      "material-ui/lib/styles/colors": "commonjs material-ui/lib/styles/colors",
-      "material-ui/lib/svg-icons": "commonjs material-ui/lib/svg-icons"
+      "material-ui/styles/colors": "commonjs material-ui/styles/colors",
+      "material-ui/svg-icons": "commonjs material-ui/svg-icons"
     }
   ],
   plugins: [

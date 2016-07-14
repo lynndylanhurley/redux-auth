@@ -1,7 +1,7 @@
 import React, {PropTypes} from "react";
-import Colors from "material-ui/lib/styles/colors";
-import {TextField} from "material-ui";
-import {AlertError} from "material-ui/lib/svg-icons";
+import * as Colors from "material-ui/styles/colors";
+import TextField from "material-ui/TextField";
+import {AlertError} from "material-ui/svg-icons";
 import Immutable from "immutable";
 
 class AuthInput extends React.Component {

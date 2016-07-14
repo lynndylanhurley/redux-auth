@@ -1,6 +1,7 @@
 import React, { PropTypes } from "react";
-import { ActionLock } from "material-ui/lib/svg-icons";
-import { Dialog, FlatButton } from "material-ui";
+import { ActionLock } from "material-ui/svg-icons";
+import Dialog from "material-ui/Dialog";
+import FlatButton from "material-ui/FlatButton";
 import ButtonLoader from "../ButtonLoader";
 import Input from "../Input";
 import { connect } from "react-redux";

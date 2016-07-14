@@ -3,7 +3,7 @@ import Input from "./Input";
 import ButtonLoader from "./ButtonLoader";
 import { emailSignUpFormUpdate, emailSignUp } from "../../actions/email-sign-up";
 import { connect } from "react-redux";
-import {ContentSend} from "material-ui/lib/svg-icons";
+import {ContentSend} from "material-ui/svg-icons";
 
 class EmailSignUpForm extends React.Component {
   static propTypes = {

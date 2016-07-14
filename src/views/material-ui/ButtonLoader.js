@@ -1,7 +1,7 @@
 import React, { PropTypes } from "react";
-import { RaisedButton } from "material-ui"
-import {ActionFavorite} from "material-ui/lib/svg-icons";
-import Colors from "material-ui/lib/styles/colors";
+import RaisedButton from "material-ui/RaisedButton";
+import {ActionFavorite} from "material-ui/svg-icons";
+import * as Colors from "material-ui/styles/colors";
 import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
