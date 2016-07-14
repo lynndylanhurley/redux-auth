@@ -67,9 +67,9 @@ export default function() {
               let passwordEl             = findClass(instance, "password-class-override");
               let passwordConfirmationEl = findClass(instance, "password-confirmation-class-override");
               findClass(instance, "submit-class-override");
-              expect(emailEl.getAttribute("style")).to.match(/color:red/);
-              expect(passwordEl.getAttribute("style")).to.match(/color:green/);
-              expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:purple/);
+              expect(emailEl.getAttribute("style")).to.match(/color:\s?red/);
+              expect(passwordEl.getAttribute("style")).to.match(/color:\s?green/);
+              expect(passwordConfirmationEl.getAttribute("style")).to.match(/color:\s?purple/);
               done();
             }).catch(e => console.log("error:", e));
           });
