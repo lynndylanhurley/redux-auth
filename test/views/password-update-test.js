@@ -60,9 +60,11 @@ export default function() {
       describe(`${theme} theme`, () => {
         describe("params", () => {
           it("should accept styling params", done => {
+            let classNameProp = (theme === '/views/bootstrap') ? 'groupClassName' : 'className';
+
             let inputProps = {
-              password: {style: {color: "red"}, className: "password-class-override"},
-              passwordConfirmation: {style: {color: "pink"}, className: "password-confirmation-class-override"},
+              password: {style: {color: "red"}, [classNameProp]: "password-class-override"},
+              passwordConfirmation: {style: {color: "pink"}, [classNameProp]: "password-confirmation-class-override"},
               submit: {className: "submit-class-override"}
             };
 

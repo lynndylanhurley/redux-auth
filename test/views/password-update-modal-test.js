@@ -80,9 +80,11 @@ export default function() {
           it("should accept styling params", done => {
             wipeout();
 
+            let classNameProp = (theme === 'bootstrap') ? 'groupClassName' : 'className';
+
             let inputProps = {
-              password: {className: "password-class-override"},
-              passwordConfirmation: {className: "password-confirmation-class-override"},
+              password: {[classNameProp]: "password-class-override"},
+              passwordConfirmation: {[classNameProp]: "password-confirmation-class-override"},
               submit: {className: "submit-class-override"}
             };
 

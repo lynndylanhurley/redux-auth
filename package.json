@@ -35,7 +35,7 @@
   ],
   "dependencies": {
     "classnames": "^2.1.5",
-    "js-cookie": "^2.0.4",
+    "js-cookie": "lynndylanhurley/js-cookie",
     "cookie": "^0.2.3",
     "extend": "^3.0.0",
     "immutable": "^3.7.5",

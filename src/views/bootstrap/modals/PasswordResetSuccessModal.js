@@ -33,7 +33,6 @@ class PasswordResetSuccessModal extends React.Component {
   }
 
   handleSubmit () {
-    console.log("@-->submitting");
     let formData = this.props.auth.getIn(["updatePasswordModal", this.getEndpoint(), "form"]).toJS();
     this.props.dispatch(updatePasswordModal(formData, this.getEndpoint()));
   }
@@ -62,7 +61,7 @@ class PasswordResetSuccessModal extends React.Component {
               label="Password"
               placeholder="Password"
               disabled={loading}
-              className="password-reset-success-modal-password"
+              groupClassName="password-reset-success-modal-password"
               value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password"])}
               errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password"])}
               onChange={this.handleInput.bind(this, "password")}
@@ -73,7 +72,7 @@ class PasswordResetSuccessModal extends React.Component {
               label="Password Confirmation"
               placeholder="Password Confirmation"
               disabled={loading}
-              className="password-reset-success-modal-password-confirmation"
+              groupClassName="password-reset-success-modal-password-confirmation"
               value={this.props.auth.getIn(["updatePasswordModal", endpoint, "form", "password_confirmation"])}
               errors={this.props.auth.getIn(["updatePasswordModal", endpoint, "errors", "password_confirmation"])}
               onChange={this.handleInput.bind(this, "password_confirmation")}

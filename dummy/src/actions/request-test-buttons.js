@@ -29,7 +29,6 @@ export function requestTest(url, key) {
       credentials: "include"
     })
       .then(resp => {
-        console.log();
         if (resp && resp.statusText === "OK") {
           dispatch(requestTestComplete(key))
         } else {

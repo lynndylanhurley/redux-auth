@@ -32,9 +32,11 @@ export default function() {
       describe(`${theme || "default"} theme`, () => {
         describe(`params`, () => {
           it("should accept styling params", done => {
+            let classNameProp = (theme === '/views/bootstrap') ? 'groupClassName' : 'className';
+
             let inputProps = {
-              email: {style: {color: "red"}, className: "email-class-override"},
-              password: {style: {color: "green"}, className: "password-class-override"},
+              email: {style: {color: "red"}, [classNameProp]: "email-class-override"},
+              password: {style: {color: "green"}, [classNameProp]: "password-class-override"},
               submit: {style: {color: "orange"}, className: "submit-class-override"}
             };
 
