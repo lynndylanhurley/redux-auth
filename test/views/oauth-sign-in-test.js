@@ -114,7 +114,7 @@ export default function () {
             , endpointConfig).then(({instance, store}) => {
 
               // click button
-              let submitEl = findClass(instance, "oauth-sign-in-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -164,7 +164,7 @@ export default function () {
             , {apiUrl}).then(({instance, store}) => {
 
               // click button
-              let submitEl = findClass(instance, "oauth-sign-in-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -211,7 +211,7 @@ export default function () {
               <OAuthSignInButton.default provider="github" />
             , {apiUrl}).then(({instance, store}) => {
               // click button
-              let submitEl = findClass(instance, "oauth-sign-in-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -250,7 +250,7 @@ export default function () {
             , {apiUrl}).then(({instance, store}) => {
 
               // click button
-              let submitEl = findClass(instance, "oauth-sign-in-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
 
               TestUtils.Simulate.click(submitEl);
 

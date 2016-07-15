@@ -66,7 +66,7 @@ export default function() {
               store.dispatch(storeCurrentEndpointKey("alt"));
               persistData(C.SAVED_CONFIG_KEY, "alt");
 
-              let submitEl = findClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -93,7 +93,7 @@ export default function() {
               <SignOutButton />
             ), {apiUrl}, {user: {isSignedIn: true}}).then(({instance, store}) => {
               // submit the form
-              let submitEl = findClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -131,7 +131,7 @@ export default function() {
               persistData(C.SAVED_CONFIG_KEY, "default");
 
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "sign-out-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
