@@ -2,3 +2,4 @@ language: node_js
 node_js:
   - "4.1"
 script: npm run test-coverage
+before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
