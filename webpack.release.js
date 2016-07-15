@@ -47,7 +47,6 @@ module.exports = {
       "react-loader": "commonjs react-loader",
       "url": "commonjs url",
       "react-bootstrap": "commonjs react-bootstrap",
-      "material-ui": "commonjs material-ui",
       "material-ui/Dialog": "commonjs material-ui/Dialog",
       "material-ui/RaisedButton": "commonjs material-ui/RaisedButton",
       "material-ui/FlatButton": "commonjs material-ui/FlatButton",
@@ -65,8 +64,8 @@ module.exports = {
     new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false}),
     new webpack.DefinePlugin({"process.env": {NODE_ENV: "\"production\""}}),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    new webpack.optimize.OccurenceOrderPlugin()
+    //new webpack.optimize.UglifyJsPlugin()
   ],
   module:  {
     loaders: [
