@@ -7,7 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class ButtonLoader extends React.Component {
   static propTypes = {
-    icon: PropTypes.func,
+    icon: PropTypes.any,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     spinColorDark: PropTypes.string,
@@ -103,7 +103,8 @@ class ButtonLoader extends React.Component {
       primary: this.props.primary,
       rippleStyle: this.props.rippleStyle,
       secondary: this.props.secondary,
-      style: this.props.style
+      style: this.props.style,
+      type: this.props.type
     };
 
    return (

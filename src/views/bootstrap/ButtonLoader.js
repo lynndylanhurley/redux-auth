@@ -4,7 +4,7 @@ import Spinner from "react-loader";
 
 class ButtonLoader extends React.Component {
   static propTypes = {
-    icon: PropTypes.node,
+    icon: PropTypes.any,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     spinColorDark: PropTypes.string,

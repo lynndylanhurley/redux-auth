@@ -4,7 +4,7 @@ import extend from "extend";
 
 class ButtonLoader extends React.Component {
   static propTypes = {
-    icon: PropTypes.string,
+    icon: PropTypes.any,
     loading: PropTypes.bool,
     spinConfig: PropTypes.object,
     spinColorDark: PropTypes.string,

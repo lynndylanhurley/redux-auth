@@ -5,6 +5,11 @@ import {expect} from "chai";
 
 var ButtonLoader;
 
+function getButtonClass(container, klass) {
+  let btnEl = TestUtils.findRenderedDOMComponentWithClass(container, klass);
+  return btnEl.getAttribute("class");
+}
+
 export default function() {
   describe("ButtonLoader", () => {
     [
@@ -38,10 +43,12 @@ export default function() {
           // was content overridden?
           expect(TestUtils.findRenderedDOMComponentWithClass(buttonLoader, "content-override"));
 
-          let btnEl = TestUtils.findRenderedDOMComponentWithTag(buttonLoader, "button");
+          let btnClass = getButtonClass(buttonLoader, "class-override");
 
           // were class and style overridden?
-          expect(btnEl.getAttribute("class")).to.match(/class-override/);
+          expect(btnClass).to.match(/class-override/);
+
+          let btnEl = TestUtils.findRenderedDOMComponentWithTag(buttonLoader, "button");
 
           // was type overridden?
           expect(btnEl.getAttribute("type")).to.equal("submit");
