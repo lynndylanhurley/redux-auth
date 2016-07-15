@@ -1,7 +1,7 @@
 {
   "name": "redux-auth",
   "description": "Complete token authentication system for react + redux.",
-  "version": "0.0.3-beta13",
+  "version": "0.0.3-beta14",
   "license": "WTFPL",
   "repository": {
     "type": "git",
