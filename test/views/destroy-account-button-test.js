@@ -68,7 +68,8 @@ export default function() {
               persistData(C.SAVED_CONFIG_KEY, "alt");
               store.dispatch(storeCurrentEndpointKey("alt"));
 
-              let submitEl = findClass(instance, "destroy-account-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
+
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -99,7 +100,7 @@ export default function() {
               <DestroyAccountButton />
             ), {apiUrl}, {user: {isSignedIn: true}}).then(({instance, store}) => {
               // submit the form
-              let submitEl = findClass(instance, "destroy-account-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
@@ -137,7 +138,7 @@ export default function() {
               <DestroyAccountButton />, {apiUrl}, {user: {isSignedIn: true}}
             ).then(({instance, store}) => {
               // submit the form
-              let submitEl = TestUtils.findRenderedDOMComponentWithClass(instance, "destroy-account-submit");
+              let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
 
               setTimeout(() => {
