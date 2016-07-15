@@ -4,7 +4,7 @@ import {Route, IndexRoute} from "react-router";
 import {configure, authStateReducer} from "../../src";
 import {createStore, compose, applyMiddleware} from "redux";
 import {Router, createMemoryHistory, browserHistory} from "react-router";
-import {routeReducer, syncHistory} from "react-router-redux";
+import {routeReducer, routerMiddleware} from "react-router-redux";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
 import demoUi from "./reducers/demo-ui";
@@ -36,6 +36,13 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
 
   var store;
 
+  // these methods will differ from server to client
+  var history = browserHistory;
+  if (isServer) {
+    history = createMemoryHistory(currentLocation);
+  }
+
+
   // access control method, used above in the "account" route
   var requireAuth = (nextState, transition, cb) => {
     // the setTimeout is necessary because of this bug:
@@ -58,13 +65,6 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
     </Route>
   );
 
-  // these methods will differ from server to client
-  var history = browserHistory;
-  if (isServer) {
-    history = createMemoryHistory(currentLocation);
-  }
-
-  var reduxRouterMiddleware = syncHistory(history)
 
   // create the redux store
   store = createStore(
@@ -72,16 +72,13 @@ export function initialize({cookies, isServer, currentLocation, userAgent} = {})
     compose(
       applyMiddleware(
         thunk,
-        reduxRouterMiddleware
+        routerMiddleware(history)
       ),
       typeof(window) !== "undefined" && window.devToolsExtension
         ? window.devToolsExtension()
         : f => f
     )
   );
-
-  // Required for replaying actions from devtools to work
-  reduxRouterMiddleware.listenForReplays(store);
 
 
   /**
