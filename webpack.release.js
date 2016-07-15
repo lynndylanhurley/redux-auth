@@ -27,7 +27,7 @@ module.exports = {
     }, {
       "react": "commonjs react",
       "classnames": "commonjs classnames",
-      "js-cookie": "commonjs js-cookie",
+      "cookies-js": "commonjs cookies-js",
       "cookie": "commonjs cookie",
       "extend": "commonjs extend",
       "history": "commonjs history",

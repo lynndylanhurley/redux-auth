@@ -34,8 +34,8 @@
     "README.md"
   ],
   "dependencies": {
+    "browser-cookies": "^1.0.8",
     "classnames": "^2.1.5",
-    "js-cookie": "^2.1.2",
     "cookie": "^0.2.3",
     "extend": "^3.0.0",
     "immutable": "^3.7.5",
@@ -43,8 +43,8 @@
     "query-string": "^2.4.2",
     "rc-dialog": "^5.3.1",
     "react-bootstrap": "^0.29.5",
-    "redux-immutablejs": "0.0.8",
-    "react-loader": "^2.0.0"
+    "react-loader": "^2.0.0",
+    "redux-immutablejs": "0.0.8"
   },
   "devDependencies": {
     "babel-cli": "6.3.13",

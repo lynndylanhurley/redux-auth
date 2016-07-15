@@ -60,7 +60,7 @@ export default function() {
             renderApp(provider);
             store.dispatch(push({pathname: "/account"}));
             setTimeout(() => {
-              destroyApp()
+              destroyApp();
               expect(store.getState().routing.location.pathname).to.equal("/login");
               done();
             }, 0)

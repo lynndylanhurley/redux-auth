@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import Cookies from "browser-cookies";
 import * as C from "./constants";
 
 
@@ -68,7 +68,7 @@ export function destroySession () {
     }
 
     // remove from base path in case config is not specified
-    Cookies.remove(key, {
+    Cookies.erase(key, {
       path: root.authState.currentSettings.cookiePath || "/"
     });
   }
@@ -171,7 +171,7 @@ export function removeData(key) {
       root.localStorage.removeItem(key);
       break;
     default:
-      Cookies.remove(key);
+      Cookies.erase(key);
   }
 }
 

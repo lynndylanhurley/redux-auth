@@ -185,7 +185,7 @@ export default function() {
 
                 // ensure auth headers were updated
                 let authHeaders = retrieveData(C.SAVED_CREDS_KEY);
-                expect(authHeaders).to.equal(undefined);
+                expect(authHeaders).to.equal(null);
 
                 let errors = store.getState().auth.getIn(["emailSignIn", "default", "errors"]).toJS();
                 expect(errors).to.deep.equal(errorResp);

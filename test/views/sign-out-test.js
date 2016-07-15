@@ -148,7 +148,7 @@ export default function() {
                 expect(isSignedIn).to.equal(false);
 
                 let creds = retrieveData(C.SAVED_CREDS_KEY);
-                expect(creds).to.equal(undefined);
+                expect(creds).to.equal(null);
 
                 done();
               }, 100);
