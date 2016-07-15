@@ -4,7 +4,7 @@ import {Provider} from "react-redux";
 import {Router, Route, IndexRoute} from "react-router";
 import {combineReducers, createStore, compose, applyMiddleware} from "redux";
 import {createMemoryHistory} from "react-router";
-import {routeReducer, syncHistory} from "react-router-redux";
+import {routerReducer, routerMiddleware} from "react-router-redux";
 import thunk from "redux-thunk";
 import { configure, authStateReducer } from "../src";
 import Immutable from "immutable";
@@ -36,7 +36,7 @@ export function initialize(
 ) {
   var reducer = combineReducers({
     auth:   authStateReducer,
-    routing: routeReducer,
+    routing: routerReducer,
     demoButtons,
     demoUi
   });
@@ -67,14 +67,11 @@ export function initialize(
 
   var history = createMemoryHistory('');
 
-  // Sync dispatched route actions to the history
-  var reduxRouterMiddleware = syncHistory(history)
-
   // create the redux store
   store = compose(
     applyMiddleware(
       thunk,
-      reduxRouterMiddleware
+      routerMiddleware(history)
     )
   )(createStore)(reducer);
 

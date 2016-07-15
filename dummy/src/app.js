@@ -4,7 +4,7 @@ import {Route, IndexRoute} from "react-router";
 import {configure, authStateReducer} from "../../src";
 import {createStore, compose, applyMiddleware} from "redux";
 import {Router, createMemoryHistory, browserHistory} from "react-router";
-import {routeReducer, routerMiddleware} from "react-router-redux";
+import {routerReducer, routerMiddleware} from "react-router-redux";
 import {combineReducers} from "redux";
 import demoButtons from "./reducers/request-test-buttons";
 import demoUi from "./reducers/demo-ui";
@@ -29,7 +29,7 @@ class App extends React.Component {
 export function initialize({cookies, isServer, currentLocation, userAgent} = {}) {
   var reducer = combineReducers({
     auth:   authStateReducer,
-    routing: routeReducer,
+    routing: routerReducer,
     demoButtons,
     demoUi
   });

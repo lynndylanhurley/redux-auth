@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
-import {push} from "react-router-redux";
+import {syncHistoryWithStore, push} from "react-router-redux";
 import {expect} from "chai";
 import {fetch} from "../../src";
 import nock from "nock";
@@ -56,13 +56,16 @@ export default function() {
 
       it("should redirect unauthenticated users to login page", done => {
         initialize()
-          .then(({provider, store}) => {
+          .then(({provider, store, history}) => {
+            const hist = syncHistoryWithStore(history, store);
             renderApp(provider);
             store.dispatch(push({pathname: "/account"}));
             setTimeout(() => {
               destroyApp();
-              expect(store.getState().routing.location.pathname).to.equal("/login");
-              done();
+              hist.listen(location => {
+                expect(location.pathname).to.equal("/login");
+                done();
+              });
             }, 0)
           })
           .catch(e => console.log("e", e.stack));
