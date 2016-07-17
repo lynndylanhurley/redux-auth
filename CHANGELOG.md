@@ -3,7 +3,7 @@
 ## [v0.0.4](https://github.com/lynndylanhurley/redux-auth/tree/v0.0.3) (2016-07-16)
 [Full Changelog](https://github.com/lynndylanhurley/redux-auth/compare/v0.0.3...v0.0.4)
 
-** New Features**
+**New Features**
 
 - EmailSignUpForm supports `next` function
 - OAuthSignUpButton supports `next` function
