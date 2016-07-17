@@ -23,7 +23,6 @@ class Main extends React.Component {
   }
 
   render () {
-    console.log("page endpoint", this.props.pageEndpoint);
     let Theme = MUITheme;
     let themePath = "/material-ui-theme";
     let endpointAttr = (this.props.pageEndpoint === "default")
