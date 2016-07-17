@@ -5,12 +5,14 @@ import { signOut } from "../../actions/sign-out";
 
 class SignOutButton extends React.Component {
   static propTypes = {
+    next: PropTypes.func,
     endpoint: PropTypes.string,
     children: PropTypes.node,
     icon: PropTypes.string
   };
 
   static defaultProps = {
+    next: () => {},
     children: <span>Sign Out</span>
   };
 
@@ -23,7 +25,9 @@ class SignOutButton extends React.Component {
   }
 
   handleClick () {
-    this.props.dispatch(signOut(this.getEndpoint()));
+    this.props.dispatch(signOut(this.getEndpoint()))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {

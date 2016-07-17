@@ -31,6 +31,7 @@ export function signOut(endpoint) {
         dispatch(signOutError(endpoint, errors))
         dispatch(storeCurrentEndpointKey(null));
         destroySession();
+        throw errors;
       });
   };
 }
