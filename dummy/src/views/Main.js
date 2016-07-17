@@ -3,6 +3,7 @@ import IndexPanel from "./partials/IndexPanel";
 import CodeSnippet from "./partials/CodeSnippet";
 import ExampleWell from "./partials/ExampleWell";
 import RequestTestButton from "./partials/RequestTestButton";
+import { browserHistory } from "react-router";
 import { updateDemoTheme, updateDemoEndpoint } from "../actions/demo-ui";
 import { PageHeader, Row, ButtonGroup, Table } from "react-bootstrap";
 import { connect } from "react-redux";
@@ -106,7 +107,9 @@ class Main extends React.Component {
 
           <IndexPanel header="Email Sign In">
             <ExampleWell>
-              <Theme.EmailSignInForm endpoint={this.props.pageEndpoint} />
+              <Theme.EmailSignInForm
+                next={() =>  browserHistory.push("/account")}
+                endpoint={this.props.pageEndpoint} />
             </ExampleWell>
 
             <CodeSnippet>
@@ -156,11 +159,13 @@ class Main extends React.Component {
             <ExampleWell>
               <ButtonGroup>
                 <Theme.OAuthSignInButton
+                  next={() =>  browserHistory.push("/account")}
                   provider="github"
                   endpoint={this.props.pageEndpoint}>
                   Github
                 </Theme.OAuthSignInButton>
                 <Theme.OAuthSignInButton
+                  next={() =>  browserHistory.push("/account")}
                   provider="facebook"
                   endpoint={this.props.pageEndpoint}
                   secondary={true}
@@ -168,6 +173,7 @@ class Main extends React.Component {
                   Facebook
                 </Theme.OAuthSignInButton>
                 <Theme.OAuthSignInButton
+                  next={() =>  browserHistory.push("/account")}
                   provider="google"
                   endpoint={this.props.pageEndpoint}
                   primary={true}

@@ -81,13 +81,14 @@ export function oAuthSignIn({provider, params, endpointKey}) {
 
     let url = getOAuthUrl({provider, params, currentEndpointKey});
 
-    authenticate({endpointKey, provider, url})
+    return authenticate({endpointKey, provider, url})
       .then(user => dispatch(oAuthSignInComplete(user, currentEndpointKey)))
       .catch(({ errors }) => {
         // revert endpoint key to what it was before failed request
         setCurrentEndpointKey(prevEndpointKey);
         dispatch(storeCurrentEndpointKey(prevEndpointKey));
         dispatch(oAuthSignInError(errors, currentEndpointKey))
+        throw errors;
       });
   };
 }

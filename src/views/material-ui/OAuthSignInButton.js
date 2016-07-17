@@ -35,7 +35,9 @@ class OAuthSignInButton extends React.Component {
       provider: this.props.provider,
       params: this.props.signInParams,
       endpointKey: this.getEndpoint()
-    }));
+    }))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {
@@ -49,7 +51,7 @@ class OAuthSignInButton extends React.Component {
       <ButtonLoader
         loading={loading}
         icon={this.props.icon}
-        className={this.props.className + ' oauth-sign-in-submit'}
+        className={this.props.className + " oauth-sign-in-submit"}
         disabled={disabled}
         onClick={this.handleClick.bind(this)}
         {...this.props} />

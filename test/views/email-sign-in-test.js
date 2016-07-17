@@ -105,6 +105,7 @@ export default function() {
             var testEmail    = "test@test.com";
             var testPassword = "test@test.com";
             var apiUrl       = "http://api.dev";
+            var nextSpy      = spy();
 
             successRespSpy = spy(() => ({data: {uid: testUid}}));
 
@@ -113,7 +114,7 @@ export default function() {
               .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
-              <EmailSignInForm />
+              <EmailSignInForm next={nextSpy} />
             ), {apiUrl}).then(({instance, store}) => {
               // find inputs
               let emailEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[0];
@@ -155,6 +156,9 @@ export default function() {
                 expect(store.getState().auth.getIn(["configure", "currentEndpointKey"])).to.equal("default");
                 expect(getCurrentEndpointKey()).to.equal("default");
 
+                // ensure `next` method was called
+                expect(nextSpy.called).to.be.ok;
+
                 done();
               }, 100);
             }).catch(e => console.log("errors", e));
@@ -165,6 +169,7 @@ export default function() {
         describe(`error`, () => {
           it("should handle failed sign in", done => {
             var apiUrl = "http://api.dev";
+            var nextSpy = spy();
 
             errorRespSpy = spy(() => errorResp);
 
@@ -173,7 +178,7 @@ export default function() {
               .reply(401, errorRespSpy);
 
             renderConnectedComponent(
-              <EmailSignInForm />, {apiUrl}
+              <EmailSignInForm next={nextSpy} />, {apiUrl}
             ).then(({instance, store}) => {
               // submit the form
               let formEl = TestUtils.findRenderedDOMComponentWithClass(instance, "email-sign-in-form");
@@ -196,6 +201,9 @@ export default function() {
 
                 let modalVisible = store.getState().auth.getIn(["ui", "emailSignInErrorModalVisible"]);
                 expect(modalVisible).to.equal(true);
+
+                // ensure `next` method was not called
+                expect(nextSpy.called).to.equal(false);
 
                 done();
               }, 100);

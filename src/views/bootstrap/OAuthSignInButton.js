@@ -13,13 +13,15 @@ class OAuthSignInButton extends React.Component {
     label: PropTypes.string,
     signInParams: PropTypes.object,
     children: PropTypes.node,
-    icon: PropTypes.node
+    icon: PropTypes.node,
+    next: PropTypes.func
   };
 
   static defaultProps = {
     signInParams: {},
     children: <span>OAuth Sign In</span>,
-    icon: <Glyphicon glyph="log-in" />
+    icon: <Glyphicon glyph="log-in" />,
+    next: () => {}
   };
 
   getEndpoint () {
@@ -35,7 +37,9 @@ class OAuthSignInButton extends React.Component {
       provider: this.props.provider,
       params: this.props.signInParams,
       endpointKey: this.getEndpoint()
-    }));
+    }))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {

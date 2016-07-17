@@ -50,7 +50,8 @@ export function emailSignIn(body, endpointKey) {
         // revert endpoint key to what it was before failed request
         setCurrentEndpointKey(prevEndpointKey);
         dispatch(storeCurrentEndpointKey(prevEndpointKey));
-        return dispatch(emailSignInError(currentEndpointKey, errors));
+        dispatch(emailSignInError(currentEndpointKey, errors));
+        throw errors;
       });
   };
 }

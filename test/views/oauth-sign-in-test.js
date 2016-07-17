@@ -112,7 +112,6 @@ export default function () {
             renderConnectedComponent(
               <OAuthSignInButton.default provider="github" endpoint="alt" />
             , endpointConfig).then(({instance, store}) => {
-
               // click button
               let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
               TestUtils.Simulate.click(submitEl);
@@ -134,6 +133,7 @@ export default function () {
                 // ensure user exists in store
                 let currentUser = store.getState().auth.get("user");
                 expect(currentUser.get("isSignedIn")).to.equal(true);
+
 
                 done();
               }, 100);
@@ -159,9 +159,13 @@ export default function () {
             oAuthActions.__set__("openPopup", popupSpy);
             OAuthSignInButton.__set__("oAuthSignIn", oAuthActions.oAuthSignIn);
 
-            renderConnectedComponent(
-              <OAuthSignInButton.default provider="github" />
-            , {apiUrl}).then(({instance, store}) => {
+            const nextSpy = spy();
+
+            renderConnectedComponent((
+              <OAuthSignInButton.default
+                next={nextSpy}
+                provider="github" />
+            ), {apiUrl}).then(({instance, store}) => {
 
               // click button
               let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
@@ -192,6 +196,10 @@ export default function () {
 
                 // ensure success modal is visible
                 expect(store.getState().auth.getIn(["ui", "oAuthSignInSuccessModalVisible"])).to.equal(true);
+
+                // make sure `next` method was called
+                expect(nextSpy.called).to.be.ok;
+
                 done();
               }, 100);
 
@@ -207,8 +215,10 @@ export default function () {
             oAuthActions.__set__("openPopup", popupSpy);
             OAuthSignInButton.__set__("oAuthSignIn", oAuthActions.oAuthSignIn);
 
+            const nextSpy = spy();
+
             renderConnectedComponent(
-              <OAuthSignInButton.default provider="github" />
+              <OAuthSignInButton.default provider="github" next={nextSpy} />
             , {apiUrl}).then(({instance, store}) => {
               // click button
               let submitEl = TestUtils.findRenderedDOMComponentWithTag(instance, "button");
@@ -221,6 +231,9 @@ export default function () {
                 let currentUser = store.getState().auth.get("user");
                 expect(currentUser.get("isSignedIn")).to.equal(false);
                 expect(currentUser.get("attributes")).to.equal(null);
+
+                // ensure `next` method was NOT called
+                expect(nextSpy.called).to.equal(false);
 
                 // ensure error message is visible
                 expect(store.getState().auth.getIn(["ui", "oAuthSignInErrorModalVisible"])).to.equal(true);
