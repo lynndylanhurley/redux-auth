@@ -11,7 +11,7 @@ class SignIn extends React.Component {
         <PageHeader>Sign In</PageHeader>
 
         <EmailSignInForm
-          next={() =>  browserHistory.push("/account")}
+          next={() => browserHistory.push("/account")}
           endpoint={this.props.pageEndpoint} />
       </div>
     );

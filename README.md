@@ -162,6 +162,7 @@ A form used to sign in using accounts that were registered by email.
 ##### EmailSignInForm props:
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block.
+* **`next`**: A method to call on successful sign-in.
 * **`inputProps`**: An object containing the following attributes:
   * **`email`**: An object that will override the email input component's default props.
   * **`password`**: An object that will override the password input component's default props.
@@ -197,6 +198,7 @@ A button used to authenticate using an OAuth provider (facebook, github, etc.).
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block.
 * **`provider`**: The name of the target provider service as represented in the `authProviderPaths` endpoint configuration.
+* **`next`**: A method to call on successful sign-in.
 
 Any additional properties will be passed on the button component of the given theme.
 
@@ -233,6 +235,7 @@ A button used to end the current user's session.
 ##### SignOutButton props:
 
 * **`endpoint`**: The key of the target provider service as represented in the endpoint configuration block. If this property isn't provided, the current signed in user will be signed out regardless of their user type.
+* **`next`**: A method to call upon successful sign-out.
 
 Any additional properties will be passed on the button component of the given theme.
 
