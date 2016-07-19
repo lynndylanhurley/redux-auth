@@ -118,6 +118,7 @@ export default function() {
           it("should handle successful sign up", done => {
             var testEmail = testUid;
             var apiUrl    = "http://api.dev";
+            var nextSpy   = sinon.spy();
 
             successRespSpy = sinon.spy(() => {
               return [200, {data: {uid: testUid, email: testUid}}];
@@ -128,7 +129,7 @@ export default function() {
               .reply(200, successRespSpy, successRespHeaders);
 
             renderConnectedComponent((
-              <EmailSignUpForm />
+              <EmailSignUpForm next={nextSpy} />
             ), {apiUrl}).then(({instance, store}) => {
               let emailEl = findTag(instance, "input")[0];
               let passwordEl = findTag(instance, "input")[1];
@@ -165,6 +166,9 @@ export default function() {
                 // ensure default url was used
                 expect(successRespSpy.called).to.be.ok;
 
+                // ensure `next` method was called
+                expect(nextSpy.called).to.be.ok;
+
                 done();
               }, 100);
             }).catch(e => console.log("errors", e.stack));
@@ -173,7 +177,8 @@ export default function() {
 
         describe(`error`, () => {
           it("should handle failed sign in", done => {
-            var apiUrl = "http://api.dev";
+            var apiUrl  = "http://api.dev";
+            var nextSpy = sinon.spy();
 
             errorRespSpy = sinon.spy(() => {
               return [401, errorResp];
@@ -184,7 +189,7 @@ export default function() {
               .reply(401, errorRespSpy);
 
             renderConnectedComponent(
-              <EmailSignUpForm />, {apiUrl}
+              <EmailSignUpForm next={nextSpy} />, {apiUrl}
             ).then(({instance, store}) => {
               // submit the form
               let formEl = findClass(instance, "email-sign-up-form");
@@ -209,6 +214,9 @@ export default function() {
                 // ensure errors show up in form
                 let errorItems = TestUtils.scryRenderedDOMComponentsWithClass(instance, "inline-error-item");
                 expect(errorItems.length).to.equal(3);
+
+                // ensure `next` method was not called
+                expect(nextSpy.called).to.equal(false);
 
                 done();
               }, 100);

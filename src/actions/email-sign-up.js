@@ -36,6 +36,9 @@ export function emailSignUp(body, endpointKey) {
     })
       .then(parseResponse)
       .then(({data}) => dispatch(emailSignUpComplete(data, endpointKey)))
-      .catch(({errors}) => dispatch(emailSignUpError(errors, endpointKey)));
+      .catch(({errors}) => {
+        dispatch(emailSignUpError(errors, endpointKey))
+        throw errors;
+      });
   };
 }

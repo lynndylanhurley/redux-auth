@@ -8,6 +8,7 @@ import ContentSend from "material-ui/svg-icons/content/send";
 class EmailSignUpForm extends React.Component {
   static propTypes = {
     endpoint: PropTypes.string,
+    next: PropTypes.func,
     inputProps: PropTypes.shape({
       email: PropTypes.object,
       password: PropTypes.object,
@@ -17,6 +18,7 @@ class EmailSignUpForm extends React.Component {
   };
 
   static defaultProps = {
+    next: () => {},
     inputProps: {
       email: {},
       password: {},
@@ -40,7 +42,9 @@ class EmailSignUpForm extends React.Component {
     console.log("@-->handling submit");
     event.preventDefault();
     let formData = this.props.auth.getIn(["emailSignUp", this.getEndpoint(), "form"]).toJS();
-    this.props.dispatch(emailSignUp(formData, this.getEndpoint()));
+    this.props.dispatch(emailSignUp(formData, this.getEndpoint()))
+      .then(this.props.next)
+      .catch(() => {});
   }
 
   render () {
