@@ -3,6 +3,7 @@ import { createReducer } from "redux-immutablejs";
 import { getCurrentEndpointKey } from "../utils/session-storage.js"
 import * as authActions from "../actions/authenticate";
 import { EMAIL_SIGN_IN_COMPLETE } from "../actions/email-sign-in";
+import { EMAIL_SIGN_UP_COMPLETE } from "../actions/email-sign-up";
 import { SIGN_OUT_COMPLETE, SIGN_OUT_ERROR } from "../actions/sign-out";
 import { OAUTH_SIGN_IN_COMPLETE } from "../actions/oauth-sign-in";
 import { DESTROY_ACCOUNT_COMPLETE } from "../actions/destroy-account";
@@ -41,6 +42,18 @@ export default createReducer(initialState, {
     isSignedIn: true,
     endpointKey: endpoint
   }),
+
+  [EMAIL_SIGN_UP_COMPLETE]: (state, { endpoint, user }) => {
+    // if registration does not require confirmation, user will be signed in at
+    // this point.
+    return (user.uid)
+      ? state.merge({
+        attributes: user,
+        isSignedIn: true,
+        endpointKey: endpoint
+      })
+      : state;
+  },
 
   [OAUTH_SIGN_IN_COMPLETE]: (state, { endpoint, user }) => state.merge({
     attributes: user,

@@ -107,7 +107,7 @@ export default function() {
           });
         });
 
-        describe(`success`, () => {
+        describe("success", () => {
           beforeEach(() => {
             // mock succes response
             successRespSpy = sinon.spy((url) => {
@@ -121,7 +121,7 @@ export default function() {
             var nextSpy   = sinon.spy();
 
             successRespSpy = sinon.spy(() => {
-              return [200, {data: {uid: testUid, email: testUid}}];
+              return [200, {data: {email: testEmail}}];
             });
 
             nock(apiUrl)
@@ -169,13 +169,64 @@ export default function() {
                 // ensure `next` method was called
                 expect(nextSpy.called).to.be.ok;
 
+                // ensure user was not signed in
+                const signedIn = store.getState().auth.getIn(["user", "isSignedIn"]);
+                const uid = store.getState().auth.getIn(["user", "attributes", "uid"]);
+                expect(signedIn).to.equal(false);
+                expect(uid).to.equal(undefined);
+
                 done();
               }, 100);
             }).catch(e => console.log("errors", e.stack));
           });
+
+          it("should sign the user in if registration returns user data", done => {
+            var testEmail = testUid;
+            var apiUrl    = "http://api.dev";
+
+            successRespSpy = sinon.spy(() => {
+              return [200, {data: {uid: "xyz123", email: "test@test.com"}}];
+            });
+
+            nock(apiUrl)
+              .post("/auth?config_name=default")
+              .reply(200, successRespSpy, successRespHeaders);
+
+            renderConnectedComponent((
+              <EmailSignUpForm />
+            ), {apiUrl}).then(({instance, store}) => {
+
+              let emailEl = findTag(instance, "input")[0];
+              let passwordEl = findTag(instance, "input")[1];
+              let passwordConfirmEl = TestUtils.scryRenderedDOMComponentsWithTag(instance, "input")[2];
+
+              // change input values
+              emailEl.value = testEmail;
+              passwordEl.value = testPassword;
+              passwordConfirmEl.value = testPassword;
+
+              // trigger dom change event
+              TestUtils.Simulate.change(emailEl);
+              TestUtils.Simulate.change(passwordEl);
+              TestUtils.Simulate.change(passwordConfirmEl);
+
+              // submit the form
+              let formEl = findClass(instance, "email-sign-up-form");
+              TestUtils.Simulate.submit(formEl, {preventDefault: sinon.spy()});
+
+              setTimeout(() => {
+                // ensure user was signed in
+                const uid = store.getState().auth.getIn(["user", "attributes", "uid"]);
+                const signedIn = store.getState().auth.getIn(["user", "isSignedIn"]);
+                expect(signedIn).to.be.ok;
+                expect(uid).to.be.ok;
+                done();
+              }, 100);
+            });
+          });
         });
 
-        describe(`error`, () => {
+        describe("error", () => {
           it("should handle failed sign in", done => {
             var apiUrl  = "http://api.dev";
             var nextSpy = sinon.spy();
