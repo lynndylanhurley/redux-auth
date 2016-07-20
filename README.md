@@ -135,7 +135,7 @@ A form used for email based registration.
 
 ~~~js
 // default theme
-import { EmailSignUpForm } from "redux-auth";
+import { EmailSignUpForm } from "redux-auth/default-theme";
 
 // material ui theme
 import { EmailSignUpForm } from "redux-auth/material-ui-theme";
@@ -170,7 +170,7 @@ A form used to sign in using accounts that were registered by email.
 
 ~~~js
 // default theme
-import { EmailSignInForm } from "redux-auth";
+import { EmailSignInForm } from "redux-auth/default-theme";
 
 // material ui theme
 import { EmailSignInForm } from "redux-auth/material-ui-theme";
@@ -204,7 +204,7 @@ Any additional properties will be passed on the button component of the given th
 
 ~~~js
 // default theme
-import { OAuthSignInButton } from "redux-auth";
+import { OAuthSignInButton } from "redux-auth/default-theme";
 
 // material ui theme
 import { OAuthSignInButton } from "redux-auth/material-ui-theme";
@@ -241,7 +241,7 @@ Any additional properties will be passed on the button component of the given th
 
 ~~~js
 // default theme
-import { SignOutButton } from "redux-auth";
+import { SignOutButton } from "redux-auth/default-theme";
 
 // material ui theme
 import { SignOutButton } from "redux-auth/material-ui-theme";
@@ -277,7 +277,7 @@ Any additional properties will be passed on the button component of the given th
 
 ~~~js
 // default theme
-import { DestroyAccountButton } from "redux-auth";
+import { DestroyAccountButton } from "redux-auth/default-theme";
 
 // material ui theme
 import { DestroyAccountButton } from "redux-auth/material-ui-theme";
@@ -314,7 +314,7 @@ A form used to send password reset emails to users that forgot their password. W
 
 ~~~js
 // default theme
-import { RequestPasswordResetForm } from "redux-auth";
+import { RequestPasswordResetForm } from "redux-auth/default-theme";
 
 // material ui theme
 import { RequestPasswordResetForm } from "redux-auth/material-ui-theme";
@@ -348,7 +348,7 @@ A form that can be used to change the current user's password.
 
 ~~~js
 // default theme
-import { UpdatePasswordForm } from "redux-auth";
+import { UpdatePasswordForm } from "redux-auth/default-theme";
 
 // material ui theme
 import { UpdatePasswordForm } from "redux-auth/material-ui-theme";
@@ -378,7 +378,7 @@ The following example shows the relevant router configuration. Note that this is
 
 ~~~js
 // default theme
-import { AuthGlobals } from "redux-auth";
+import { AuthGlobals } from "redux-auth/default-theme";
 
 // material ui theme
 import { AuthGlobals } from "redux-auth/material-ui-theme";
@@ -502,9 +502,9 @@ src/
 // app.js
 import React from "react";
 import {Provider} from "react-redux";
-import {configure, authStateReducer, AuthGlobals} from "redux-auth";
+import {configure, authStateReducer} from "redux-auth";
 import {createStore, compose, applyMiddleware, combineReducers} from "redux";
-import {AuthGlobals} from "redux-auth"
+import {AuthGlobals} from "redux-auth/default-theme";
 
 class App extends React.Component {
   render() {
@@ -668,7 +668,7 @@ The following example assumes a configuration where two endpoints have been defi
 
 ##### Component example:
 ~~~js
-import { EmailSignInForm } from "redux-auth";
+import { EmailSignInForm } from "redux-auth/default-theme";
 
 // within render method
 <EmailSignInForm endpoint="alt" />
