@@ -11,7 +11,7 @@ export function updatePasswordModalFormUpdate(endpoint, key, value) {
   return { type: UPDATE_PASSWORD_MODAL_FORM_UPDATE, endpoint, key, value };
 }
 export function updatePasswordModalStart(endpoint) {
-  return { type: UPDATE_PASSWORD_MODAL_START };
+  return { type: UPDATE_PASSWORD_MODAL_START, endpoint };
 }
 export function updatePasswordModalComplete(endpoint, user) {
   return { type: UPDATE_PASSWORD_MODAL_COMPLETE, endpoint, user };
