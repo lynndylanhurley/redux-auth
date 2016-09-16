@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import {syncHistoryWithStore, push} from "react-router-redux";
 import {expect} from "chai";
-import {fetch} from "../../src";
+import {fetch, xhr} from "../../src";
 import nock from "nock";
 
 var testUid        = "test@test.com",
@@ -160,6 +160,14 @@ export default function() {
 
             // next request should include auth headers
             fetch(`${altApiUrl}/api/hello`).then(() => {
+              // cookie should have been updated to latest
+              expect(retrieveData("authHeaders")["access-token"]).to.equal(nextToken);
+              done();
+            });
+
+            // next request should include auth headers
+            console.log('Hereeeeeeee');
+            xhr(`${altApiUrl}/api/hello`).then(() => {
               // cookie should have been updated to latest
               expect(retrieveData("authHeaders")["access-token"]).to.equal(nextToken);
               done();

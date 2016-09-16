@@ -74,11 +74,56 @@ function updateAuthCredentials(resp) {
   return resp;
 }
 
-export default function (url, options={}) {
+export default function (url, options) {
+  extendRequester(url, originalFetch, options)
+}
+
+export function xhr(url, options) {
+  extendRequester(url, xhrRequest, options)
+}
+
+
+function extendRequester(url, requester, options={}) {
   if (!options.headers) {
     options.headers = {}
   }
   extend(options.headers, getAuthHeaders(url));
-  return originalFetch(url, options)
+  return requester(url, options)
     .then(resp => updateAuthCredentials(resp));
+}
+
+function xhrRequest(url, options) {
+  return new Promise((resolve, reject) => {
+    const xhrReq = new XMLHttpRequest();
+    xhrReq.open(opts.method, getApiPath(url));
+    xhrReq.onload = () => {
+      if (this.status >= 200 && this.status < 300) {
+        resolve(xhrReq.response);
+      } else {
+        reject({
+          status: this.status,
+          statusText: xhrReq.statusText
+        });
+      }
+    };
+    xhrReq.onerror = () => {
+      reject({
+        status: this.status,
+        statusText: xhrReq.statusText
+      });
+    };
+    if (opts.headers) {
+      Object.keys(opts.headers).forEach((key) => {
+        xhrReq.setRequestHeader(key, opts.headers[key]);
+      });
+    }
+    let params = opts.params;
+    if (params && typeof params === 'object') {
+      params = objectToQueryString(params);
+    }
+    if (opts.progress) {
+      xhrReq.upload.addEventListener('progress', opts.progress, false);
+    }
+    xhrReq.send(params);
+  });
 }
