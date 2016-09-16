@@ -95,7 +95,7 @@ function extendRequester(url, requester, options={}) {
 function xhrRequest(url, options) {
   return new Promise((resolve, reject) => {
     const xhrReq = new XMLHttpRequest();
-    xhrReq.open(opts.method, getApiPath(url));
+    xhrReq.open(options.method, getApiPath(url));
     xhrReq.onload = () => {
       if (this.status >= 200 && this.status < 300) {
         resolve(xhrReq.response);
@@ -112,17 +112,17 @@ function xhrRequest(url, options) {
         statusText: xhrReq.statusText
       });
     };
-    if (opts.headers) {
-      Object.keys(opts.headers).forEach((key) => {
-        xhrReq.setRequestHeader(key, opts.headers[key]);
+    if (options.headers) {
+      Object.keys(options.headers).forEach((key) => {
+        xhrReq.setRequestHeader(key, options.headers[key]);
       });
     }
-    let params = opts.params;
+    let params = options.params;
     if (params && typeof params === 'object') {
       params = objectToQueryString(params);
     }
-    if (opts.progress) {
-      xhrReq.upload.addEventListener('progress', opts.progress, false);
+    if (options.progress) {
+      xhrReq.upload.addEventListener('progress', options.progress, false);
     }
     xhrReq.send(params);
   });

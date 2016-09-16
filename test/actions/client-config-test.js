@@ -166,7 +166,6 @@ export default function() {
             });
 
             // next request should include auth headers
-            console.log('Hereeeeeeee');
             xhr(`${altApiUrl}/api/hello`).then(() => {
               // cookie should have been updated to latest
               expect(retrieveData("authHeaders")["access-token"]).to.equal(nextToken);
