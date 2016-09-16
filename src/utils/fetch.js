@@ -75,11 +75,11 @@ function updateAuthCredentials(resp) {
 }
 
 export default function (url, options) {
-  extendRequester(url, originalFetch, options)
+  return extendRequester(url, originalFetch, options);
 }
 
 export function xhr(url, options) {
-  extendRequester(url, xhrRequest, options)
+  return extendRequester(url, xhrRequest, options);
 }
 
 
