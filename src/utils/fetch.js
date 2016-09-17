@@ -74,8 +74,13 @@ function updateAuthCredentials(resp) {
   return resp;
 }
 
-export default function (url, options) {
-  return extendRequester(url, originalFetch, options);
+export default function (url, options={}) {
+  if (!options.headers) {
+    options.headers = {}
+  }
+  extend(options.headers, getAuthHeaders(url));
+  return originalFetch(url, options)
+    .then(resp => updateAuthCredentials(resp));
 }
 
 export function xhr(url, options) {
