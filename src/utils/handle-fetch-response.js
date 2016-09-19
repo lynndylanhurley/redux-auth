@@ -1,4 +1,4 @@
-export function parseResponse (response, cb = function(){}) {
+export function parseResponse (response, cb = () => {}) {
   let json = response.json();
   if (response.status >= 200 && response.status < 300) {
     return json;
