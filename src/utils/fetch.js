@@ -101,7 +101,7 @@ function xhrRequest(url, options) {
     const xhrReq = new XMLHttpRequest();
     xhrReq.open(options.method, url);
     xhrReq.onload = () => {
-      if (this.status >= 200 && this.status < 300) {
+      if (xhrReq.status >= 200 && xhrReq.status < 300) {
         resolve(xhrReq.response);
       } else {
         reject({
