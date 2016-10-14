@@ -87,7 +87,6 @@ export function xhr(url, options) {
   return extendRequester(url, xhrRequest, options);
 }
 
-
 function extendRequester(url, requester, options={}) {
   if (!options.headers) {
     options.headers = {}
@@ -100,7 +99,7 @@ function extendRequester(url, requester, options={}) {
 function xhrRequest(url, options) {
   return new Promise((resolve, reject) => {
     const xhrReq = new XMLHttpRequest();
-    xhrReq.open(options.method, getApiPath(url));
+    xhrReq.open(options.method, url);
     xhrReq.onload = () => {
       if (this.status >= 200 && this.status < 300) {
         resolve(xhrReq.response);
