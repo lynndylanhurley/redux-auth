@@ -74,6 +74,34 @@ function updateAuthCredentials(resp) {
   return resp;
 }
 
+function updateAuthCredentialsXhr(xhrReq, url) {
+  // check config apiUrl matches the current response url
+  if (isApiRequest(url)) {
+    // set header for each key in `tokenFormat` config
+    var newHeaders = {};
+
+    // set flag to ensure that we don't accidentally nuke the headers
+    // if the response tokens aren't sent back from the API
+    var blankHeaders = true;
+
+    // set header key + val for each key in `tokenFormat` config
+    for (var key in getTokenFormat()) {
+      newHeaders[key] = xhrReq.getResponseHeader(key);
+
+      if (newHeaders[key]) {
+        blankHeaders = false;
+      }
+    }
+
+    // persist headers for next request
+    if (!blankHeaders) {
+      persistData(C.SAVED_CREDS_KEY, newHeaders);
+    }
+  }
+
+  return xhrReq.response;
+}
+
 export default function (url, options={}) {
   if (!options.headers) {
     options.headers = {}
@@ -84,16 +112,16 @@ export default function (url, options={}) {
 }
 
 export function xhr(url, options) {
-  return extendRequester(url, xhrRequest, options);
+  return extendRequesterXhr(url, xhrRequest, options);
 }
 
-function extendRequester(url, requester, options={}) {
+function extendRequesterXhr(url, requester, options={}) {
   if (!options.headers) {
     options.headers = {}
   }
   extend(options.headers, getAuthHeaders(url));
   return requester(url, options)
-    .then(resp => updateAuthCredentials(resp));
+    .then(xhrReq => updateAuthCredentials(xhrReq, url));
 }
 
 function xhrRequest(url, options) {
@@ -102,7 +130,7 @@ function xhrRequest(url, options) {
     xhrReq.open(options.method, url);
     xhrReq.onload = () => {
       if (xhrReq.status >= 200 && xhrReq.status < 300) {
-        resolve(xhrReq.response);
+        resolve(xhrReq);
       } else {
         reject({
           status: this.status,
