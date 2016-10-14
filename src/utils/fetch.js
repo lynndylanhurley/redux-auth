@@ -128,6 +128,13 @@ function xhrRequest(url, options) {
     if (options.progress) {
       xhrReq.upload.addEventListener('progress', options.progress, false);
     }
+    if (params.formData) {
+      params = params.formData;
+    }
     xhrReq.send(params);
   });
+}
+
+function objectToQueryString(obj) {
+  return Object.keys(obj).map(k => `${encodeURIComponent(k)}=${encodeURIComponent(obj[k])}`).join('&');
 }
