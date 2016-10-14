@@ -122,7 +122,7 @@ function xhrRequest(url, options) {
       });
     }
     let params = options.params;
-    if (params && typeof params === 'object') {
+    if (params && typeof params === 'object' && !params.formData) {
       params = objectToQueryString(params);
     }
     if (options.progress) {
