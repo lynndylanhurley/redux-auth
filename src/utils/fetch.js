@@ -121,7 +121,7 @@ function extendRequesterXhr(url, requester, options={}) {
   }
   extend(options.headers, getAuthHeaders(url));
   return requester(url, options)
-    .then(xhrReq => updateAuthCredentials(xhrReq, url));
+    .then(xhrReq => updateAuthCredentialsXhr(xhrReq, url));
 }
 
 function xhrRequest(url, options) {
