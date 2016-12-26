@@ -133,14 +133,14 @@ function xhrRequest(url, options) {
         resolve(xhrReq);
       } else {
         reject({
-          status: this.status,
+          status: xhrReq.status,
           statusText: xhrReq.statusText
         });
       }
     };
     xhrReq.onerror = () => {
       reject({
-        status: this.status,
+        status: xhrReq.status,
         statusText: xhrReq.statusText
       });
     };
