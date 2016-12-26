@@ -2,7 +2,7 @@ import React, { PropTypes } from "react";
 import {Glyphicon} from "react-bootstrap";
 import {ButtonLoader} from "../../../../src/views/bootstrap";
 import {connect} from "react-redux";
-import {requestTest} from "../../actions/request-test-buttons";
+import {requestTest, requestTestXhr} from "../../actions/request-test-buttons";
 import {getApiUrl} from "../../../../src/utils/session-storage";
 
 class RequestTestButton extends React.Component {
@@ -17,7 +17,11 @@ class RequestTestButton extends React.Component {
 
   handleClick () {
     let url = getApiUrl() + this.props.path;
-    this.props.dispatch(requestTest(url, this.props.path));
+    if (!this.props.xhr) {
+      this.props.dispatch(requestTest(url, this.props.path));
+    } else {
+      this.props.dispatch(requestTestXhr(url, this.props.path));
+    }
   }
 
   render () {

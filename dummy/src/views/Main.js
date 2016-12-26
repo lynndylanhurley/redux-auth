@@ -100,6 +100,27 @@ class Main extends React.Component {
                       path="/demo/members_only_group"
                       endpointKey="any"/></td>
                 </tr>
+                <tr>
+                  <td>Default user:</td>
+                  <td><RequestTestButton
+                      xhr
+                      path="/demo/members_only"
+                      endpointKey="default"/></td>
+                </tr>
+                <tr>
+                  <td>Alternate user class:</td>
+                  <td><RequestTestButton
+                      xhr
+                      path="/demo/members_only_mang"
+                      endpointKey="evilUser"/></td>
+                </tr>
+                <tr>
+                  <td>Group that includes both user classes:</td>
+                  <td><RequestTestButton
+                      xhr
+                      path="/demo/members_only_group"
+                      endpointKey="any"/></td>
+                </tr>
               </tbody>
             </Table>
           </IndexPanel>
