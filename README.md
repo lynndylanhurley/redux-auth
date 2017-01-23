@@ -535,7 +535,7 @@ const store = compose(
 // url of the current request. also be sure to set `isServer` to true.
 export function renderApp({cookies, isServer, currentLocation} = {}) {
   // configure redux-auth BEFORE rendering the page
-  store.dispatch(configure(
+  return store.dispatch(configure(
     // use the FULL PATH to your API
     {apiUrl: "http://api.catfancy.com"},
     {isServer, cookies, currentLocation}
