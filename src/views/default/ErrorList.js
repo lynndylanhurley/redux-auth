@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import Immutable from "immutable";
 
 class ErrorList extends React.Component {

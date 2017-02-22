@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import ButtonLoader from "./ButtonLoader";
 import ActionLock from "material-ui/svg-icons/action/lock";
 import { connect } from "react-redux";
