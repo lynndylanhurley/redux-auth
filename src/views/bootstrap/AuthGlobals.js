@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import EmailSignInSuccessModal from "./modals/EmailSignInSuccessModal";
 import EmailSignInErrorModal from "./modals/EmailSignInErrorModal";
 import OAuthSignInSuccessModal from "./modals/OAuthSignInSuccessModal";

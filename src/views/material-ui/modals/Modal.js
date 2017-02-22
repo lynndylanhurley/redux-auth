@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
 import ErrorList from "../ErrorList";

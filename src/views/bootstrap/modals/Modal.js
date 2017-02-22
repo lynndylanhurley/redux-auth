@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import { Modal, Button } from "react-bootstrap";
 import ErrorList from "../ErrorList";
 import { connect } from "react-redux";

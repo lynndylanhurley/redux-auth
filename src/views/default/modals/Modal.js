@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import Dialog from "rc-dialog";
 import ErrorList from "../ErrorList";
 import { connect } from "react-redux";

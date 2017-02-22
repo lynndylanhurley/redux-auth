@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "proptypes";
 import RaisedButton from "material-ui/RaisedButton";
 import ActionFavorite from "material-ui/svg-icons/action/favorite";
 import * as Colors from "material-ui/styles/colors";
