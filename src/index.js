@@ -69,4 +69,4 @@ export {
 } from "./actions/ui";
 
 /* utils */
-export {default as fetch} from "./utils/fetch";
+export {default as fetch, getAuthHeaders} from "./utils/fetch";
