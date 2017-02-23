@@ -26,7 +26,7 @@ export function addAuthorizationHeader(accessToken, headers) {
   });
 }
 
-function getAuthHeaders(url) {
+export function getAuthHeaders(url) {
   if (isApiRequest(url)) {
     // fetch current auth headers from storage
     var currentHeaders = retrieveData(C.SAVED_CREDS_KEY) || {},
