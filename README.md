@@ -324,7 +324,7 @@ import { RequestPasswordResetForm } from "redux-auth/bootstrap-theme";
 
 // render
 render: () {
-  return <RequestPassswordResetForm />;
+  return <RequestPasswordResetForm />;
 }
 ~~~
 
