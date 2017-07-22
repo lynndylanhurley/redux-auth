@@ -1,6 +1,6 @@
 //require("babel-polyfill");
 
-require("babel-register")({ //This was babel-core/register but that will be deprecated: https://stackoverflow.com/questions/37780952/babel-core-register-vs-babel-register
+require("babel-register")({ 
   only: /src/,
   presets: ["es2015", "react", "stage-0"]
 });

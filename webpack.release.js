@@ -19,7 +19,6 @@ module.exports = {
   },
   externals: [
     function(rtx, req, cb) {
-      //If the request starts with '../..' that means its part of redux-auth
       if (/\.\.\/\.\.\//.test(req)) {
         return cb(null, "commonjs redux-auth");
       } else {
@@ -64,13 +63,11 @@ module.exports = {
     }
   ],
   plugins: [
-    //Just makes variables that you can access in the bundled code. Preprocessor macros basically?
     new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false}),
     new webpack.DefinePlugin({"process.env": {NODE_ENV: "\"production\""}}),
-    //Dedupe Plugin is gone with webpack 2. https://webpack.github.io/docs/list-of-plugins.html#dedupeplugin
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin()
+    // new webpack.optimize.DedupePlugin(),
+    // new webpack.optimize.OccurenceOrderPlugin(),
+    // new webpack.optimize.UglifyJsPlugin()
   ],
   module:  {
     loaders: [
@@ -78,7 +75,6 @@ module.exports = {
       { include: /\.js$/, loaders: ["babel?cacheDirectory&presets[]=es2015&presets[]=react&presets[]=stage-0"], exclude: /node_modules/ }
     ]
   },
-  //Why does he do this?
   resolve: {
     alias: {
       react: path.join(__dirname, "node_modules/react")
