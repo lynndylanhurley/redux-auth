@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom";
 import {retrieveData, getCurrentEndpointKey} from "../../src/utils/session-storage";
 import {syncHistoryWithStore, push} from "react-router-redux";
