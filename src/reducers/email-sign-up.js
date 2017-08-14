@@ -21,9 +21,10 @@ export default createReducer(Immutable.fromJS({}), {
     [endpoint]: initialState
   }),
 
-  [A.EMAIL_SIGN_UP_ERROR]: (state, {endpoint, errors}) => state.mergeDeep({
+  [A.EMAIL_SIGN_UP_ERROR]: (state, {endpoint, errors}) => state.merge({
     [endpoint]: {
       loading: false,
+      form: state.getIn([endpoint, "form"]),
       errors
     }
   }),

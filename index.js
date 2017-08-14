@@ -621,17 +621,8 @@
 	          }));
 	        }
 	      } else {
-	        if (authRedirectHeaders) {
-	          headers = authRedirectHeaders;
-	        }
-
-	        if (authRedirectHeaders && authRedirectHeaders.reset_password) {
-	          mustResetPassword = authRedirectHeaders.reset_password;
-	        }
-
-	        if (authRedirectHeaders && authRedirectHeaders.first_time_login) {
-	          firstTimeLogin = authRedirectHeaders.first_time_login;
-	        }
+	        mustResetPassword = authRedirectHeaders && authRedirectHeaders.reset_password;
+	        firstTimeLogin = authRedirectHeaders && authRedirectHeaders.first_time_login;
 	      }
 
 	      if (authRedirectPath) {
@@ -960,6 +951,7 @@
 	      reset = _ref$reset === undefined ? false : _ref$reset;
 
 	  var currentEndpointKey = void 0;
+
 	  if (reset) {
 	    resetConfig();
 	  }
@@ -3116,8 +3108,9 @@
 	}), _defineProperty(_createReducer, A.EMAIL_SIGN_UP_ERROR, function (state, _ref4) {
 	  var endpoint = _ref4.endpoint,
 	      errors = _ref4.errors;
-	  return state.mergeDeep(_defineProperty({}, endpoint, {
+	  return state.merge(_defineProperty({}, endpoint, {
 	    loading: false,
+	    form: state.getIn([endpoint, "form"]),
 	    errors: errors
 	  }));
 	}), _defineProperty(_createReducer, A.EMAIL_SIGN_UP_FORM_UPDATE, function (state, _ref5) {
