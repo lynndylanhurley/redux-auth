@@ -3090,7 +3090,9 @@
 	var initialState = {
 	  loading: false,
 	  errors: null,
-	  form: {}
+	  form: {
+	    password_confirmation: ""
+	  }
 	};
 
 	exports.default = (0, _reduxImmutablejs.createReducer)(_immutable2.default.fromJS({}), (_createReducer = {}, _defineProperty(_createReducer, _configure.SET_ENDPOINT_KEYS, function (state, _ref) {

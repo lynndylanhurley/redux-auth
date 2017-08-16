@@ -6,7 +6,9 @@ import { SET_ENDPOINT_KEYS } from "../actions/configure";
 const initialState = {
   loading: false,
   errors: null,
-  form: {}
+  form: {
+    password_confirmation: ""
+  }
 };
 
 export default createReducer(Immutable.fromJS({}), {
