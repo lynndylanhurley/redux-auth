@@ -41,6 +41,7 @@
     "extend": "^3.0.0",
     "immutable": "^3.7.5",
     "isomorphic-fetch": "^2.1.1",
+    "prop-types": "^15.5.10",
     "query-string": "^2.4.2",
     "rc-dialog": "^6.1.1",
     "react-bootstrap": "^0.29.5",

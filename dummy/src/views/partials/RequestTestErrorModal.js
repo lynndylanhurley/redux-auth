@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 import { Modal, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { dismissRequestTestErrorModal } from "../../actions/request-test-buttons";
