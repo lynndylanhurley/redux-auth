@@ -73,42 +73,29 @@ const buildCredentials = function(location, keys) {
 };
 
 
-// this method is tricky. we want to reconstruct the current URL with the
-// following conditions:
-// 1. search contains none of the supplied keys
-// 2. anchor search (i.e. `#/?key=val`) contains none of the supplied keys
-// 3. all of the keys NOT supplied are presevered in their original form
-// 4. url protocol, host, and path are preserved
-// const getLocationWithoutParams = function(currentLocation, keys) {
-//   // strip all values from both actual and anchor search params
-//   var newSearch   = querystring.stringify(stripKeys(getSearchQs(currentLocation), keys)),
-//       newAnchorQs = querystring.stringify(stripKeys(getAnchorQs(currentLocation), keys)),
-//       newAnchor   = (currentLocation.hash || "").split("?")[0];
-//
-//   if (newSearch) {
-//     newSearch = "?" + newSearch;
-//   }
-//
-//   if (newAnchorQs) {
-//     newAnchor += "?" + newAnchorQs;
-//   }
-//
-//   if (newAnchor && !newAnchor.match(/^#/)) {
-//     newAnchor = "#/" + newAnchor;
-//   }
-//
-//   // reconstruct location with stripped auth keys
-//   var newLocation = currentLocation.pathname + newSearch + newAnchor;
-//
-//   return newLocation;
-// };
+const stripAuthKeysAndNormalize = function(targetString, authKeys) {
+  const parsed = querystring.parse(targetString);
+  const stripped = stripKeys(parsed, authKeys);
+  const stringified = querystring.stringify(stripped);
+  return stringified;
+};
 
+const normalizeSearch = function(location, authKeys) {
+  const newSearch = stripAuthKeysAndNormalize(location.search.replace( '?', '' ), authKeys);
+  return newSearch ? `?${newSearch}` : location.search;
+};
 
-// TODO: this needs some more work to gain compatibility with the original method from above
-const getLocationWithoutAuthParams = function(currentLocation, keys) {
+const normalizeHash = function(location, authKeys) {
+  const [hashAnchor, hashSearch] = location.hash.replace('#', '').split('?');
+  const newHashSearch = stripAuthKeysAndNormalize(hashSearch, authKeys);
+  const newHash = newHashSearch.length > 0 ? [hashAnchor, newHashSearch].join('?') : hashAnchor;
+  return newHash.length > 0 ? `#${newHash}` : location.hash;
+};
+
+const getLocationWithoutAuthParams = function(currentLocation, authKeys) {
   const location = createLocation(currentLocation);
-
-  console.log(location);
+  location.search = normalizeSearch(location, authKeys);
+  location.hash = normalizeHash(location, authKeys);
 
   return location;
 };
