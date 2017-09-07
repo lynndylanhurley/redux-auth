@@ -78,7 +78,7 @@ export function configure(endpoint={}, settings={}) {
       // if the authentication happened server-side, find the resulting auth
       // credentials that were injected into the dom.
       let tokenBridge = document.getElementById("token-bridge");
-      let {authRedirectPath, authRedirectHeaders} = getRedirectInfo(window.location);
+      let {authRedirectLocation, authRedirectHeaders} = getRedirectInfo(window.location);
 
       if (tokenBridge) {
         let rawServerCreds = tokenBridge.innerHTML;
@@ -107,8 +107,8 @@ export function configure(endpoint={}, settings={}) {
         firstTimeLogin = authRedirectHeaders && authRedirectHeaders.first_time_login
       }
 
-      if (authRedirectPath) {
-        dispatch(push({pathname: authRedirectPath}));
+      if (authRedirectLocation) {
+        dispatch(push(authRedirectLocation));
       }
 
       if (authRedirectHeaders && authRedirectHeaders.uid && authRedirectHeaders["access-token"]) {
