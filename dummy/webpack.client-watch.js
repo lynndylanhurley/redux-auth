@@ -8,28 +8,21 @@ config.debug = true;
 config.devtool = "eval-sourcemap";
 
 config.entry.unshift(
-  "webpack-dev-server/client?http://" + hostname + ":8080",
-  "webpack/hot/only-dev-server"
+  "webpack-dev-server/client?http://" + hostname + ":8080"
 );
 
 config.output.publicPath = "http://" + hostname + ":8080/dist/";
-config.output.hotUpdateMainFilename = "update/[hash]/update.json";
-config.output.hotUpdateChunkFilename = "update/[hash]/[id].update.js";
+
 
 config.plugins = [
   new webpack.DefinePlugin({__CLIENT__: true, __SERVER__: false}),
-  new webpack.HotModuleReplacementPlugin(),
   new webpack.NoErrorsPlugin()
 ];
 
-config.module.postLoaders = [
-  {test: /\.js$/, loaders: ["react-hot"], exclude: /node_modules/}
-]
 
 config.devServer = {
   publicPath:  "http://" + hostname + ":8080/dist/",
   contentBase: "./static",
-  hot:         true,
   inline:      true,
   lazy:        false,
   quiet:       true,

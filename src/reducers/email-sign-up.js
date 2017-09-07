@@ -6,7 +6,9 @@ import { SET_ENDPOINT_KEYS } from "../actions/configure";
 const initialState = {
   loading: false,
   errors: null,
-  form: {}
+  form: {
+    password_confirmation: ""
+  }
 };
 
 export default createReducer(Immutable.fromJS({}), {
@@ -21,9 +23,10 @@ export default createReducer(Immutable.fromJS({}), {
     [endpoint]: initialState
   }),
 
-  [A.EMAIL_SIGN_UP_ERROR]: (state, {endpoint, errors}) => state.mergeDeep({
+  [A.EMAIL_SIGN_UP_ERROR]: (state, {endpoint, errors}) => state.merge({
     [endpoint]: {
       loading: false,
+      form: state.getIn([endpoint, "form"]),
       errors
     }
   }),
