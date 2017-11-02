@@ -1,4 +1,4 @@
-import fetch from "isomorphic-fetch";
+import fetch from "cross-fetch";
 import cookie from "cookie";
 import getRedirectInfo from "../utils/parse-url";
 import * as C from "../utils/constants";

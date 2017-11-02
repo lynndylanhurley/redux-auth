@@ -1,4 +1,4 @@
-import originalFetch from "isomorphic-fetch";
+import originalFetch from "cross-fetch";
 import * as C from "./constants";
 import extend from "extend";
 import {
