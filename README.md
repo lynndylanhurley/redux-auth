@@ -592,7 +592,7 @@ server.ext("onPreResponse", (request, reply) => {
   }).then(appComponent => {
     reply(getMarkup(appComponent));
   });
-}
+});
 ~~~
 
 ##### client side rendering configuration
