@@ -58,7 +58,6 @@
     "babel-register": "6.3.13",
     "bootstrap": "^3.3.5",
     "bootstrap-sass": "^3.3.5",
-    "bootstrap-webpack": "0.0.5",
     "chai": "^3.3.0",
     "chai-as-promised": "^5.1.0",
     "concurrently": "0.1.1",

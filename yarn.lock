@@ -1120,10 +1120,6 @@ bootstrap-sass@^3.3.5:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.3.7.tgz#6596c7ab40f6637393323ab0bc80d064fc630498"
 
-bootstrap-webpack@0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/bootstrap-webpack/-/bootstrap-webpack-0.0.5.tgz#c843494022140b545b711b5cd272942b9da01766"
-
 bootstrap@^3.3.5:
   version "3.3.7"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.3.7.tgz#5a389394549f23330875a3b150656574f8a9eb71"
