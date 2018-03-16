@@ -105,7 +105,7 @@
     "sass-loader": "^3.0.0",
     "serialize-javascript": "^1.1.2",
     "sinon": "1.17.0",
-    "style-loader": "^0.12.4",
+    "style-loader": "^0.20.3",
     "thunk": "^0.0.1",
     "url-loader": "^0.5.6",
     "warning": "^2.1.0",
