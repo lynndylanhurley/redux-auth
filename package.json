@@ -62,7 +62,7 @@
     "chai-as-promised": "^5.1.0",
     "concurrently": "0.1.1",
     "coveralls": "^2.11.4",
-    "css-loader": "^0.19.0",
+    "css-loader": "^0.28.11",
     "exports-loader": "^0.6.2",
     "fetch-mock": "^2.1.0",
     "file-loader": "0.8.5",
