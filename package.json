@@ -109,8 +109,7 @@
     "thunk": "^0.0.1",
     "url-loader": "^0.5.6",
     "warning": "^2.1.0",
-    "webpack": "1.12.9",
-    "webpack-dev-server": "1.14.0"
+    "webpack": "1.12.9"
   },
   "peerDependencies": {
     "react-router-bootstrap": "*"
