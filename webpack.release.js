@@ -68,7 +68,7 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin()
   ],
   module:  {
-    loaders: [
+    rules: [
       {
         include: /\.js$/,
         exclude: /node_modules/,
