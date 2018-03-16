@@ -84,7 +84,7 @@
     "mocha": "^2.3.4",
     "mockery": "^1.4.0",
     "nock": "^3.3.2",
-    "node-sass": "^3.3.3",
+    "node-sass": "^4.8.2",
     "nodemon": "^1.7.2",
     "piping": "0.2.0",
     "react": "^15.2.1",
