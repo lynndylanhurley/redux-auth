@@ -63,7 +63,7 @@
     "concurrently": "0.1.1",
     "coveralls": "^2.11.4",
     "css-loader": "^0.28.11",
-    "exports-loader": "^0.6.2",
+    "exports-loader": "^0.7.0",
     "fetch-mock": "^2.1.0",
     "file-loader": "1.1.11",
     "h2o2": "4.0.1",
