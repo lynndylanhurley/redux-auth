@@ -830,14 +830,6 @@ babel-plugin-transform-strict-mode@^6.24.1:
     babel-runtime "^6.22.0"
     babel-types "^6.24.1"
 
-babel-polyfill@6.3.13:
-  version "6.3.13"
-  resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.3.13.tgz#67ebdd52202f7b3db736296038bfce1d1eeefdac"
-  dependencies:
-    babel-regenerator-runtime "^6.3.13"
-    babel-runtime "^5.0.0"
-    core-js "^1.0.1"
-
 babel-polyfill@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-polyfill/-/babel-polyfill-6.26.0.tgz#379937abc67d7895970adc621f284cd966cf2153"
@@ -916,10 +908,6 @@ babel-preset-stage-3@^6.24.1:
     babel-plugin-transform-async-to-generator "^6.24.1"
     babel-plugin-transform-exponentiation-operator "^6.24.1"
     babel-plugin-transform-object-rest-spread "^6.22.0"
-
-babel-regenerator-runtime@^6.3.13:
-  version "6.5.0"
-  resolved "https://registry.yarnpkg.com/babel-regenerator-runtime/-/babel-regenerator-runtime-6.5.0.tgz#0e41cd1c9f80442466f015c749fff8ba98f8e110"
 
 babel-register@6.3.13:
   version "6.3.13"
@@ -1606,7 +1594,7 @@ copy-descriptor@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/copy-descriptor/-/copy-descriptor-0.1.1.tgz#676f6eb3c39997c2ee1ac3a924fd6124748f578d"
 
-core-js@^1.0.0, core-js@^1.0.1:
+core-js@^1.0.0:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
 
