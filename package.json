@@ -79,7 +79,7 @@
     "jquery-deparam": "^0.4.2",
     "jsdom": "^9.4.1",
     "jsdomify": "^2.1.0",
-    "json-loader": "0.5.4",
+    "json-loader": "0.5.7",
     "material-ui": "0.15.2",
     "mocha": "^2.3.4",
     "mockery": "^1.4.0",
