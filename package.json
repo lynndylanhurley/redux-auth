@@ -115,6 +115,6 @@
     "react-router-bootstrap": "*"
   },
   "engines": {
-    "node": ">=0.10.32"
+    "node": ">= 8"
   }
 }
