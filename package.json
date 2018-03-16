@@ -69,7 +69,7 @@
     "h2o2": "4.0.1",
     "hapi": "9.3.1",
     "highlight.js": "^8.8.0",
-    "imports-loader": "^0.6.4",
+    "imports-loader": "^0.8.0",
     "inert": "3.0.1",
     "install": "^0.3.0",
     "invariant": "^2.2.0",
